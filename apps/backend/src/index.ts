@@ -1,12 +1,21 @@
-import express from 'express';
+import dotenv from  "dotenv"
+import connectToDB from './db';
+import { app } from './app';
 
-const app = express();
-const port = 3000;
+dotenv.config({path: "./.env"});
 
-app.get('/', (req, res) => {
-  res.send('Hello from Backend nodemon configured');
-});
+const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Backend listening at http://localhost:${port}`);
-});
+connectToDB()
+.then(() => {
+  app.get('/', (req, res) => {
+    res.send('Hello from Backend');
+  });
+  
+  app.listen(port, () => {
+    console.log(`Backend listening at http://localhost:${port}`);
+  });
+})
+.catch((error) => {
+   console.error("DB connection failed !! ", error);
+})
