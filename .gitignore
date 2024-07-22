@@ -6,12 +6,6 @@ jspm_packages/
 dist/
 build/
 
-# Logs
-*.log
-
-# Environment variables
-.env
-
 # Turborepo cache and build artifacts
 .turbo/
 
