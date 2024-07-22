@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-const router = require("./routes/user")
+import router from "./routes/user.js"
 
 const app = express();
 
@@ -17,4 +17,4 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 
-export { app };
+export default app;

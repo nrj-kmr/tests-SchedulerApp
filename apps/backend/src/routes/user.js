@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 
 const router = Router();
 
@@ -47,4 +47,6 @@ router.delete("/:_id", async (req, res) => {
   return res.json(`Deletion Successful`);
 });
 
-module.exports = router;
+// module.exports = router;
+
+export default router
