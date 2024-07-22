@@ -4,7 +4,7 @@ import { app } from './app';
 
 dotenv.config({path: "./.env"});
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 connectToDB()
 .then(() => {

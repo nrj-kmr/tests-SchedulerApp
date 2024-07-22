@@ -1,11 +1,12 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import router from "./routes/user"
+const router = require("./routes/user")
 
 const app = express();
 
-// app.use("/user", router)
+app.use(express.urlencoded({ extended: true }));
+app.use("/user", router)
 app.use(cors({
    origin: process.env.CORS_ORIGIN,
    credentials: true
