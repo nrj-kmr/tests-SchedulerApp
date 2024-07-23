@@ -4,13 +4,13 @@ export default function Login() {
     const navigate = useNavigate();
     return (
         <div className="bg-slate-700 min-h-screen text-white">
-            <button className="border border-gray rounded-md p-1 m-4 hover:bg-gray-800 transition-colors"
+            {/* <button className="border border-gray rounded-md p-1 m-4 hover:bg-gray-800 transition-colors"
                 onClick={() => {
                     navigate('/')
-                }}>Back</button>
+                }}>Back</button> */}
 
             <div className="flex flex-col items-center">
-                <h2 className="text-center text-3xl font-bold mb-6 pt-20">Welcome Back,<br /> Login to your Account</h2>
+                {/* <h2 className="text-center text-3xl font-bold mb-6 pt-20">Welcome Back,<br /> Login to your Account</h2> */}
                 <form action=""
                     className="border border-gray rounded-md p-5 max-w-80"
                 >
