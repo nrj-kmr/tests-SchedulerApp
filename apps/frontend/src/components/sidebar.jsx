@@ -1,8 +1,6 @@
-import React from 'react';
-
 const Sidebar = () => {
   return (
-    <div className="h-full w-64 bg-gray-800 text-white flex flex-col fixed top-16">
+    <div className="h-full w-64 bg-slate-700 text-white flex flex-col fixed top-16">
       <div className="p-4 text-2xl font-bold">
         Departments
       </div>
