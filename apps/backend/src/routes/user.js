@@ -1,20 +1,20 @@
 import { Router } from "express";
 import { User } from "../models/user.model.js";
 
-const router = Router();
+const user = Router();
 
-router.get("/", async (req, res) => {
+user.get("/", async (req, res) => {
   const users = await User.find({})
   if (!users) return res.send(404).json({ error: "users not fetched" })
   return res.json(users)
 })
 
-router.get("/:_id", async (req, res) => {
+user.get("/:_id", async (req, res) => {
   const user = await User.findById(req.params._id)
   return res.json(`User with given id: ${req.params._id} is \n ${user}`)
 })
 
-router.post("/", async (req, res) => {
+user.post("/", async (req, res) => {
   const body = req.body;
   if (
     !body ||
@@ -44,11 +44,11 @@ router.post("/", async (req, res) => {
   return res.status(201).json({ mssg: "User Creation Success" })
 })
 
-router.delete("/:_id", async (req, res) => {
+user.delete("/:_id", async (req, res) => {
   await User.findByIdAndDelete(req.params._id);
   return res.json(`Deletion Successful`);
 });
 
 // module.exports = router;
 
-export default router
+export default user
