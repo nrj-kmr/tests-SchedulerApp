@@ -1,9 +1,7 @@
-// src/components/Topbar.jsx
-import React from 'react';
-
+/* eslint-disable react/prop-types */
 const Topbar = ({ toggleSidebar }) => {
   return (
-    <div className="h-16 bg-blue-600 text-white flex items-center justify-between px-4">
+    <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4">
       <div className="text-xl font-bold cursor-pointer" onClick={toggleSidebar}>
         Test Scheduler
       </div>

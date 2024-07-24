@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import LoginForm from '../components/loginForm';
 import SignupForm from '../components/signupForm';
-import Login from '../components/login';
-import Signup from '../components/signup';
 
 export default function Home() {
    const [activeForm, setActiveForm] = useState('login');
@@ -31,8 +28,8 @@ export default function Home() {
             </button>
          </div>
 
-         {activeForm === 'login' && <Login />}
-         {activeForm === 'signup' && <Signup />}
+         {activeForm === 'login' && <LoginForm />}
+         {activeForm === 'signup' && <SignupForm />}
       </div>
    );
 }

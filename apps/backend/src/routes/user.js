@@ -21,7 +21,8 @@ router.post("/", async (req, res) => {
     !body.first_Name ||
     !body.last_Name ||
     !body.email ||
-    !body.user_Name
+    !body.passWord ||
+    !body.is_Admin 
   ) {
     return res.status(400).json(
       {
@@ -34,7 +35,8 @@ router.post("/", async (req, res) => {
     firstName: body.first_Name,
     lastName: body.last_Name,
     email: body.email,
-    userName: body.user_Name
+    password: body.passWord,
+    isAdmin: body.is_Admin
   })
 
   console.log("result", result)
