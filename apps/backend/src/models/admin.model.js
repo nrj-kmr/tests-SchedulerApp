@@ -1,13 +1,9 @@
-import e from "express";
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-   firstName: {
+const adminSchema = new mongoose.Schema({
+   name: {
       type: String,
       required: true
-   },
-   lastName: {
-      type: String,
    },
    email: {
       type: String,
@@ -25,8 +21,14 @@ const userSchema = new mongoose.Schema({
    password: {
       type: String,
       required: true,
+   },
+   department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      required: true
    }
 }, { timestamps: true })
 
-const User = mongoose.model("User", userSchema);
-export default User;
+const Admin = mongoose.model("Admin", adminSchema);
+
+export default Admin;
