@@ -1,9 +1,9 @@
-import express from "express";
+import express, { application } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv"
 import router from "./routes/user.js"
-import usersApi from "./routes/allUsersApi.js";
+import Api from "./routes/api.js";
 
 dotenv.config({ path: "./.env" })
 const app = express();
@@ -20,6 +20,6 @@ app.use(cors({
 }))
 
 app.use("/user", router)
-app.use("/api", usersApi)
+app.use("/api", Api)
 
 export default app;
