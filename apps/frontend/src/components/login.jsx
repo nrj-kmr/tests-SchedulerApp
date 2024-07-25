@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext.jsx';
+import { useContext } from 'react';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -9,6 +11,7 @@ export default function Login() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const { login } = useContext(AuthContext);
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
@@ -32,8 +35,8 @@ export default function Login() {
             if (error.response && error.response.status === 400 && error.response.data) {
                 setErrorMessage(error.response.data.message);
             }
-
         }
+        login({ email, isAdmin });
     }
 
     return (

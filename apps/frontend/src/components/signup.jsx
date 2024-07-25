@@ -1,16 +1,19 @@
 import axios from "axios"
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { useContext } from "react";
 
 function Signup({ onSuccess }) {
+    const { signup } = useContext(AuthContext);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
         email: '',
         password: ''
     });
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
 
     const navigate = useNavigate();
 
@@ -41,6 +44,7 @@ function Signup({ onSuccess }) {
                 setErrorMessage('An unexpected error occurred. Please try again later.');
             }
         }
+        signup({ firstname: formData.firstname, email: formData.email });
     }
 
     return (
