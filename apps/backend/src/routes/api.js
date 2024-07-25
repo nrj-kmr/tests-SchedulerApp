@@ -1,12 +1,17 @@
 import { Router } from "express";
-import { User } from '../models/user.model.js';
+import userRouter from "./user.routes.js";
+import adminRouter from "./admin.routes.js";
+import superAdminRouter from "./superAdmin.routes.js";
 
 const Api = Router();
 
-export default Api;
+// use the user routes
+Api.use('/api/user', userRouter);
 
-Api.get("/getUsers", async (req, res) => {
-   const users = await User.find({})
-   if (!users) return res.send(404).json({ error: "users not fetched" })
-   res.json(users)
-})
+// use the admin routes
+Api.use('/api/admin', adminRouter);
+
+// use the superAdmin routes
+Api.use('/api/superAdmin', superAdminRouter);
+
+export default Api;

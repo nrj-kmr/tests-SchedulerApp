@@ -1,10 +1,11 @@
 import React from "react";
+import CalendarView from "../calendarView";
 
 const Department03 = () => {
    return (
       <div>
          <h1>Department 03</h1>
-         <p>Department 03 is the best department</p>
+         <CalendarView />
       </div>
    )
 }

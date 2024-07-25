@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import Sidebar from '../components/sidebar';
 import Topbar from '../components/topbar';
-import CalendarView from '../components/calendarView';
-import Department01 from '../components/department01';
-import Department02 from '../components/department02';
-import Department03 from '../components/department03';
-import Department04 from '../components/department04';
+import CalendarView from '../components/calendarComponents/calendarView';
+import { Department01, Department02, Department03, Department04 } from '../components/calendarComponents/Departments';
 
 const Dashboard = () => {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [isSidebarVisible, setSidebarVisible] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('default');
 
   const toggleSidebar = () => {
@@ -19,20 +16,20 @@ const Dashboard = () => {
     setSelectedDepartment(department);
   };
 
-  const renderCalendar = () => {
-    switch (selectedDepartment) {
-      case 'dept 01':
-        return <Department01 />; // Replace this with the component for the department
-      case 'dept 02':
-        return <Department02 />; // Replace this with the component for the department
-      case 'dept 03':
-        return <Department03 />; // Replace this with the component for the department
-      case 'dept 04':
-        return <Department04 />; // Replace this with the component for the department
-      default:
-        return <CalendarView />
-    }
-  }
+  // const renderCalendar = () => {
+  //   switch (selectedDepartment) {
+  //     case 'Dept 01':
+  //       return <Department01 selectedDepartment={selectedDepartment} events={events} />;
+  //     case 'Dept 02':
+  //       return <Department02 selectedDepartment={selectedDepartment} events={events} />;
+  //     case 'Dept 03':
+  //       return <Department03 selectedDepartment={selectedDepartment} events={events} />;
+  //     case 'Dept 04':
+  //       return <Department04 selectedDepartment={selectedDepartment} events={events} />;
+  //     default:
+  //       return <CalendarView />;
+  //   }
+  // }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -42,8 +39,8 @@ const Dashboard = () => {
       <div className="flex flex-col flex-grow">
         <Topbar toggleSidebar={toggleSidebar} />
         <div className={`flex-grow p-6 bg-slate-500 text-white ${isSidebarVisible ? 'ml-64' : ''}`}>
-          {renderCalendar()}
-          {/* <CalendarView department={selectedDepartment} /> */}
+          <CalendarView department={selectedDepartment} />
+          {/* {renderCalendar()} */}
         </div>
       </div>
     </div>

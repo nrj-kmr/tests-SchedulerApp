@@ -1,13 +1,14 @@
 import React from 'react';
 
 const Sidebar = ({ onDepartmentChange }) => {
+  const departments = ['Department 01', 'Department 02', 'Department 03', 'Department 04'];
+
   return (
     <div className="sidebar h-full w-64 bg-slate-700 text-white flex flex-col fixed top-16">
       <ul className="flex flex-col flex-grow">
-        <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange('Dept 01')}>Department01</li>
-        <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange('Dept 02')}>Department02</li>
-        <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange('Dept 03')}>Department03</li>
-        <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange('Dept 01')}>Department04</li>
+        {departments.map(department => (
+          <li key={department} className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange(department)}>{department}</li>
+        ))}
       </ul>
     </div>
   );

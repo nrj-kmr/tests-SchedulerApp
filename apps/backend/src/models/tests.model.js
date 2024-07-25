@@ -21,18 +21,17 @@ const testsSchema = new mongoose.Schema({
       required: true
    },
    department: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Department",
       required: true
    },
    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Admin",
       required: true
    },
    status: {
       type: String,
-      required: true
    },
 }, { timestamps: true })
 

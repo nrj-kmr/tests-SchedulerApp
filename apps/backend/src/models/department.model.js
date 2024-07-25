@@ -7,9 +7,8 @@ const departmentSchema = new mongoose.Schema({
       unique: true
    },
    admin: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Admin",
-      required: true
    }
 }, { timestamps: true })
 

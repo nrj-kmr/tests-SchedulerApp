@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
-   name: {
-      type: String,
-      required: true
-   },
+   name: { type: String, required: true },
    email: {
       type: String,
       required: true,
@@ -18,15 +15,13 @@ const adminSchema = new mongoose.Schema({
          message: props => `${props.value} is not a valid email address!`
       }
    },
-   password: {
-      type: String,
-      required: true,
-   },
+   password: { type: String, required: true },
    department: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Department",
-      required: true
-   }
+   },
+   isAdmin: { type: Boolean, default: false },
+   superAdmin: { type: Boolean, default: false, select: false }
 }, { timestamps: true })
 
 const Admin = mongoose.model("Admin", adminSchema);
