@@ -64,10 +64,18 @@ const CalendarView = ({ department }) => {
 
     return (
         <div>
-            <h1>{department}</h1>
+            {department === 'default' || !department ? (
+                <h1 className='flex justify-center items-center bg-yellow-200 text-yellow-800 border border-yellow-400 mb-2 rounded p-2'>
+                    <span className='text-center'>Please choose a department</span>
+                </h1>
+                ) : (
+                    <h1 className='flex justify-center items-center bg-green-200 text-green-800 border border-green-400 mb-2 rounded p-2'>
+                    <span className='text-center'>{department}</span>
+                </h1>
+                 )}
+
             <Calendar
-                defaultView='week'
-                views={['month', 'week', 'day']}
+                defaultView='month'
                 localizer={localizer}
                 events={events}
                 startAccessor="start"
@@ -80,7 +88,7 @@ const CalendarView = ({ department }) => {
                 eventPropGetter={eventStyleGetter}
             />
             {showForm && (
-                <EventForm 
+                <EventForm
                     date={selectedDate}
                     onSubmit={handleEventSubmit}
                     onClose={() => setShowForm(false)}

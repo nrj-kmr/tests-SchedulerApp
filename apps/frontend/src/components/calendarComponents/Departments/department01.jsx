@@ -13,7 +13,6 @@ const Department01 = ({ selectedDepartment, events }) => {
       <h1>Department 01</h1>
       <Calendar
         defaultView="week"
-        views={['month', 'week', 'day']}
         localizer={localizer}
         events={filteredEvents}
         startAccessor="start"
