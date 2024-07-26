@@ -1,12 +1,24 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Sidebar from '../components/sidebar';
 import Topbar from '../components/topbar';
 import CalendarView from '../components/calendarComponents/calendarView';
 import { Department01, Department02, Department03, Department04 } from '../components/calendarComponents/Departments';
+import { AuthContext } from '../context/AuthContext';
+import { AdminDashboard, UserDashboard } from '../components';
+import { useNavigate } from 'react-router-dom';
+import Home from './home';
+useNavigate
 
 const Dashboard = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState('default');
+
+  const navigate = useNavigate();
+  const handleLogin = () => {
+      navigate(<Home />);
+  }
+
+  const { user } = useContext(AuthContext)
 
   const toggleSidebar = () => {
     setSidebarVisible(!isSidebarVisible);
@@ -16,34 +28,27 @@ const Dashboard = () => {
     setSelectedDepartment(department);
   };
 
-  // const renderCalendar = () => {
-  //   switch (selectedDepartment) {
-  //     case 'Dept 01':
-  //       return <Department01 selectedDepartment={selectedDepartment} events={events} />;
-  //     case 'Dept 02':
-  //       return <Department02 selectedDepartment={selectedDepartment} events={events} />;
-  //     case 'Dept 03':
-  //       return <Department03 selectedDepartment={selectedDepartment} events={events} />;
-  //     case 'Dept 04':
-  //       return <Department04 selectedDepartment={selectedDepartment} events={events} />;
-  //     default:
-  //       return <CalendarView />;
-  //   }
-  // }
+  if (!user) {
+    return <div className='flex space-x-2 h-screen overflow-hidden justify-center items-center bg-slate-600 text-white text-2xl font-bold'>
+      <h1 className='text-center'>Please Login! to continue</h1>
+      <span className='cursor-pointer underline' onClick={handleLogin}>Login</span>
+    </div>
+  }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <div className={`fixed ${isSidebarVisible ? 'block' : 'hidden'}`}>
-        <Sidebar onDepartmentChange={onDepartmentChange} />
-      </div>
-      <div className="flex flex-col flex-grow">
-        <Topbar toggleSidebar={toggleSidebar} />
-        <div className={`flex-grow p-6 bg-slate-500 text-white ${isSidebarVisible ? 'ml-64' : ''}`}>
-          <CalendarView department={selectedDepartment} />
-          {/* {renderCalendar()} */}
-        </div>
-      </div>
-    </div>
+    // <div className="flex h-screen overflow-hidden">
+    //   <div className={`fixed ${isSidebarVisible ? 'block' : 'hidden'}`}>
+    //     <Sidebar onDepartmentChange={onDepartmentChange} />
+    //   </div>
+    //   <div className="flex flex-col flex-grow">
+    //     <Topbar toggleSidebar={toggleSidebar} />
+    //     <div className={`flex-grow p-6 bg-slate-500 text-white ${isSidebarVisible ? 'ml-64' : ''}`}>
+    //       <CalendarView department={selectedDepartment} />
+    //       {/* {renderCalendar()} */}
+    //     </div>
+    //   </div>
+    // </div>
+    user.role === 'admin' ? <AdminDashboard /> : <UserDashboard />
   );
 };
 
