@@ -24,16 +24,15 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-auto">
       <div className={`fixed ${isSidebarVisible ? 'block' : 'hidden'}`}>
         <Sidebar onDepartmentChange={onDepartmentChange} />
       </div>
-      <div className="flex flex-col flex-grow">
+      <div className={`flex flex-col flex-grow ${isSidebarVisible ? 'ml-64' : ''} transition-all duration-300`}>
         <Topbar toggleSidebar={toggleSidebar} />
-        <div className={`flex-grow p-6 bg-slate-500 text-white ${isSidebarVisible ? 'ml-64' : ''}`}>
-         <h1>This is Admin Dashboard</h1>
+        <div className="flex-grow pt-16 p-6 bg-slate-500 text-white">
+          <h1 className="bg-gray-700 mt-3 mb-2 text-center font-bold text-2xl p-2 rounded shadow-md">Admin Dashboard</h1>
           <CalendarView department={selectedDepartment} />
-          {/* {renderCalendar()} */}
         </div>
       </div>
     </div>

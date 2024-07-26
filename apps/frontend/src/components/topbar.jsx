@@ -1,11 +1,14 @@
 import { FaBars } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = ({ toggleSidebar }) => {
   const { user, logout } = useContext(AuthContext);
   const [userDropdown, setUserDropdown] = useState(false);
   const [notifications, setNotifications] = useState(false)
+
+  const navigate = useNavigate()
 
   const toggleUserDropdown = () => {
     setUserDropdown(!userDropdown);
@@ -14,12 +17,16 @@ const Topbar = ({ toggleSidebar }) => {
     setNotifications(!notifications)
   }
 
+  const handleCLick = () => {
+    navigate('/')
+  }
+
   return (
-    <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4">
+    <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 shadow-2xl">
       <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
       <span className="text-xl font-bold">Test Scheduler</span>
       <div className="flex space-x-4 relative">
-        {user && (
+        {user && user.email? (
           <>
             <div className="relative">
               <span
@@ -47,7 +54,7 @@ const Topbar = ({ toggleSidebar }) => {
               {userDropdown && (
                 <div className="absolute right-0 mt-2 w-auto rounded-md shadow-md bg-blue-700 hover:bg-blue-800">
                   <button
-                    onClick={logout}
+                    onClick={logout && handleCLick}
                     className="w-full text-left px-4 py-2 text-white"
                   >
                     Logout
@@ -56,6 +63,11 @@ const Topbar = ({ toggleSidebar }) => {
               )}
             </div>
           </>
+        ) : (
+          <button
+          className="flex items-center text-sm cursor-pointer p-2 rounded-md shadow-lg bg-blue-700 hover:bg-blue-800"
+          onClick={handleCLick}
+          >Login</button>
         )}
       </div>
     </div>

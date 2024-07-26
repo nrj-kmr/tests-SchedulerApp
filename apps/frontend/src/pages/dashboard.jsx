@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
   const handleLogin = () => {
-      navigate(<Home />);
+      navigate('/');
   }
 
   const { user } = useContext(AuthContext)
@@ -29,10 +29,12 @@ const Dashboard = () => {
   };
 
   if (!user) {
-    return <div className='flex space-x-2 h-screen overflow-hidden justify-center items-center bg-slate-600 text-white text-2xl font-bold'>
-      <h1 className='text-center'>Please Login! to continue</h1>
-      <span className='cursor-pointer underline' onClick={handleLogin}>Login</span>
-    </div>
+    return (
+      <div className='flex space-x-2 h-screen overflow-hidden justify-center items-center bg-slate-600 text-white text-2xl font-bold'>
+        <h1 className='text-center'>Please Login! to continue</h1>
+        <span className='cursor-pointer underline' onClick={handleLogin}>Login</span>
+      </div>      
+    )
   }
 
   return (
@@ -48,7 +50,8 @@ const Dashboard = () => {
     //     </div>
     //   </div>
     // </div>
-    user.role === 'admin' ? <AdminDashboard /> : <UserDashboard />
+    <AdminDashboard />
+    // user.role === 'admin' ? <AdminDashboard /> : <UserDashboard />
   );
 };
 

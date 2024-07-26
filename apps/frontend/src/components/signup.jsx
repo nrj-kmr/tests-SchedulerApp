@@ -44,7 +44,7 @@ function Signup({ onSuccess }) {
                 setErrorMessage('An unexpected error occurred. Please try again later.');
             }
         }
-        signup({ firstname: formData.firstname, email: formData.email });
+        // signup({ firstname: formData.firstname, email: formData.email });
     }
 
     return (

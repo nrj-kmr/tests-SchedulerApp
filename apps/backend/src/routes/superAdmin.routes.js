@@ -8,7 +8,7 @@ const superAdminRouter = Router();
 
 // SuperAdmin Routes for admin management
 superAdminRouter.post("/createAdmin", async (req, res) => {
-   const { name, email, password, department } = req.body;
+   const { name, email, password, department, isAdmin, superAdmin } = req.body;
    try {
       // Find the department by name
       const departmentDoc = await Department.findOne({ name: department });
@@ -24,7 +24,9 @@ superAdminRouter.post("/createAdmin", async (req, res) => {
          name,
          email,
          password: hashedPassword,
-         department: departmentDoc.name
+         department: departmentDoc.name,
+         isAdmin,
+         superAdmin
       });
       await newAdmin.save();
       return res.status(201).json({
