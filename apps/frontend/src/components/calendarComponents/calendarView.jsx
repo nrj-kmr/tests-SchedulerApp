@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import CustomToolbar from './CustomToolbar'
 
 const localizer = momentLocalizer(moment)
 
@@ -75,17 +76,20 @@ const CalendarView = ({ department }) => {
                  )}
 
             <Calendar
-                defaultView='month'
+                defaultView='week'
                 localizer={localizer}
                 events={events}
                 startAccessor="start"
                 endAccessor="end"
-                min={moment("2024-07-24T09:00:00").toDate()}
-                max={moment("2024-07-24T19:00:00").toDate()}
+                min={moment("2024-07-27T09:00:00").toDate()}
+                max={moment("2024-07-27T19:00:00").toDate()}
                 style={{ height: "80vh" }}
-                selectable
+                // selectable
                 onSelectSlot={handleSelectSlot}
                 eventPropGetter={eventStyleGetter}
+                components={{
+                    toolbar: CustomToolbar
+                }}
             />
             {showForm && (
                 <EventForm
@@ -101,29 +105,29 @@ const CalendarView = ({ department }) => {
 const getEventsForDepartment = (department) => {
     const allEvents = [
         {
-            start: moment("2024-07-24T16:00:00").toDate(),
-            end: moment("2024-07-24T18:00:00").toDate(),
+            start: moment("2024-07-27T16:00:00").toDate(),
+            end: moment("2024-07-27T18:00:00").toDate(),
             title: 'Meeting with the boss',
-            department: 'Dept 01',
+            department: 'Department01',
             status: 'pending',
         },
         {
-            start: moment("2024-07-24T10:00:00").toDate(),
-            end: moment("2024-07-24T12:00:00").toDate(),
+            start: moment("2024-07-27T10:00:00").toDate(),
+            end: moment("2024-07-27T12:00:00").toDate(),
             title: 'Meeting with the team',
             department: 'Dept 02',
             status: 'done',
         },
         {
-            start: moment("2024-07-24T14:00:00").toDate(),
-            end: moment("2024-07-24T16:00:00").toDate(),
+            start: moment("2024-07-27T14:00:00").toDate(),
+            end: moment("2024-07-27T16:00:00").toDate(),
             title: 'Meeting with the client',
             department: 'Dept 03',
             status: 'not done',
         },
         {
-            start: moment("2024-07-24T08:00:00").toDate(),
-            end: moment("2024-07-24T10:00:00").toDate(),
+            start: moment("2024-07-27T08:00:00").toDate(),
+            end: moment("2024-07-27T10:00:00").toDate(),
             title: 'Meeting with the manager',
             department: 'Dept 04',
             status: 'ongoing',
