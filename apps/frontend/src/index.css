@@ -60,3 +60,13 @@
    box-sizing: border-box;
    min-height: 30px;
 }
+.rbc-event {
+   border-radius: 5px !important;
+}
+.rbc-events-container {
+   width: 100% !important;
+}
+
+.rbc-event-label {
+   display: none !important;
+}
