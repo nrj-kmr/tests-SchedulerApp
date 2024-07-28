@@ -59,7 +59,10 @@ const Topbar = ({ toggleSidebar }) => {
               {userDropdown && (
                 <div className="absolute right-0 mt-2 w-auto rounded-md shadow-md bg-blue-700 hover:bg-blue-800">
                   <button
-                    onClick={logout && handleCLick}
+                    onClick={() => {
+                      logout();
+                      handleCLick();
+                    }}
                     className="w-full text-left px-4 py-2 text-white"
                   >
                     Logout
