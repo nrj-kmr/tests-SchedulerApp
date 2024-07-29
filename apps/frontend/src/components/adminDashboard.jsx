@@ -40,14 +40,8 @@ const AdminDashboard = () => {
     console.log('opening modal');
     setIsUserModalOpen(true);
   }
-  const closeUserModal = () => {
-    setIsUserModalOpen(false);
-  }
   const openTestModal = () => {
     setIsTestModalOpen(true);
-  }
-  const closeTestModal = () => {
-    setIsTestModalOpen(false);
   }
   const handleUserInput = (e) => {
     setNewUser({
@@ -56,10 +50,10 @@ const AdminDashboard = () => {
     });
   }
   const handleTestInput = (e) => {
-    setNewTest({
-      ...newTest,
+    setNewTest((prevState) => ({
+      ...prevState,
       [e.target.name]: e.target.value
-    });
+    }));
   }
 
 
@@ -201,17 +195,18 @@ const AdminDashboard = () => {
 
       <UserModal
         isOpen={isUserModalOpen}
-        closeModal={closeUserModal}
+        closeModal={() => setIsUserModalOpen(false)}
         newUser={newUser}
         handleInputChange={handleUserInput}
         handleAddUser={handleAddUser}
       />
-      <TestModal 
+      <TestModal
         isOpen={isTestModalOpen}
-        closeModal={closeTestModal}
+        closeModal={() => setIsTestModalOpen(false)}
         newTest={newTest}
         handleInputChange={handleTestInput}
         handleAddTest={handleAddTest}
+        serNewTest={setNewTest}
       />
     </div>
   );

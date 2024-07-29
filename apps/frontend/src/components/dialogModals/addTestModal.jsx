@@ -3,7 +3,8 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import TimePicker from 'react-time-picker';
 
-const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
+const TestModal = ({ isOpen, closeModal, handleInputChange, handleAddTest }) => {
+   const [newTest, setNewTest] = useState({ title: '', description: '', startTime: '', endTime: '', department: '' });
    const [departments, setDepartments] = useState([]);
 
    useEffect(() => {
@@ -11,6 +12,13 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
          .then((response) => setDepartments(response.data))
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
+
+   const handleTimeChange = (name, value) => {
+      setNewTest({
+         ...newTest,
+         [name]: value
+      });
+   }
 
    return (
       <Modal
@@ -28,36 +36,44 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
 
                <div className='flex flex-col space-y-4'>
                   <label className='block'>
-                     <input type='text' name='title' placeholder='Title' value={newTest.title} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                     <input
+                        type='text'
+                        name='title'
+                        placeholder='Title'
+                        value={newTest.title}
+                        onChange={handleInputChange}
+                        required
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                     />
                   </label>
                   <label className='block'>
-                     <textarea type='text' name='description' placeholder='Description' value={newTest.description} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 min-h-10 max-h-72' />
+                     <textarea
+                        type='text'
+                        name='description'
+                        placeholder='Description'
+                        value={newTest.description}
+                        onChange={handleInputChange}
+                        required
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 min-h-10 max-h-72'
+                     />
                   </label>
 
                   <div className='flex flex-row space-x-4'>
                      <label className='block flex-grow'>
                         <span className='text-gray-700'>Start Time:</span>
-                        <TimePicker
-                           onChange={(value) => handleTimeChange('startTime', value)}
+                        <input type="time"
+                           onChange={(e) => handleInputChange('startTime', e.target.value)}
                            value={newTest.startTime}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer'
-                           disableClock={true}
-                           clearIcon={null}
-                           clockIcon={null}
-                           format='HH:mm'
                            placeholder='Select Start Time'
                         />
                      </label>
                      <label className='block flex-grow'>
                         <span className='text-gray-700'>End Time:</span>
-                        <TimePicker
-                           onChange={(value) => handleTimeChange('endTime', value)}
+                        <input type="time"
+                           onChange={(e) => handleInputChange('endTime', e.target.value)}
                            value={newTest.endTime}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer'
-                           disableClock={true}
-                           clearIcon={null}
-                           clockIcon={null}
-                           format='HH:mm'
                            placeholder='Select End Time'
                         />
                      </label>

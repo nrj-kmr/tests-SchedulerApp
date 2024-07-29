@@ -40,23 +40,30 @@ const Sidebar = ({ onViewChange, onDepartmentChange, }) => {
           </li>
 
           <li title='departments'>
-            <div className="p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300">
-
-
-              <select name="department"
-                //  value={newUser.department}
-                id="department"
-                onChange={() => { onViewChange('calendar') }}
-                className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 bg-slate-700 text-lg cursor-pointer transition-colors duration-300"
-              >
-                <option value="">--Select Department--</option>
-                {departments.map((department) => (
-                  <option key={department._id} value={department.name}
-                    onClick={() => onDepartmentChange(department.name)}
-                  >{department.name}</option>
-                ))}
-              </select>
-            </div>
+            <h1
+              onClick={() => handleToggle('departments')}
+              className='p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300'
+            >
+              Departments
+            </h1>
+            {openDropdown === 'departments' && (
+              <div className="transition-colors duration-300">
+                <div className="p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300">
+                  <select name="department"
+                    id="department"
+                    onChange={() => { onViewChange('calendar') }}
+                    className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 bg-slate-700 text-lg cursor-pointer transition-colors duration-300"
+                  >
+                    <option value="">--Select Department--</option>
+                    {departments.map((department) => (
+                      <option key={department._id} value={department.name}
+                        onClick={() => onDepartmentChange(department.name)}
+                      >{department.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
           </li>
         </ul>
       </div>
@@ -64,7 +71,12 @@ const Sidebar = ({ onViewChange, onDepartmentChange, }) => {
       <div className="sidebar h-full w-64 bg-slate-700 text-white flex flex-col fixed top-16">
         <ul className="list-none p-0 pl-4 m-0">
           {departments.map(department => (
-            <li key={department} className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => onDepartmentChange(department)}>{department}</li>
+            <li
+              key={department._id}
+              className="p-4 hover:bg-gray-700 cursor-pointer"
+              onClick={() => onDepartmentChange(department.name)}>
+              {department.name}
+            </li>
           ))}
         </ul>
       </div>
