@@ -25,8 +25,7 @@ const Dashboard = () => {
   if (!user) {
     return (
       <div className='flex space-x-2 h-screen overflow-hidden justify-center items-center bg-slate-600 text-white text-2xl font-bold'>
-        <h1 className='text-center'>Please Login! to continue</h1>
-        <span className='cursor-pointer underline' onClick={handleLogin}>Login</span>
+        <h1 className='text-center'>Please <span className='cursor-pointer underline' onClick={handleLogin}>Login</span> to continue</h1>
       </div>      
     )
   }
