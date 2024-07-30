@@ -103,15 +103,12 @@ const AdminDashboard = () => {
                       Add User
                     </button>
                   </div>
-
                   <div className="flex justify-between items-center p-2">
                     <span className="font-bold">Name</span>
                     <span className="font-bold">Email</span>
                     <span className="font-bold">Department</span>
                   </div>
-
                 </div>
-
                 <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
                   {users.length === 0 ? (
                     <p>No users available</p>
