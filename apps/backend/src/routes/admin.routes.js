@@ -13,7 +13,7 @@ const adminRouter = Router();
 // Admin Routes for user management
 adminRouter.post("/createUser", async (req, res) => {
    try {
-      const { firstname, lastname, email, password } = req.body;
+      const { firstname, lastname, email, password, department } = req.body;
       if (!email || !password) {
          res.status(400).json({ error: 'Email and Password are required!' });
       }
@@ -24,7 +24,7 @@ adminRouter.post("/createUser", async (req, res) => {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({ firstname, lastname, email, password: hashedPassword });
+      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department });
       await newUser.save();
       return res.status(201).json({ message: 'User created successfully!' });
    } catch (error) {

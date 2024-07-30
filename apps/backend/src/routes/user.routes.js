@@ -22,8 +22,8 @@ userRouter.get("/getUsers", async (req, res) => {
 // User singup route
 userRouter.post("/signup", async (req, res) => {
   try {
-    const { firstname, lastname, email, password } = req.body;
-    if (!firstname || !lastname || !email || !password) {
+    const { firstname, lastname, email, password, department } = req.body;
+    if (!firstname || !lastname || !email || !password || !department) {
       return res.status(400).json({ error: 'All fields are required!' });
     }
     const userExists = await User.findOne({ email })
@@ -31,7 +31,7 @@ userRouter.post("/signup", async (req, res) => {
       return res.status(400).json({ error: 'User already exists!' });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({ firstname, lastname, email, password: hashedPassword });
+      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department });
       await newUser.save();
       return res.status(201).json({ message: 'User created successfully!' });
     }

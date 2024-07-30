@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-import TimePicker from 'react-time-picker';
 
-const TestModal = ({ isOpen, closeModal, handleInputChange, handleAddTest }) => {
-   const [newTest, setNewTest] = useState({ title: '', description: '', startTime: '', endTime: '', department: '' });
+const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
+   const [newTest, setNewTest] = useState({
+      title: '',
+      description: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      department: '',
+      createdBy: '',
+      status: 'pending'
+   });
    const [departments, setDepartments] = useState([]);
 
    useEffect(() => {
@@ -13,12 +21,24 @@ const TestModal = ({ isOpen, closeModal, handleInputChange, handleAddTest }) => 
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
 
-   const handleTimeChange = (name, value) => {
-      setNewTest({
-         ...newTest,
-         [name]: value
-      });
-   }
+   const handleChange = (e) => {
+      const { name, value } = e.target;
+      setNewTest((prevState) => ({
+         ...prevState,
+         [name]: value,
+      }));
+   };
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      axios.post('http://localhost:8000/api/admin/createTest', newTest)
+         .then((response) => {
+            console.log(response.data);
+            handleAddTest(response.data);
+            closeModal();
+         })
+         .catch((error) => console.error('Error creating test:', error));
+   };
 
    return (
       <Modal
@@ -32,75 +52,86 @@ const TestModal = ({ isOpen, closeModal, handleInputChange, handleAddTest }) => 
             <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add Test</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleAddTest(); }} className='space-y-4'>
-
+            <form onSubmit={handleSubmit}>
                <div className='flex flex-col space-y-4'>
                   <label className='block'>
                      <input
                         type='text'
                         name='title'
-                        placeholder='Title'
                         value={newTest.title}
-                        onChange={handleInputChange}
-                        required
+                        placeholder='Enter test title'
+                        onChange={handleChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                        required
                      />
                   </label>
                   <label className='block'>
                      <textarea
-                        type='text'
                         name='description'
-                        placeholder='Description'
                         value={newTest.description}
-                        onChange={handleInputChange}
+                        onChange={handleChange}
+                        placeholder='Enter test description'
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
-                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 min-h-10 max-h-72'
                      />
                   </label>
-
+                  <label className='block'>
+                     <input
+                        type='date'
+                        name='date'
+                        value={newTest.date}
+                        onChange={handleChange}
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                        required
+                        max='2040-12-31'
+                        min='2022-01-01'
+                     />
+                  </label>
                   <div className='flex flex-row space-x-4'>
                      <label className='block flex-grow'>
                         <span className='text-gray-700'>Start Time:</span>
-                        <input type="time"
-                           onChange={(e) => handleInputChange('startTime', e.target.value)}
+                        <input
+                           type='time'
+                           name='startTime'
                            value={newTest.startTime}
-                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer'
-                           placeholder='Select Start Time'
+                           onChange={handleChange}
+                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                           required
+                           min='05:00'
+                           max='20:00'
                         />
                      </label>
                      <label className='block flex-grow'>
                         <span className='text-gray-700'>End Time:</span>
-                        <input type="time"
-                           onChange={(e) => handleInputChange('endTime', e.target.value)}
+                        <input
+                           type='time'
+                           name='endTime'
                            value={newTest.endTime}
-                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer'
-                           placeholder='Select End Time'
+                           onChange={handleChange}
+                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                           required
+                           min='05:00'
+                           max='20:00'
                         />
                      </label>
                   </div>
-
                   <label className='block'>
-                     <select name="department"
+                     <select
+                        name='department'
                         value={newTest.department}
-                        onChange={handleInputChange}
+                        onChange={handleChange}
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
-                        className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                      >
-                        <option value="">--Select Department--</option>
-                        {departments.map((department) => (
-                           <option key={department._id} value={department.name}
-                           >{department.name}</option>
+                        <option value=''>Select Department</option>
+                        {departments.map((dept) => (
+                           <option key={dept._id} value={dept._id}>{dept.name}</option>
                         ))}
                      </select>
                   </label>
-                  <div className='flex justify-end space-x-4'>
-                     <button type='button' onClick={closeModal} className='px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'>
-                        Cancel
-                     </button>
-                     <button type='submit' className='px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                        Add Test
-                     </button>
-                  </div>
+                  <button type='submit' className='mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'>
+                     Add Test
+                  </button>
                </div>
             </form>
          </div>

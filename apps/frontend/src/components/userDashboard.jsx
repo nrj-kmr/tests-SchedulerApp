@@ -14,10 +14,6 @@ const UserDashboard = () => {
     setSidebarVisible(!isSidebarVisible);
   };
 
-  const onDepartmentChange = (department) => {
-    setSelectedDepartment(department);
-  };
-
   if (!user) {
     return <h1>Please Login!</h1>
   }
@@ -25,7 +21,9 @@ const UserDashboard = () => {
   return (
     <div className="flex h-screen overflow-auto">
       <div className={`fixed ${isSidebarVisible ? 'block' : 'hidden'}`}>
-        <Sidebar onDepartmentChange={onDepartmentChange} />
+        <Sidebar onDepartmentChange={(department) => {
+    setSelectedDepartment(department);
+  }} />
       </div>
       <div className={`flex flex-col flex-grow ${isSidebarVisible ? 'ml-64' : ''} transition-all duration-300`}>
         <Topbar toggleSidebar={toggleSidebar} />
