@@ -24,14 +24,14 @@ export default function Home() {
    useEffect(() => {
       if (successMessage) {
          setTimeout(() => {
-            navigate('/Home');
+            navigate('/');
          }, 2000);
       }
    }, [successMessage, navigate]);
 
    return (
       <div className="bg-slate-700 min-h-screen text-white flex flex-col items-center">
-         <h1 className="text-center text-3xl font-bold mb-6 pt-20">theScheduler App</h1>
+         <h1 className="text-center text-3xl font-bold mb-6 pt-20">Tests Scheduler App</h1>
 
          {successMessage && (
             <div className="bg-green-500 p-2 rounded-md text-white w-80 text-center">

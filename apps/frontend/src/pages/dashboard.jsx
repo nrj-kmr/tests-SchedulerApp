@@ -8,9 +8,6 @@ const Dashboard = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('default');
 
   const navigate = useNavigate();
-  const handleLogin = () => {
-      navigate('/');
-  }
 
   const { user } = useContext(AuthContext)
 
@@ -25,7 +22,9 @@ const Dashboard = () => {
   if (!user) {
     return (
       <div className='flex space-x-2 h-screen overflow-hidden justify-center items-center bg-slate-600 text-white text-2xl font-bold'>
-        <h1 className='text-center'>Please <span className='cursor-pointer underline' onClick={handleLogin}>Login</span> to continue</h1>
+        <h1 className='text-center'>Please <span className='cursor-pointer underline' onClick={() => {
+      navigate('/');
+  }}>Login</span> to continue</h1>
       </div>      
     )
   }

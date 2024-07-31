@@ -6,31 +6,13 @@ import Department from '../models/department.model.js';
 import Test from '../models/tests.model.js';
 
 import dotenv from "dotenv";
+import { createUser } from '../controllers/user.controller.js';
 dotenv.config({ path: "./.env" });
 
 const adminRouter = Router();
 
 // Admin Routes for user management
-adminRouter.post("/createUser", async (req, res) => {
-   try {
-      const { firstname, lastname, email, password, department } = req.body;
-      if (!email || !password) {
-         res.status(400).json({ error: 'Email and Password are required!' });
-      }
-
-      const userExists = await User.findOne({ email });
-      if (userExists) {
-         return res.status(400).json({ error: 'User already exists!' });
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department });
-      await newUser.save();
-      return res.status(201).json({ message: 'User created successfully!' });
-   } catch (error) {
-      return res.status(500).json({ error: error.message || 'User creation failed!' });
-   }
-})
+adminRouter.post("/createUser", createUser)
 
 adminRouter.get("/getUsers", async (req, res) => {
    try {
@@ -86,6 +68,17 @@ adminRouter.get("/getDepartments", async (req, res) => {
       return res.status(500).json({
          error: error.message,
          message: 'server error, with departments' })
+   }
+})
+
+// get department for an email
+adminRouter.get("/getDepartment/:email", async (req, res) => {
+   try {
+      const user = await User.findOne({ email: req.params.email });
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.json({ department: user.department });
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'Department not found!' });
    }
 })
 

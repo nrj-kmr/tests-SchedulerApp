@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-   firstname: {
-      type: String,
-      required: true
-   },
-   lastname: {
-      type: String,
-   },
+   firstname: { type: String, required: true },
+   lastname: { type: String },
    email: {
       type: String,
       required: true,
@@ -21,14 +16,9 @@ const userSchema = new mongoose.Schema({
          message: props => `${props.value} is not a valid email address!`
       }
    },
-   password: {
-      type: String,
-      required: true,
-   },
-   department: {
-      type: String,
-      ref: 'Department'
-   }
+   password: { type: String, required: true },
+   department: { type: String, ref: 'Department' },  
+   isAdmin: { type: Boolean, default: false }
 }, { timestamps: true })
 
 const User = mongoose.model("User", userSchema);

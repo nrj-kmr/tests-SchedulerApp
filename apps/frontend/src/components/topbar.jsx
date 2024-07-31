@@ -23,13 +23,15 @@ const Topbar = ({ toggleSidebar }) => {
 
   return (
     <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 shadow-2xl">
-      <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
-      <div className="flex flex-row space-x-2">
+      {!user && (
+        <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
+      )}
+      {/* <div className="flex flex-row space-x-2"> */}
         <span className="p-2 text-xl font-bold">Test Scheduler</span>
         <span className="p-2 text-xl font-bold rounded-md shadow-md">
           {user.isAdmin ? ("Admin") : ("User")}
         </span>
-      </div>
+      {/* </div> */}
       <div className="flex space-x-4 relative">
         {user && user.email ? (
           <>

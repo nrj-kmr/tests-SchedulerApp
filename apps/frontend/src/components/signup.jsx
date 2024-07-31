@@ -121,7 +121,7 @@ function Signup({ onSuccess }) {
                     </div>
 
                     <button type="submit" className="w-full p-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors">Signup</button>
-                    {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
+                    {errorMessage && <p className="text-pink-300 mt-4">{errorMessage}</p>}
                 </form>
             </div>
         </div>

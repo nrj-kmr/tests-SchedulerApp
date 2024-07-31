@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
-   name: { type: String, required: true },
+   firstname: { type: String, required: true },
+   lastname: { type: String },
    email: {
       type: String,
       required: true,
@@ -16,10 +17,7 @@ const adminSchema = new mongoose.Schema({
       }
    },
    password: { type: String, required: true },
-   department: {
-      type: String,
-      ref: "Department",
-   },
+   department: { type: String, ref: "Department" },
    isAdmin: { type: Boolean, default: false },
    superAdmin: { type: Boolean, default: false, select: false }
 }, { timestamps: true })

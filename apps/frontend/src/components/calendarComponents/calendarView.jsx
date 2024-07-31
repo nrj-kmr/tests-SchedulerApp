@@ -7,44 +7,28 @@ import CustomToolbar from './CustomToolbar'
 
 const localizer = momentLocalizer(moment)
 
+const CalendarView = ({ department, actualUserDept }) => {
+    const [tests, setTests] = useState([]);
 
-
-const CalendarView = ({ department, tests }) => {
-    const [events, setEvents] = useState([]);
-
-    const getEventsForDepartment = (department) => {
-        const allTests = events.map(event => ({
-            start: moment(event.start).toDate(),
-            end: moment(event.end).toDate(),
-            title: event.title,
-            department: event.department,
-            status: event.status,
-        }));
-        
-        return allEvents.filter(event => event.department === department)
-    }
-    useEffect(() => {
-        axios.get('http://localhost:8000/api/admin/getTests')
-            .then((response) => setEvents(response.data))
-            .catch((error) => console.error('Error fetching tests:', error));
-    }, []);
-    const [departments, setDepartments] = useState([]);
-
-    const showTests = () => {
-        axios.get('http://localhost:8000/api/admin/getTests')
-            .then((response) => setEvents(response.data))
-            .catch((error) => console.error('Error fetching tests:', error));
+    const getTestsForDepartment = (department) => {
+        return tests.filter(test => test.department === department);
     }
 
+    // display the tests in the calendar to the userDashboard filtered by department
     useEffect(() => {
-        axios.get('http://localhost:8000/api/admin/getDepartments')
-           .then((response) => setDepartments(response.data))
-           .catch((error) => console.error('Error fetching departments:', error));
-     }, []);
+        const fetchTests = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/admin/getTests');
+                setTests(response.data.filter(test => test.department === actualUserDept));
+            } catch (error) {
+                console.error('Error fetching tests:', error);
+            }
+        }
+    }, [actualUserDept]);
 
-    const eventStyleGetter = (event) => {
+    const testStyleGetter = (test) => {
         let backgroundColor = ''
-        switch (event.status) {
+        switch (test.status) {
             case 'done':
                 backgroundColor = 'green';
                 break;
@@ -70,17 +54,17 @@ const CalendarView = ({ department, tests }) => {
         return {
             style: style
         }
-    }
+    };
 
     return (
         <div>
-            {department === 'default' || !department ? (
+            {department === '' || !department ? (
                 <h1 className='flex justify-center items-center bg-yellow-200 text-yellow-800 border border-yellow-400 mb-2 rounded p-2'>
-                    <span className='text-center'>Please choose a department</span>
+                    <span className='text-center'>No Department Found for this user</span>
                 </h1>
             ) : (
                 <h1 className='flex justify-center items-center bg-green-200 text-green-800 border border-green-400 mb-2 rounded p-2'>
-                    <span className='text-center'>Calendar for {department}</span>
+                    <span className='text-center'>Calendar for {actualUserDept}</span>
                 </h1>
             )}
 
@@ -93,7 +77,7 @@ const CalendarView = ({ department, tests }) => {
                 min={moment("2024-07-27T09:00:00").toDate()}
                 max={moment("2024-07-27T19:00:00").toDate()}
                 style={{ height: "80vh" }}
-                eventPropGetter={eventStyleGetter}
+                eventPropGetter={testStyleGetter}
                 components={{
                     toolbar: CustomToolbar
                 }}

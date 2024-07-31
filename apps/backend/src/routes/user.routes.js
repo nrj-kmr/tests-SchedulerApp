@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import Admin from "../models/admin.model.js";
 import dotenv from "dotenv";
+import { createUser } from "../controllers/user.controller.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -20,32 +21,18 @@ userRouter.get("/getUsers", async (req, res) => {
 });
 
 // User singup route
-userRouter.post("/signup", async (req, res) => {
-  try {
-    const { firstname, lastname, email, password, department } = req.body;
-    if (!firstname || !lastname || !email || !password || !department) {
-      return res.status(400).json({ error: 'All fields are required!' });
-    }
-    const userExists = await User.findOne({ email })
-    if (userExists) {
-      return res.status(400).json({ error: 'User already exists!' });
-    } else {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department });
-      await newUser.save();
-      return res.status(201).json({ message: 'User created successfully!' });
-    }
-  } catch (error) {
-    return res.status(500).json({ error: error.message, message: 'user creation failed!' });
-  }
-})
+userRouter.post("/signup", createUser);
 
 // User login route
 userRouter.post("/login", async (req, res) => {
   try {
-    const { email, password, isAdmin } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'All fields are required!' });
+    const { email, password, isAdmin, department } = req.body;
+    const requiredFields = { email, password, department };
+
+    for (const [field, value] of Object.entries(requiredFields)) {
+      if (!value) {
+        return res.status(400).json({ error: `${field.charAt(0).toUpperCase() + field.slice(1)} is required!` });
+      }
     }
 
     // Check if the user is an admin
@@ -60,6 +47,11 @@ userRouter.post("/login", async (req, res) => {
       }
     }
 
+    // Check if the user belongs to the selected department
+    if (user.department !== department) {
+      return res.status(400).json({ error: 'User does not belong to the selected department!' });
+    }
+
     // Check if the password is correct
     const passwordMatch = await (bcrypt.compare(password, user.password));
     if (!passwordMatch) {
@@ -71,9 +63,36 @@ userRouter.post("/login", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: error.message,
-      message: 'login failed!'
+      message: 'Sever Error, login failed!'
     });
   }
 })
 
+// Verify user credentials
+userRouter.post("/verifyCredentials", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ valid: false });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    return res.json({ valid: isPasswordValid });
+  } catch (error) {
+    return res.status(500).json({ error: error.message || 'Error verifying credentials!' });
+  }
+})
+
+// Verify if a user is an admin
+userRouter.get("/verifyAdmin/:email", async (req, res) => {
+  try {
+    const user = await Admin.findOne({ email: req.params.email });
+    if (!user) {
+      return res.json({ isAdmin: false });
+    }
+    return res.json({ isAdmin: true });
+  } catch (error) {
+    return res.status(500).json({ error: error.message || 'Error verifying admin!' });
+  }
+})
 export default userRouter;

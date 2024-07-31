@@ -5,6 +5,7 @@ import Sidebar from '../components/sidebar';
 import Topbar from '../components/topbar';
 import CalendarView from '../components/calendarComponents/calendarView';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import UserModal from './dialogModals/createUserModal';
 import TestModal from './dialogModals/addTestModal';
 import DepartmentModal from './dialogModals/createDepartment';
@@ -26,9 +27,19 @@ const AdminDashboard = () => {
   const [newTest, setNewTest] = useState({ title: '', description: '', status: '' });
 
   const { user } = useContext(AuthContext)
+  const navigate = useNavigate();
 
   if (!user) {
-    return <h1>Please Login!, to access Admin Dashboard.</h1>
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100 text-gray-800 font-sans text-center">
+      <div>
+        <h1 className="text-4xl mb-4 text-orange-700">Please <span className='underline cursor-pointer text-blue-400' onClick={() => {
+      navigate('/');
+  }}>Login</span>!!</h1>
+        <p className="text-xl">You need to be logged in to access the Admin Dashboard.</p>
+      </div>
+    </div>
+    )
   }
 
   const allTests = () => {

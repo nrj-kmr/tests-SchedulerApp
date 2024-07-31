@@ -1,35 +1,54 @@
-import { useContext, useState } from 'react';
-import Sidebar from '../components/sidebar';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Topbar from '../components/topbar';
 import CalendarView from '../components/calendarComponents/calendarView';
 import { AuthContext } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-const UserDashboard = () => {
-  const [isSidebarVisible, setSidebarVisible] = useState(true);
+const UserDashboard = ({ }) => {
   const [selectedDepartment, setSelectedDepartment] = useState('default');
+  const [exactDepartment, setExactDepartment] = useState('');
 
+  // get the email from the the session storage
+  const sessionData = JSON.parse(sessionStorage.getItem('user')) || {};
+  const userEmail = sessionData.email || '';
+
+  const userActualDepartment =  useEffect(() => {
+    const fetchDepartment = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/admin/getDepartment/${userEmail}`);
+        setExactDepartment(response.data.department);
+        setSelectedDepartment(response.data.department);
+      } catch (error) {
+        console.error('Error fetching department:', error);
+      }
+    }
+    fetchDepartment();
+  }, [userEmail]);
+  
   const { user } = useContext(AuthContext)
+  const navigate = useNavigate();
 
-  const toggleSidebar = () => {
-    setSidebarVisible(!isSidebarVisible);
-  };
-
-  if (!user) {
-    return <h1>Please Login!</h1>
+  if(!user) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100 text-gray-800 font-sans text-center">
+        <div>
+          <h1 className="text-4xl mb-4">Please <span className='underline cursor-pointer text-blue-400' onClick={() => {
+            navigate('/');
+          }}>Login</span>!</h1>
+          <p className="text-xl">You need to be logged in to access the Dashboard.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="flex h-screen overflow-auto">
-      <div className={`fixed ${isSidebarVisible ? 'block' : 'hidden'}`}>
-        <Sidebar onDepartmentChange={(department) => {
-    setSelectedDepartment(department);
-  }} />
-      </div>
-      <div className={`flex flex-col flex-grow ${isSidebarVisible ? 'ml-64' : ''} transition-all duration-300`}>
-        <Topbar toggleSidebar={toggleSidebar} />
+      <div className={`flex flex-col flex-grow`}>
+        <Topbar />
         <div className="flex-grow pt-16 p-6 mt-2 bg-slate-500 text-white">
-          {/* <h1 className="bg-gray-700 mt-3 mb-2 text-center font-bold text-2xl p-2 rounded shadow-md">User Dashboard</h1> */}
-          <CalendarView department={selectedDepartment} />
+          <CalendarView actualUserDept={exactDepartment} department={selectedDepartment} tests={[]} />
         </div>
       </div>
     </div>
