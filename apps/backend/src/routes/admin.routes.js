@@ -53,7 +53,7 @@ adminRouter.post("/createDepartment", async (req, res) => {
    try {
       const newDepartment = await Department.create(req.body);
       await newDepartment.save();
-      return res.status(201).json({ message: 'Department created successfully!' });
+      return res.status(201).json({ message: `Department: ${newDepartment.name} created successfully!` });
    } catch (error) {
       return res.status(500).json({ error: error.message || 'Department creation failed!' });
    }

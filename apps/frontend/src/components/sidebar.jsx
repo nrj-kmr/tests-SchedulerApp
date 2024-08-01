@@ -3,17 +3,17 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const Sidebar = ({ onViewChange, onDepartmentChange }) => {
-  const { user } = useContext(AuthContext);
+  const { isUserAdmin } = useContext(AuthContext);
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8000/api/admin/getDepartments')
       .then((response) => setDepartments(response.data))
       .catch((error) => console.error('Error fetching departments:', error));
-  })
+  }, [])
 
   return (
-    user.isAdmin === true ? (
+    isUserAdmin === true ? (
       <div className="sidebar h-full w-64 bg-slate-700 text-white items-center flex flex-col fixed top-16 left-0 overflow-y-auto">
         <ul className='w-full list-none p-0 m-0'>
           <li title='users'>
@@ -27,7 +27,7 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
 
           <li title='tests'>
             <h1
-              onClick={() => onViewChange('tests')}
+              // onClick={() => onViewChange('tests')}
               className="p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300"
             >
               Tests
@@ -36,9 +36,7 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
 
           <li title='departments'>
             <h1
-              onClick={() => {
-                onViewChange('departments');
-              }}
+              // onClick={() => onViewChange('departments')}
               className='p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300'
             >
               Departments
@@ -48,8 +46,8 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
               <div className="p-4 text-lg cursor-pointer hover:bg-slate-600 transition-colors duration-300">
                 <select name="department"
                   id="department"
-                  onChange={(e) => { onViewChange(e.target.value) }}
-                  onViewChange={(e) => { onDepartmentChange(e.target.value) }}
+                  // onChange={(e) => { onViewChange(e.target.value) }}
+                  // onViewChange={(e) => { onDepartmentChange(e.target.value) }}
                   className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 bg-slate-700 text-lg cursor-pointer transition-colors duration-300"
                 >
                   <option value="" disabled>--Select Department--</option>
@@ -57,7 +55,7 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
                     <option
                       key={department._id}
                       value={department.name}
-                      onClick={() => onDepartmentChange(department.name)}
+                      // onClick={() => onDepartmentChange(department.name)}
                       >
                       {department.name}
                     </option>
@@ -76,7 +74,8 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
               key={department._id}
               value={department.name}
               className="p-4 hover:bg-gray-700 cursor-pointer"
-              onClick={() => onDepartmentChange(department.name)}>
+              // onClick={() => onDepartmentChange(department.name)}
+              >
               {department.name}
             </li>
           ))}
