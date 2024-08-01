@@ -58,7 +58,7 @@ const DepartmentModal = ({ isOpen, closeModal, handleAddTest }) => {
                      />
                   </label>
                   <label className='block'>
-                     <textarea
+                     <input
                         name='text'
                         value={newDepartment.admin}
                         onChange={handleChange}

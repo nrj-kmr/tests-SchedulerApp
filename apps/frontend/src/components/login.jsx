@@ -109,6 +109,9 @@ export default function Login() {
         <div className="bg-slate-600 p-6 rounded-lg shadow-md">
             <div className="flex flex-col items-center">
                 <form onSubmit={handleLogin} className="min-w-80 max-w-screen">
+                    <h1 className='text-center text-xl font-semibold'>User Login</h1>
+                    <p className='text-center text-sm mb-2'>Login to your account</p>
+                    <hr className='border-gray-500 mb-5' />
                     <div className="mb-4">
                         <label className="block text-sm font-medium">User ID</label>
                         <input

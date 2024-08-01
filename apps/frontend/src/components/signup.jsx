@@ -59,6 +59,9 @@ function Signup({ onSuccess }) {
 
             <div className="flex flex-col items-center">
                 <form onSubmit={handleSignup} className="min-w-80 max-w-screen">
+                <h1 className="text-center font-semibold text-xl">Register Yourself</h1>
+                <p className="text-sm mb-2 text-center">Create a new User Account</p>
+                <hr className="w-full border-gray-500 mb-5" />
                     <div className="flex flex-row space-x-2 mb-4">
                         <input type="text"
                             name="firstname"
