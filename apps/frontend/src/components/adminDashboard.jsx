@@ -58,7 +58,13 @@ const AdminDashboard = () => {
           console.error('Error fetching users:', error);
         });
     } else if (selectedView === 'tests') {
-      allTests();
+      axios.get('http://localhost:8000/api/admin/getTests')
+        .then((response) => {
+          setTests(response.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching tests:', error);
+        });
     } else if (selectedView === 'departments') {
       allTests();
       axios.get('http://localhost:8000/api/admin/getDepartments')
@@ -248,17 +254,23 @@ const AdminDashboard = () => {
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
         newTest={newTest}
+        handleInputChange={(e) => {
+          setNewTest({
+            ...newTest,
+            [e.target.name]: e.target.value
+          });
+        }}
         handleAddTest={() => {
           axios.post('http://localhost:8000/api/admin/createTest', newTest)
             .then((response) => {
-              setTests((prevTests) => [...prevTests, response.data]);
+              setTests([...tests, response.data]);
               setIsTestModalOpen(false);
             })
             .catch((error) => {
               console.error('Error creating test:', error);
             });
         }}
-        serNewTest={setNewTest}
+        // setNewTest={setNewTest}
       />
       <DepartmentModal 
       isOpen={isDepartmentModalOpen}

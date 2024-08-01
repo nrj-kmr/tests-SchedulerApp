@@ -32,22 +32,18 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
 
                <div className="flex flex-row space-x-2 mb-4">
                   <label className='block'>
-                     {/* <span className='text-gray-700'>First Name:</span> */}
                      <input type='text' name='firstname' placeholder='First Name' value={newUser.firstname} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                   </label>
                   <label className='block'>
-                     {/* <span className='text-gray-700'>Last Name:</span> */}
                      <input type='text' name='lastname' placeholder='Last Name' value={newUser.lastname} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                   </label>
                </div>
 
                <label className='block'>
-                  {/* <span className='text-gray-700'>Email:</span> */}
                   <input type='email' name='email' placeholder='Email' value={newUser.email} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                </label>
 
                <label className='block'>
-                  {/* <span className='text-gray-700'>Password:</span> */}
                   <div className='relative'>
                      <input type={passwordVisible ? 'text' : 'password'}
                         name='password' placeholder='Password'
@@ -68,7 +64,7 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
                      required
                      className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
-                     <option value="">--Select Department--</option>
+                     <option value="" disabled>Select Department</option>
                      {departments.map((department) => (
                         <option key={department._id} value={department.name}
                         >{department.name}</option>

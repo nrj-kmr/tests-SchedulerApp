@@ -2,43 +2,31 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
-   const [newTest, setNewTest] = useState({
-      title: '',
-      description: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      department: '',
-      createdBy: '',
-      status: 'pending'
-   });
+const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
+   // const [newTest, setNewTest] = useState({
+   //    title: '',
+   //    description: '',
+   //    date: '',
+   //    startTime: '',
+   //    endTime: '',
+   //    department: '',
+   //    createdBy: '',
+   //    status: 'pending'
+   // });
    const [departments, setDepartments] = useState([]);
+
+   const allStatus = [
+      { _id: '1', name: 'Scheduled' },
+      { _id: '2', name: 'In Progress' },
+      { _id: '3', name: 'Completed' },
+      { _id: '4', name: 'Rescheduled' }
+    ];
 
    useEffect(() => {
       axios.get('http://localhost:8000/api/admin/getDepartments')
          .then((response) => setDepartments(response.data))
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
-
-   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setNewTest((prevState) => ({
-         ...prevState,
-         [name]: value,
-      }));
-   };
-
-   const handleSubmit = (e) => {
-      e.preventDefault();
-      axios.post('http://localhost:8000/api/admin/createTest', newTest)
-         .then((response) => {
-            console.log(response.data);
-            handleAddTest(response.data);
-            closeModal();
-         })
-         .catch((error) => console.error('Error creating test:', error));
-   };
 
    return (
       <Modal
@@ -52,15 +40,16 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
             <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add Test</h2>
-            <form onSubmit={handleSubmit}>
-               <div className='flex flex-col space-y-4'>
+            <form onSubmit={(e) => { e.preventDefault(); handleAddTest(); }} className='space-y-4'>
+
+               <div className='flex flex-col space-y-4 mb-4'>
                   <label className='block'>
                      <input
                         type='text'
                         name='title'
                         value={newTest.title}
                         placeholder='Enter test title'
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
                      />
@@ -69,7 +58,7 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
                      <textarea
                         name='description'
                         value={newTest.description}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         placeholder='Enter test description'
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
@@ -80,7 +69,7 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
                         type='date'
                         name='date'
                         value={newTest.date}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
                         max='2040-12-31'
@@ -94,7 +83,7 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
                            type='time'
                            name='startTime'
                            value={newTest.startTime}
-                           onChange={handleChange}
+                           onChange={handleInputChange}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                            required
                            min='05:00'
@@ -107,7 +96,7 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
                            type='time'
                            name='endTime'
                            value={newTest.endTime}
-                           onChange={handleChange}
+                           onChange={handleInputChange}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                            required
                            min='05:00'
@@ -119,19 +108,38 @@ const TestModal = ({ isOpen, closeModal, handleAddTest }) => {
                      <select
                         name='department'
                         value={newTest.department}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
                      >
-                        <option value=''>Select Department</option>
+                        <option value='' disabled>Select Department</option>
                         {departments.map((dept) => (
                            <option key={dept._id} value={dept._id}>{dept.name}</option>
                         ))}
                      </select>
                   </label>
-                  <button type='submit' className='mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'>
-                     Add Test
-                  </button>
+                  <label className='block'>
+                     <select
+                        name='status'
+                        value={newTest.department}
+                        onChange={handleInputChange}
+                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                        required
+                     >
+                        <option value='' disabled>Status</option>
+                        {allStatus.map((status) => (
+                           <option key={status._id} value={status._id}>{status.name}</option>
+                        ))}
+                     </select>
+                  </label>
+                  <div className='flex justify-end space-x-4'>
+                     <button type='button' onClick={closeModal} className='mt-4 w-full bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500'>
+                        Cancel
+                     </button>
+                     <button type='submit' className='mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-600'>
+                        Add Test
+                     </button>
+                  </div>
                </div>
             </form>
          </div>
