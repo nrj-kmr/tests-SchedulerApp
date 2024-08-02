@@ -12,9 +12,9 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
 
    useEffect(() => {
       axios.get('http://localhost:8000/api/admin/getDepartments')
-          .then((response) => setDepartments(response.data))
-          .catch((error) => console.error('Error fetching departments:', error));
-  }, []);
+         .then((response) => setDepartments(response.data))
+         .catch((error) => console.error('Error fetching departments:', error));
+   }, []);
 
    return (
       <Modal
@@ -35,7 +35,7 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
                      <input type='text' name='firstname' placeholder='First Name' value={newUser.firstname} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                   </label>
                   <label className='block'>
-                     <input type='text' name='lastname' placeholder='Last Name' value={newUser.lastname} onChange={handleInputChange} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                     <input type='text' name='lastname' placeholder='Last Name' value={newUser.lastname} onChange={handleInputChange} className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                   </label>
                </div>
 

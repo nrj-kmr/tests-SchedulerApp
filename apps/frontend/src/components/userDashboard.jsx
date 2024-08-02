@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Topbar from '../components/topbar';
 import CalendarView from '../components/calendarComponents/calendarView';
 import { AuthContext } from '../context/AuthContext';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const UserDashboard = ({ }) => {
   const [selectedDepartment, setSelectedDepartment] = useState('default');
   const [exactDepartment, setExactDepartment] = useState('');
 
-  // get the email from the the session storage
-  const sessionData = JSON.parse(sessionStorage.getItem('user')) || {};
-  const userEmail = sessionData.email || '';
+  const { user, userEmail } = useContext(AuthContext)
+  const navigate = useNavigate();
+
+
 
   const userActualDepartment =  useEffect(() => {
     const fetchDepartment = async () => {
@@ -26,9 +26,6 @@ const UserDashboard = ({ }) => {
     }
     fetchDepartment();
   }, [userEmail]);
-  
-  const { user } = useContext(AuthContext)
-  const navigate = useNavigate();
 
   if(!user) {
     return (

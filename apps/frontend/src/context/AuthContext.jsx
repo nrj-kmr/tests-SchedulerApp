@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -13,6 +12,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const sessionData = JSON.parse(sessionStorage.getItem('user')) || {};
+  const userEmail = sessionData.email || '';
+  const isUserAdmin = sessionData.isAdmin || '';
+
   const login = (userData) => {
     setUser(userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, userEmail, isUserAdmin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

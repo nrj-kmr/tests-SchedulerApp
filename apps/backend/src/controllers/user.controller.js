@@ -33,7 +33,7 @@ export const createUser = async (req, res) => {
       await newUser.save();
 
       // If user is an admin, add them to the admin collection
-      if (isAdmin) {
+      if (isAdmin === 'true') {
         const newAdmin = new Admin({ firstname, lastname, email, password: hashedPassword, department, isAdmin });
         await newAdmin.save();
       }
