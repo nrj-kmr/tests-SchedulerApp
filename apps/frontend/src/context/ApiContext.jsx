@@ -1,16 +1,20 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
-import { fetchDepartments, fetchUsers } from "../services/apiServices";
+import { fetchDepartments, fetchTests, fetchUsers } from "../services/apiServices";
 
-const ApiContext = createContext();
+export const ApiContext = createContext();
 
 export const ApiProvider = ({ children }) => {
     const [users, setUsers] = useState(null);
+    const [tests, setTests] = useState(null);
     const [departments, setDepartments] = useState(null);
+
     const [usersError, setUsersError] = useState({});
+    const [testsError, setTestsError] = useState({});
     const [departmentsError, setDepartmentsError] = useState({});
 
     const [loadingUsers, setLoadingUsers] = useState(true);
+    const [loadingTests, setLoadingTests] = useState(true);
     const [loadingDepartments, setLoadingDepartments] = useState(true);
 
     useEffect(() => {
@@ -27,10 +31,19 @@ export const ApiProvider = ({ children }) => {
             try {
                 const response = await fetchDepartments();
                 setDepartments(response.data)
-            } catch(error) {
+            } catch(err) {
                 setDepartmentsError({error: err, message: "Failed to fetch Departments"})
             } finally {
                 setLoadingDepartments(false)
+            }
+
+            try {
+                const userResponse = await fetchTests();
+                setTests(userResponse.data);
+            } catch (err) {
+                setTestsError({error: err, message: "Failed to fetch Tests"})
+            } finally {
+                setLoadingTests(false);
             }
         };
 
@@ -38,10 +51,8 @@ export const ApiProvider = ({ children }) => {
     }, [])
 
     return (
-        <ApiContext.Provider value={{ users, departments, usersError, departmentsError, loadingUsers, loadingDepartments }}>
+        <ApiContext.Provider value={{ users, tests, departments, usersError, testsError, departmentsError, loadingUsers, loadingTests, loadingDepartments }}>
             {children}
         </ApiContext.Provider>
     )
 }
-
-export const useApi = () => useContext(ApiContext);
