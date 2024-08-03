@@ -5,5 +5,6 @@ const api = axios.create({
 });
 
 export const fetchUsers = () => api.get('/admin/getUsers');
+export const fetchUserByEmail = (email) => api.get(`/admin/getUser/${email}`);
 export const fetchTests = () => api.get('/admin/getTests');
 export const fetchDepartments = () => api.get('/admin/getDepartments');

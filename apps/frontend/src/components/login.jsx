@@ -12,13 +12,11 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [department, setDepartment] = useState('');
     const [allDepartments, setAllDepartments] = useState([]);
-    const [isAdmin, setIsAdmin] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false); // toggle password visibility
 
     // errors:
     const [credentialsResponse, setCredentialsResponse] = useState('');
     const [departmentError, setDepartmentError] = useState('');
-    const [adminError, setAdminError] = useState('');
     const [generalError, setGeneralError] = useState('');
 
     // Get all departments for the dropdown
@@ -29,15 +27,14 @@ export default function Login() {
     }, []);
 
     // Handle login form submission
-    const { login } = useContext(AuthContext);
+    const { user, login } = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         // Reset all errors
         setCredentialsResponse('');
         setDepartmentError('');
-        setAdminError('');
         setGeneralError('');
 
         if (!department) {
@@ -64,33 +61,15 @@ export default function Login() {
                 return;
             }
 
-            // Check if the user is an admin
-            const adminResponse = await axios.get(`http://localhost:8000/api/user/verifyAdmin/${email}`);
-            const isAdminFromBackend = adminResponse.data.isAdmin;
-            if (isAdmin && !isAdminFromBackend) {
-                setAdminError('User is not an admin, Please uncheck the box!');
-                return;
-            }
-            if (!isAdmin && isAdminFromBackend) {
-                setAdminError('User is an admin, Please check the box!');
-                return;
-            }
-
             // Proceed with login if all checks pass
             const response = await axios.post('http://localhost:8000/api/user/login', {
                 email,
                 password,
                 department,
-                isAdmin: isAdminFromBackend
             });
             if (response.status === 200) {
-                if(isAdminFromBackend) {
-                    sessionStorage.setItem('token', response.data.token);
-                    navigate('/admin/dashboard');
-                } else {
-                    sessionStorage.setItem('adminToken', response.data.token);
-                    navigate('/dashboard', { state: { userDepartment: actualDepartment } });
-                }
+                sessionStorage.setItem('adminToken', response.data.token);
+                navigate('/dashboard', { state: { userDepartment: actualDepartment } });
             }
         } catch (error) {
             console.error('Login error', error);
@@ -102,7 +81,7 @@ export default function Login() {
                 setGeneralError('An unexpected error occurred. Please try again later.');
             }
         }
-        login({ email, isAdmin });
+        login({ email });
     }
 
     return (
@@ -160,16 +139,7 @@ export default function Login() {
                         </select>
                         {departmentError && <p className="text-pink-300 m-2">{departmentError}</p>}
                     </div>
-                    <div className='checkbox-container'>
-                        <input
-                            type="checkbox"
-                            className="mr-2 cursor-pointer"
-                            onChange={(e) => setIsAdmin(e.target.checked)}
-                        />
-                        <label className='text-sm font-medium'>Check this if you're an Admin.</label>
-                    </div>
-                    {adminError ? (<p className="text-pink-300 m-2">{adminError}</p>) :
-                        generalError ? (<p className="text-pink-300 mb-4">{generalError}</p>) : null}
+                    {generalError ? (<p className="text-pink-300 mb-4">{generalError}</p>) : null}
                     <button type="submit" className="w-full p-2 mt-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors">Login</button>
                 </form>
             </div>

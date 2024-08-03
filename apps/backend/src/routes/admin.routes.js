@@ -26,6 +26,17 @@ adminRouter.get("/getUsers", async (req, res) => {
    }
 })
 
+// get user by email
+adminRouter.get("/getUser/:email", async (req, res) => {
+   try {
+      const user = await User.findOne({ email: req.params.email });
+      if (!user) return res.status(404).json({ error: "User not found" });
+      return res.json(user);
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'User not found!' });
+   }
+});
+
 adminRouter.delete("/deleteUser/:_id", async (req, res) => {
    try {
       const user = await User.findByIdAndDelete(req.params._id);

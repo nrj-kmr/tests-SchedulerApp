@@ -1,14 +1,16 @@
 import { FaBars } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Topbar = ({ toggleSidebar }) => {
   const { user, isUserAdmin, logout } = useContext(AuthContext);
   const [userDropdown, setUserDropdown] = useState(false);
   const [notifications, setNotifications] = useState(false)
+  const [isAdminPanel, setIsAdminPanel] = useState(false)
 
   const navigate = useNavigate()
+  const location = useLocation();
 
   const toggleUserDropdown = () => {
     setUserDropdown(!userDropdown);
@@ -17,20 +19,36 @@ const Topbar = ({ toggleSidebar }) => {
     setNotifications(!notifications)
   }
 
-  const handleCLick = () => {
-    navigate('/')
+  useEffect(() => {
+    if (location.pathname === '/admin/dashboard') {
+      setIsAdminPanel(true)
+    } else {
+      setIsAdminPanel(false)
+    }
+  }, [location.pathname])
+
+  const handleAdminPanel = () => {
+    if (isAdminPanel) {
+      navigate('/dashboard')
+    } else {
+      navigate('/admin/dashboard')
+    }
   }
 
   return (
     <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 shadow-2xl">
-      {isUserAdmin && (
+      {isAdminPanel && (
         <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
       )}
       {/* <div className="flex flex-row space-x-2"> */}
-        <span className="p-2 text-xl font-bold">Test Scheduler</span>
-        <span className="p-2 text-xl font-bold rounded-md shadow-md">
-          {isUserAdmin ? ("Admin") : ("User")}
-        </span>
+      <span className="p-2 text-xl font-bold">Test Scheduler</span>
+      {isUserAdmin &&
+        <button
+          onClick={handleAdminPanel}
+          className="py-1 px-2 text-xl font-bold rounded-md shadow-md bg-red-500 text-gray-100 hover:bg-red-600 hover:text-gray-100">
+          {isAdminPanel ? 'User Panel' : 'Admin Panel'}
+        </button>}
+
       {/* </div> */}
       <div className="flex space-x-4 relative">
         {user && user.email ? (
@@ -63,7 +81,7 @@ const Topbar = ({ toggleSidebar }) => {
                   <button
                     onClick={() => {
                       logout();
-                      handleCLick();
+                      navigate('/');
                     }}
                     className="w-full text-left px-4 py-2 text-white"
                   >
@@ -76,7 +94,7 @@ const Topbar = ({ toggleSidebar }) => {
         ) : (
           <button
             className="flex items-center text-sm cursor-pointer p-2 rounded-md shadow-lg bg-blue-700 hover:bg-blue-800"
-            onClick={handleCLick}
+            onClick={() => navigate('/')}
           >Login</button>
         )}
       </div>
