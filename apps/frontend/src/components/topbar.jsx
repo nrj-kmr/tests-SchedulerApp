@@ -39,7 +39,9 @@ const Topbar = ({ toggleSidebar }) => {
     <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 shadow-2xl">
       {isAdminPanel ? (
         <div className="flex items-center justify-start">
+          <div className="hover:bg-slate-700 rounded-full p-2">
           <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
+          </div>
           <span className="p-2 text-xl font-bold">Test Scheduler</span>
         </div>
       ) : (

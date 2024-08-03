@@ -6,20 +6,16 @@ import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const UserDashboard = ({ }) => {
-  const [selectedDepartment, setSelectedDepartment] = useState('default');
   const [exactDepartment, setExactDepartment] = useState('');
 
   const { user, userEmail } = useContext(AuthContext)
   const navigate = useNavigate();
 
-
-
-  const userActualDepartment =  useEffect(() => {
+  useEffect(() => {
     const fetchDepartment = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/admin/getDepartment/${userEmail}`);
         setExactDepartment(response.data.department);
-        setSelectedDepartment(response.data.department);
       } catch (error) {
         console.error('Error fetching department:', error);
       }
@@ -45,7 +41,7 @@ const UserDashboard = ({ }) => {
       <div className={`flex flex-col flex-grow`}>
         <Topbar />
         <div className="flex-grow pt-16 p-6 mt-2 bg-slate-500 text-white">
-          <CalendarView actualUserDept={exactDepartment} department={selectedDepartment} tests={[]} />
+          <CalendarView actualUserDept={exactDepartment} department={exactDepartment} tests={[]} />
         </div>
       </div>
     </div>

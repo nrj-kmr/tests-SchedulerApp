@@ -13,7 +13,7 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
   }, [])
 
   return (
-    isUserAdmin === true ? (
+    isUserAdmin && (
       <div className="sidebar h-full w-64 bg-slate-700 text-white items-center flex flex-col fixed top-16 left-0 overflow-y-auto">
         <ul className='w-full list-none p-0 m-0'>
           <li title='users'>
@@ -64,21 +64,6 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
               </div>
             </div>
           </li>
-        </ul>
-      </div>
-    ) : (
-      <div className="sidebar h-full w-64 bg-slate-700 text-white flex flex-col fixed top-16">
-        <ul className="list-none p-0 pl-4 m-0">
-          {departments.map(department => (
-            <li
-              key={department._id}
-              value={department.name}
-              className="p-4 hover:bg-gray-700 cursor-pointer"
-              // onClick={() => onDepartmentChange(department.name)}
-              >
-              {department.name}
-            </li>
-          ))}
         </ul>
       </div>
     )
