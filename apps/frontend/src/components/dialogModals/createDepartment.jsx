@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-const DepartmentModal = ({ isOpen, closeModal, handleAddTest }) => {
+const DepartmentModal = ({ isOpen, closeModal, handleInputChange, handleAddDepartment }) => {
    const [newDepartment, setNewDepartment] = useState({ name: '', admin: '' });
    const [departments, setDepartments] = useState([]);
    const [passwordVisible, setPasswordVisible] = useState(false);
@@ -13,13 +13,13 @@ const DepartmentModal = ({ isOpen, closeModal, handleAddTest }) => {
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
 
-   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setNewTest((prevState) => ({
-         ...prevState,
-         [name]: value,
-      }));
-   };
+   // const handleChange = (e) => {
+   //    const { name, value } = e.target;
+   //    setNewDepartment((prevState) => ({
+   //       ...prevState,
+   //       [name]: value,
+   //    }));
+   // };
 
    const handleSubmit = (e) => {
       e.preventDefault();
@@ -52,7 +52,7 @@ const DepartmentModal = ({ isOpen, closeModal, handleAddTest }) => {
                         name='title'
                         value={newDepartment.name}
                         placeholder='Enter Department name'
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
                      />
@@ -61,10 +61,9 @@ const DepartmentModal = ({ isOpen, closeModal, handleAddTest }) => {
                      <input
                         name='text'
                         value={newDepartment.admin}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         placeholder='Enter Department admin'
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                        required
                      />
                   </label>
 

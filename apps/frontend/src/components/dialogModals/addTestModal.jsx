@@ -3,7 +3,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 
 const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
-   // const [newTest, setNewTest] = useState({
+   // const [test, setTest] = useState({
    //    title: '',
    //    description: '',
    //    date: '',
@@ -24,9 +24,38 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
 
    useEffect(() => {
       axios.get('http://localhost:8000/api/admin/getDepartments')
-         .then((response) => setDepartments(response.data))
+         .then((response) => {setDepartments(response.data); console.log(response.data)})
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+
+      const {date, startTime, endTime} = newTest;
+
+      // Function to combine date and time into a Date Object
+      const combineDateAndTime = (dateString, timeString) => {
+         const [year, month, day] = dateString.split('-').map(Number);
+         const [hours, minutes] = timeString.split(':').map(Number);
+         return new Date(year, month - 1, day, hours, minutes);
+      }
+
+      // create startTime and endTime Objects
+      const startDateTime = combineDateAndTime(date, startTime);
+      const endDateTime = combineDateAndTime(date, endTime);
+
+      //convert to Local Time Zone
+      const startDateTimeUTC = new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000)
+      const endDateTimeUTC = new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000)
+
+      const formData = {
+         ...newTest,
+         startTime: startDateTimeUTC.toISOString(),
+         endTime: endDateTimeUTC.toISOString()
+      }
+
+      handleAddTest(formData);
+   }
 
    return (
       <Modal
@@ -40,7 +69,7 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
             <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add Test</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleAddTest(); }} className='space-y-4'>
+            <form onSubmit={handleSubmit} className='space-y-4'>
 
                <div className='flex flex-col space-y-4 mb-4'>
                   <label className='block'>
@@ -114,21 +143,23 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                      >
                         <option value='' disabled>Select Department</option>
                         {departments.map((dept) => (
-                           <option key={dept._id} value={dept._id}>{dept.name}</option>
+                           <option key={dept._id} value={dept.name}>{dept.name}</option>
                         ))}
                      </select>
                   </label>
+                  {console.log(newTest.status)}
+                  {console.log(newTest.department)}
                   <label className='block'>
                      <select
                         name='status'
-                        value={newTest.department}
+                        value={newTest.status}
                         onChange={handleInputChange}
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                         required
                      >
                         <option value='' disabled>Status</option>
                         {allStatus.map((status) => (
-                           <option key={status._id} value={status._id}>{status.name}</option>
+                           <option key={status._id} value={status.name}>{status.name}</option>
                         ))}
                      </select>
                   </label>

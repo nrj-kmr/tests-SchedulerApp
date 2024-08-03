@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
 
   const [newUser, setNewUser] = useState({ firstname: '', lastname: '', email: '', password: '', department: '' });
-  const [newTest, setNewTest] = useState({ title: '', description: '', department: '', startTime: '', endTime: '', status: '' });
+  const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
   const [newDepartment, setNewDepartment] = useState({ name: '', admin: '' });
 
   if (!isUserAdmin) {
@@ -120,6 +120,7 @@ const AdminDashboard = () => {
                       <div className="flex justify-between items-center p-2">
                         <span className="font-bold">Title</span>
                         <span className="font-bold">Department</span>
+                        <span className="font-bold">Date</span>
                         <span className="font-bold">Start Time</span>
                         <span className="font-bold">End Time</span>
                         <span className="font-bold">Status</span>
@@ -128,8 +129,9 @@ const AdminDashboard = () => {
                         <div key={test._id} className='flex justify-between items-center border-b border-gray-400 p-2'>
                           <span>{test.title}</span>
                           <span>{test.department}</span>
-                          <span>{test.startTime}</span>
-                          <span>{test.endTime}</span>
+                          <span>{test.date.split('T')[0]}</span>
+                          <span>{test.startTime.split('T')[1].split('.')[0]}</span>
+                          <span>{test.endTime.split('T')[1].split('.')[0]}</span>
                           <span>{test.status}</span>
                         </div>
                       ))}
@@ -213,15 +215,15 @@ const AdminDashboard = () => {
         closeModal={() => setIsTestModalOpen(false)}
         newTest={newTest}
         handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-        handleAddTest={() => {
-          axios.post('http://localhost:8000/api/admin/createTest', newTest)
-            .then((response) => {
-              console.log(response)
-              setIsTestModalOpen(false);
-            })
-            .catch((err) => {
-              console.log('Error while adding new test', err)
-            })
+        handleAddTest={async (formData) => {
+          try {
+            const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
+            console.log("Test Added", response.data)
+            setIsTestModalOpen(false);
+
+          } catch (err) {
+            console.log('Error while adding new test', err)
+          }
         }}
       />
 
@@ -229,6 +231,8 @@ const AdminDashboard = () => {
       <DepartmentModal
         isOpen={isDepartmentModalOpen}
         closeModal={() => setIsDepartmentModalOpen(false)}
+        newDepartment={newDepartment}
+        handleInputChange={(e) => setNewDepartment({ ...newDepartment, [e.target.name]: e.target.value })}
       />
 
     </div>
