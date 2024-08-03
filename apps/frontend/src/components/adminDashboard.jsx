@@ -172,6 +172,9 @@ const AdminDashboard = () => {
                       {departments.map((department) => (
                         <div key={department._id} className='flex justify-between items-center border-b border-gray-400 p-2'>
                           <span>{department.name}</span>
+                          <span>{department.admin}</span>
+                          <span>No. of employees aren't calculated yet</span>
+                          <span>No. of tests needs to be obtained yet</span>
                         </div>
                       ))}
                     </>
@@ -181,9 +184,9 @@ const AdminDashboard = () => {
             )}
 
             {/* Show Calendar Based on Selected Department */}
-            {/* {console.log(selectedView)}
+            {console.log(selectedView)}
             {console.log(departments)}
-            {departments.map((department) => () => {
+            {/* {departments.map((department) => () => {
               console.log(department)
             })} */}
 
@@ -233,6 +236,16 @@ const AdminDashboard = () => {
         closeModal={() => setIsDepartmentModalOpen(false)}
         newDepartment={newDepartment}
         handleInputChange={(e) => setNewDepartment({ ...newDepartment, [e.target.name]: e.target.value })}
+        handleAddDepartment={() => {
+          axios.post('http://localhost:8000/api/admin/createDepartment', newDepartment)
+            .then((response) => {
+              console.log(response)
+              setIsDepartmentModalOpen(false);
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }}
       />
 
     </div>

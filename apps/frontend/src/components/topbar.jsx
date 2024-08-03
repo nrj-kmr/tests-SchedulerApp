@@ -37,20 +37,24 @@ const Topbar = ({ toggleSidebar }) => {
 
   return (
     <div className="h-16 bg-slate-600 text-white flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 shadow-2xl">
-      {isAdminPanel && (
-        <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
+      {isAdminPanel ? (
+        <div className="flex items-center justify-start">
+          <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
+          <span className="p-2 text-xl font-bold">Test Scheduler</span>
+        </div>
+      ) : (
+        <span className="p-2 text-xl font-bold">Test Scheduler</span>
       )}
-      {/* <div className="flex flex-row space-x-2"> */}
-      <span className="p-2 text-xl font-bold">Test Scheduler</span>
-      {isUserAdmin &&
-        <button
-          onClick={handleAdminPanel}
-          className="py-1 px-2 text-xl font-bold rounded-md shadow-md bg-red-500 text-gray-100 hover:bg-red-600 hover:text-gray-100">
-          {isAdminPanel ? 'User Panel' : 'Admin Panel'}
-        </button>}
 
-      {/* </div> */}
-      <div className="flex space-x-4 relative">
+
+      <div className="flex space-x-4 relative justify-end">
+        {isUserAdmin &&
+          <button
+            onClick={handleAdminPanel}
+            className="py-1 px-2 text-xl font-bold rounded-md shadow-md bg-red-600 text-gray-100 hover:bg-red-700 hover:text-gray-100">
+            {isAdminPanel ? 'User Panel' : 'Admin Panel'}
+          </button>
+        }
         {user && user.email ? (
           <>
             <div className="relative">

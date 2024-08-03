@@ -2,35 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-const DepartmentModal = ({ isOpen, closeModal, handleInputChange, handleAddDepartment }) => {
-   const [newDepartment, setNewDepartment] = useState({ name: '', admin: '' });
-   const [departments, setDepartments] = useState([]);
-   const [passwordVisible, setPasswordVisible] = useState(false);
-
-   useEffect(() => {
-      axios.get('http://localhost:8000/api/admin/getDepartments')
-         .then((response) => setDepartments(response.data))
-         .catch((error) => console.error('Error fetching departments:', error));
-   }, []);
-
-   // const handleChange = (e) => {
-   //    const { name, value } = e.target;
-   //    setNewDepartment((prevState) => ({
-   //       ...prevState,
-   //       [name]: value,
-   //    }));
-   // };
-
-   const handleSubmit = (e) => {
-      e.preventDefault();
-      axios.post('http://localhost:8000/api/admin/createDepartment', newTest)
-         .then((response) => {
-            console.log(response.data);
-            handleAddTest(response.data);
-            closeModal();
-         })
-         .catch((error) => console.error('Error creating test:', error));
-   };
+const DepartmentModal = ({ isOpen, closeModal, newDepartment, handleInputChange, handleAddDepartment }) => {
 
    return (
       <Modal
@@ -44,12 +16,12 @@ const DepartmentModal = ({ isOpen, closeModal, handleInputChange, handleAddDepar
             <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add Department</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => { e.preventDefault(); handleAddDepartment(); }}>
                <div className='flex flex-col space-y-4'>
                   <label className='block'>
                      <input
                         type='text'
-                        name='title'
+                        name='name'
                         value={newDepartment.name}
                         placeholder='Enter Department name'
                         onChange={handleInputChange}
@@ -59,7 +31,8 @@ const DepartmentModal = ({ isOpen, closeModal, handleInputChange, handleAddDepar
                   </label>
                   <label className='block'>
                      <input
-                        name='text'
+                        type='text'
+                        name='admin'
                         value={newDepartment.admin}
                         onChange={handleInputChange}
                         placeholder='Enter Department admin'

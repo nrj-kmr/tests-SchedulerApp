@@ -3,16 +3,6 @@ import axios from 'axios';
 import Modal from 'react-modal';
 
 const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
-   // const [test, setTest] = useState({
-   //    title: '',
-   //    description: '',
-   //    date: '',
-   //    startTime: '',
-   //    endTime: '',
-   //    department: '',
-   //    createdBy: '',
-   //    status: 'pending'
-   // });
    const [departments, setDepartments] = useState([]);
 
    const allStatus = [
@@ -24,7 +14,7 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
 
    useEffect(() => {
       axios.get('http://localhost:8000/api/admin/getDepartments')
-         .then((response) => {setDepartments(response.data); console.log(response.data)})
+         .then((response) => {setDepartments(response.data);})
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
 
@@ -147,8 +137,6 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                         ))}
                      </select>
                   </label>
-                  {console.log(newTest.status)}
-                  {console.log(newTest.department)}
                   <label className='block'>
                      <select
                         name='status'
