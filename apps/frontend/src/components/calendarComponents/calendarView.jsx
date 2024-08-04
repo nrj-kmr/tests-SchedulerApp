@@ -9,6 +9,14 @@ const localizer = momentLocalizer(moment)
 
 const CalendarView = ({ department, actualUserDept }) => {
     const [tests, setTests] = useState([]);
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+    const [selectedTest, setSelectedTest] = useState(null);
+
+    const handleRightClick = (e, test) => {
+        e.preventDefault();
+        setSelectedTest(test);
+        setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+    }
 
     useEffect(() => {
         const fetchAllTests = async () => {
@@ -58,7 +66,7 @@ const CalendarView = ({ department, actualUserDept }) => {
     };
 
     return (
-        <div>
+        <div onContextMenu={(e) => handleRightClick(e, null)}>
             {department === '' || !department ? (
                 <h1 className='flex justify-center items-center bg-yellow-200 text-yellow-800 border border-yellow-400 mb-2 rounded p-2'>
                     <span className='text-center'>No Department Found for this user</span>
@@ -83,6 +91,42 @@ const CalendarView = ({ department, actualUserDept }) => {
                     toolbar: CustomToolbar
                 }}
             />
+
+            {contextMenu.visible && (
+                <div
+                    className='fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 z-50'
+                    onClick={ () => {setContextMenu({ visible: false, x: 0, y: 0 }); setSelectedTest(null);} }
+                >
+                    <div
+                        className='fixed bg-slate-700 border border-slate-900 rounded shadow-md z-50'
+                        style={{ top: contextMenu.y, left: contextMenu.x }}
+                    >
+                        <ul className='list-none p-0 m-0'>
+                            {selectedTest ? (
+                                <>
+                                    <li>
+                                        <h1 className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'>
+                                            Edit Test
+                                        </h1>
+                                    </li>
+                                    <li>
+                                        <h1 className='p-2 text-lg text-red-400 cursor-pointer hover:bg-slate-800 transition-colors duration-300'>
+                                            Delete Test
+                                        </h1>
+                                    </li>
+                                </>
+                            ) : (
+                                <li>
+                                    <h1 className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'>
+                                        Add Test
+                                    </h1>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
