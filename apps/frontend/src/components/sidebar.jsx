@@ -50,12 +50,11 @@ const Sidebar = ({ onViewChange, onDepartmentChange }) => {
                   // onViewChange={(e) => { onDepartmentChange(e.target.value) }}
                   className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 bg-slate-700 text-lg cursor-pointer transition-colors duration-300"
                 >
-                  <option value="">--Select Department--</option>
+                  <option value="" disabled>--Select Department--</option>
                   {departments.map((department) => (
                     <option
                       key={department._id}
                       value={department.name}
-                      onClick={() => onDepartmentChange(department.name)}
                       >
                       {department.name}
                     </option>

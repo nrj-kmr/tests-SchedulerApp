@@ -8,6 +8,7 @@ import { ApiContext } from "../context/ApiContext";
 import UserModal from "./dialogModals/createUserModal";
 import TestModal from "./dialogModals/addTestModal";
 import DepartmentModal from "./dialogModals/createDepartment";
+import CalendarView from "./calendarComponents/calendarView";
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -184,11 +185,18 @@ const AdminDashboard = () => {
             )}
 
             {/* Show Calendar Based on Selected Department */}
-            {console.log(selectedView)}
-            {console.log(departments)}
-            {/* {departments.map((department) => () => {
-              console.log(department)
-            })} */}
+            {(departments || []).map((department) => {
+              if (department.name.includes(selectedView)) {
+                return (
+                  < CalendarView
+                    key={department._id}
+                    department={selectedView}
+                    actualUserDept={selectedView}
+                  />
+                )
+              }
+              return null;
+            })}
 
           </div>
         </div>
