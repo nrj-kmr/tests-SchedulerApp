@@ -4,6 +4,8 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import CustomToolbar from './CustomToolbar'
 import { fetchTests } from '../../services/apiServices'
+import TestModal from '../dialogModals/addTestModal'
+import axios from 'axios'
 
 const localizer = momentLocalizer(moment)
 
@@ -11,6 +13,9 @@ const CalendarView = ({ department, actualUserDept }) => {
     const [tests, setTests] = useState([]);
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
     const [selectedTest, setSelectedTest] = useState(null);
+    
+    const [isTestModalOpen, setIsTestModalOpen] = useState(false);
+    const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
     const handleRightClick = (e, test) => {
         e.preventDefault();
@@ -95,7 +100,7 @@ const CalendarView = ({ department, actualUserDept }) => {
             {contextMenu.visible && (
                 <div
                     className='fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 z-50'
-                    onClick={ () => {setContextMenu({ visible: false, x: 0, y: 0 }); setSelectedTest(null);} }
+                    onClick={() => { setContextMenu({ visible: false, x: 0, y: 0 }); setSelectedTest(null); }}
                 >
                     <div
                         className='fixed bg-slate-700 border border-slate-900 rounded shadow-md z-50'
@@ -117,7 +122,10 @@ const CalendarView = ({ department, actualUserDept }) => {
                                 </>
                             ) : (
                                 <li>
-                                    <h1 className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'>
+                                    <h1
+                                        className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'
+                                        onClick={() => setIsTestModalOpen(true)}
+                                    >
                                         Add Test
                                     </h1>
                                 </li>
@@ -127,6 +135,21 @@ const CalendarView = ({ department, actualUserDept }) => {
                 </div>
             )}
 
+            <TestModal
+                isOpen={isTestModalOpen}
+                closeModal={() => setIsTestModalOpen(false)}
+                newTest={newTest}
+                handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
+                handleAddTest={async (formData) => {
+                    try {
+                        const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
+                        console.log("Test Added", response.data)
+                        setIsTestModalOpen(false);
+                    } catch (err) {
+                        console.log('Error while adding new test', err)
+                    }
+                }}
+            />
         </div>
     )
 }
