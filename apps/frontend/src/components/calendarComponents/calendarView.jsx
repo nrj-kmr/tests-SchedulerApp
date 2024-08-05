@@ -13,7 +13,7 @@ const CalendarView = ({ department, actualUserDept }) => {
     const [tests, setTests] = useState([]);
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
     const [selectedTest, setSelectedTest] = useState(null);
-    
+
     const [isTestModalOpen, setIsTestModalOpen] = useState(false);
     const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
@@ -77,9 +77,18 @@ const CalendarView = ({ department, actualUserDept }) => {
                     <span className='text-center'>No Department Found for this user</span>
                 </h1>
             ) : (
-                <h1 className='flex justify-center items-center bg-green-200 text-green-800 border border-green-400 mb-2 rounded p-2'>
-                    <span className='text-center'>Calendar for {actualUserDept}</span>
-                </h1>
+                <div className='flex items-center space-x-4'>
+
+                    <h1 className='flex justify-center items-center bg-green-200 text-green-800 border border-green-400 mb-2 rounded py-2 px-20'>
+                        <span className='text-center'>Calendar for {actualUserDept}</span>
+                    </h1>
+
+                    <div className='flex flex-grow space-x-2 justify-end'>
+                        <button className='border-blue-950 p-2 items-center text-center rounded-md bg-blue-700 hover:bg-blue-800 mb-2'>Calendar View</button>
+                        <button className='border-blue-950 p-2 items-center text-center rounded-md bg-blue-700 hover:bg-blue-800 mb-2'>Board View</button>
+                    </div>
+
+                </div>
             )}
 
             <Calendar
@@ -143,7 +152,7 @@ const CalendarView = ({ department, actualUserDept }) => {
                 handleAddTest={async (formData) => {
                     try {
                         const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
-                        console.log("Test Added", response.data)
+                        console.log("Test Added", (await response).data)
                         setIsTestModalOpen(false);
                     } catch (err) {
                         console.log('Error while adding new test', err)
