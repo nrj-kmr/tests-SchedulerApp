@@ -10,18 +10,18 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
       { _id: '2', name: 'In Progress' },
       { _id: '3', name: 'Completed' },
       { _id: '4', name: 'Rescheduled' }
-    ];
+   ];
 
    useEffect(() => {
       axios.get('http://localhost:8000/api/admin/getDepartments')
-         .then((response) => {setDepartments(response.data);})
+         .then((response) => { setDepartments(response.data); })
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
 
    const handleSubmit = (e) => {
       e.preventDefault();
 
-      const {date, startTime, endTime} = newTest;
+      const { date, startTime, endTime } = newTest;
 
       // Function to combine date and time into a Date Object
       const combineDateAndTime = (dateString, timeString) => {
@@ -31,12 +31,18 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
       }
 
       // create startTime and endTime Objects
-      const startDateTime = combineDateAndTime(date, startTime);
-      const endDateTime = combineDateAndTime(date, endTime);
+      const startDateTimeUTC = combineDateAndTime(date, startTime);
+      const endDateTimeUTC = combineDateAndTime(date, endTime);
 
       //convert to Local Time Zone
-      const startDateTimeUTC = new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000)
-      const endDateTimeUTC = new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000)
+      // const startDateTimeUTC = new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000)
+      // const endDateTimeUTC = new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000)
+
+      console.log(`Start DateTime UTC: ${startDateTimeUTC}`);
+      console.log(`End DateTime UTC: ${endDateTimeUTC}`);
+
+      console.log(`Start DateTime UTC (ISO): ${startDateTimeUTC.toISOString()}`);
+      console.log(`End DateTime UTC (ISO): ${endDateTimeUTC.toISOString()}`);
 
       const formData = {
          ...newTest,
