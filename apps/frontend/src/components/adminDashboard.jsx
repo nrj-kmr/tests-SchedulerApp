@@ -59,7 +59,7 @@ const AdminDashboard = () => {
             {/* USERS' VIEW */}
             {selectedView === 'users' && (
               <div>
-                <div className="sticky top-0 z-10">
+                <div className="sticky top-0 z-0">
                   <h1 className='flex flex-grow justify-center font-bold text-2xl'>Users List</h1>
                   <div className='flex justify-end mb-4'>
                     <button
@@ -77,20 +77,32 @@ const AdminDashboard = () => {
                   {users.length === 0 ? (
                     <p>No users available</p>
                   ) : (
-                    <>
-                      <div className="flex justify-between items-center p-2">
-                        <span className="font-bold">Name</span>
-                        <span className="font-bold">Email</span>
-                        <span className="font-bold">Department</span>
-                      </div>
-                      {users.map((user) => (
-                        <div key={user._id} className='flex justify-between items-center border-b border-gray-400 p-2'>
-                          <span>{user.firstname} {user.lastname}</span>
-                          <span>{user.email}</span>
-                          <span>{user.department ? user.department : '-'}</span>
-                        </div>
-                      ))}
-                    </>
+                    <table className="min-w-full">
+                      <thead>
+                        <tr>
+                          <th className="py-2 px-4 border-b font-bold text-left">#</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Name</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Email</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Department</th>
+                          <th className="py-2 px-4 border-b font-bold text-left"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users.map((user, index) => (
+                          <tr key={user._id}>
+                            <td className="py-1 px-4 border-b">{index + 1}</td>
+                            <td className="py-1 px-4 border-b">{user.firstname} {user.lastname}</td>
+                            <td className="py-1 px-4 border-b">{user.email}</td>
+                            <td className="py-1 px-4 border-b">{user.department ? user.department : '-'}</td>
+                            <td className="py-1 px-4 border-b">
+                              <div className="flex space-x-2 justify-end">
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Options</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   )}
                 </div>
               </div>
@@ -99,7 +111,7 @@ const AdminDashboard = () => {
             {/* TESTS' VIEW */}
             {selectedView === 'tests' && (
               <div>
-                <div className="sticky top-0 z-10">
+                <div className="sticky top-0 z-0">
                   <h1 className='flex flex-grow justify-center font-bold text-2xl'>Tests List</h1>
                   <div className="flex justify-end mb-4">
                     <button
@@ -117,26 +129,38 @@ const AdminDashboard = () => {
                   {tests.length === 0 ? (
                     <p>No tests available</p>
                   ) : (
-                    <>
-                      <div className="flex justify-between items-center p-2">
-                        <span className="font-bold">Title</span>
-                        <span className="font-bold">Department</span>
-                        <span className="font-bold">Date</span>
-                        <span className="font-bold">Start Time</span>
-                        <span className="font-bold">End Time</span>
-                        <span className="font-bold">Status</span>
-                      </div>
-                      {tests.map((test) => (
-                        <div key={test._id} className='flex justify-between items-center border-b border-gray-400 p-2'>
-                          <span>{test.title}</span>
-                          <span>{test.department}</span>
-                          <span>{test.date.split('T')[0]}</span>
-                          <span>{test.startTime.split('T')[1].split('.')[0]}</span>
-                          <span>{test.endTime.split('T')[1].split('.')[0]}</span>
-                          <span>{test.status}</span>
-                        </div>
-                      ))}
-                    </>
+                    <table className="min-w-full">
+                      <thead>
+                        <tr>
+                          <th className="py-2 px-4 border-b font-bold text-left">#</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Title</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Department</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Date</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Start Time</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">End Time</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Status</th>
+                          <th className="py-2 px-4 border-b font-bold text-left"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tests.map((test, index) => (
+                          <tr key={test._id}>
+                            <td className="py-1 px-4 border-b">{index + 1}</td>
+                            <td className="py-1 px-4 border-b">{test.title}</td>
+                            <td className="py-1 px-4 border-b">{test.department}</td>
+                            <td className="py-1 px-4 border-b">{test.date.split('T')[0]}</td>
+                            <td className="py-1 px-4 border-b">{test.startTime.split('T')[1].split('.')[0]}</td>
+                            <td className="py-1 px-4 border-b">{test.endTime.split('T')[1].split('.')[0]}</td>
+                            <td className="py-1 px-4 border-b">{test.status}</td>
+                            <td className="py-1 px-4 border-b">
+                              <div className="flex space-x-2 justify-end">
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Edit</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   )}
                 </div>
               </div>
@@ -145,7 +169,7 @@ const AdminDashboard = () => {
             {/* All DEPARTMENTS' VIEW */}
             {selectedView === 'departments' && (
               <div>
-                <div className="sticky top-0 z-10">
+                <div className="sticky top-0 z-0">
                   <h1 className='flex flex-grow justify-center font-bold text-2xl'>Departments List</h1>
                   <div className="flex justify-end mb-4">
                     <button
@@ -163,22 +187,31 @@ const AdminDashboard = () => {
                   {departments.length === 0 ? (
                     <p>No departments available</p>
                   ) : (
-                    <>
-                      <div className="flex justify-between items-center p-2">
-                        <span className="font-bold">Name</span>
-                        <span className="font-bold">Admin</span>
-                        <span className="font-bold">No. Employees</span>
-                        <span className="font-bold">No. Scheduled Tests</span>
-                      </div>
-                      {departments.map((department) => (
-                        <div key={department._id} className='flex justify-between items-center border-b border-gray-400 p-2'>
-                          <span>{department.name}</span>
-                          <span>{department.admin}</span>
-                          <span>No. of employees aren't calculated yet</span>
-                          <span>No. of tests needs to be obtained yet</span>
-                        </div>
-                      ))}
-                    </>
+                    <table className="min-w-full">
+                      <thead>
+                        <tr>
+                          <th className="py-2 px-4 border-b font-bold text-left">#</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Name</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Admin</th>
+                          <th className="py-2 px-4 border-b font-bold text-left"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {departments.map((department, index) => (
+                          <tr key={department._id}>
+                            <td className="py-1 px-4 border-b">{index + 1}</td>
+                            <td className="py-1 px-4 border-b">{department.name}</td>
+                            <td className="py-1 px-4 border-b">{department.admin ? department.admin : '-'}</td>
+                            <td className="py-1 px-4 border-b">
+                              <div className="flex space-x-2 justify-end">
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Edit</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+
+                    </table>
                   )}
                 </div>
               </div>

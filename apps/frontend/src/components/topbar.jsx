@@ -40,7 +40,7 @@ const Topbar = ({ toggleSidebar }) => {
       {isAdminPanel ? (
         <div className="flex items-center justify-start">
           <div className="hover:bg-slate-700 rounded-full p-2">
-          <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
+            <FaBars onClick={toggleSidebar} className="text-2xl cursor-pointer" />
           </div>
           <span className="p-2 text-xl font-bold">Test Scheduler</span>
         </div>
@@ -80,16 +80,20 @@ const Topbar = ({ toggleSidebar }) => {
                 className="flex items-center text-sm cursor-pointer p-2 rounded-md shadow-lg bg-blue-700 hover:bg-blue-800"
                 onClick={toggleUserDropdown}
               >
-                🧑🏻‍💼 {user.email}
+                🧑🏻‍💼 Profile
               </span>
               {userDropdown && (
-                <div className="absolute right-0 mt-2 w-auto rounded-md shadow-md bg-blue-700 hover:bg-blue-800">
+                <div className="absolute right-0 mt-2 w-auto rounded-md shadow-md bg-blue-700">
+                  <div className="flex flex-col items-start rounded-t-md hover:bg-blue-800">
+                    <span className="m-2 text-white">{user.email}</span>
+                    <hr className="border-gray-400 w-full" />
+                  </div>
                   <button
                     onClick={() => {
                       logout();
                       navigate('/');
                     }}
-                    className="w-full text-left px-4 py-2 text-white"
+                    className="w-full text-left px-4 py-2 text-white hover:bg-blue-800 rounded-b-md"
                   >
                     Logout
                   </button>
