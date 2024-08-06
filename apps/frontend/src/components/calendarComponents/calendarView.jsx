@@ -6,6 +6,7 @@ import CustomToolbar from './CustomToolbar'
 import { fetchTests } from '../../services/apiServices'
 import TestModal from '../dialogModals/addTestModal'
 import axios from 'axios'
+import BoardView from './boardView'
 
 const localizer = momentLocalizer(moment)
 
@@ -13,6 +14,9 @@ const CalendarView = ({ department, actualUserDept }) => {
     const [tests, setTests] = useState([]);
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
     const [selectedTest, setSelectedTest] = useState(null);
+    const [showCalendar, setShowCalendar] = useState(true);
+    const [showBoard, setShowBoard] = useState(false);
+    const [activeView, setActiveView] = useState('calendar');
 
     const [isTestModalOpen, setIsTestModalOpen] = useState(false);
     const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
@@ -80,31 +84,44 @@ const CalendarView = ({ department, actualUserDept }) => {
                 <div className='flex items-center space-x-4'>
 
                     <h1 className='flex justify-center items-center bg-green-200 text-green-800 border border-green-400 mb-2 rounded py-2 px-20'>
-                        <span className='text-center'>Calendar for {actualUserDept}</span>
+                        {showCalendar && <span className='text-center'>Calendar for {actualUserDept}</span>}
+                        {showBoard && <span className='text-center'>Board for {actualUserDept}</span>}
                     </h1>
 
-                    <div className='flex flex-grow space-x-2 justify-end'>
-                        <button className='border-blue-950 p-2 items-center text-center rounded-md bg-blue-700 hover:bg-blue-800 mb-2'>Calendar View</button>
-                        <button className='border-blue-950 p-2 items-center text-center rounded-md bg-blue-700 hover:bg-blue-800 mb-2'>Board View</button>
+                    <div className='flex flex-grow justify-end'>
+                        <button
+                            className={`border-blue-950 p-2 items-center text-center rounded-l-md mb-2 transition duration-500 ${activeView === 'calendar' ? 'bg-blue-800' : 'bg-blue-700'}`}
+                            onClick={() => { setShowCalendar(true); setShowBoard(false); setActiveView('calendar'); }}
+                        >Calendar</button>
+                        <button
+                            className={`border-blue-950 p-2 items-center text-center rounded-r-md mb-2 transition duration-500 ${activeView === 'board' ? 'bg-blue-800' : 'bg-blue-700'}`}
+                            onClick={() => { setShowCalendar(false); setShowBoard(true); setActiveView('board'); }}
+                        >Board</button>
                     </div>
-
                 </div>
             )}
 
-            <Calendar
-                defaultView='month'
-                localizer={localizer}
-                events={tests}
-                startAccessor="start"
-                endAccessor="end"
-                min={moment("2024-07-27T09:00:00").toDate()}
-                max={moment("2024-07-27T19:00:00").toDate()}
-                style={{ height: "80vh" }}
-                eventPropGetter={testStyleGetter}
-                components={{
-                    toolbar: CustomToolbar
-                }}
-            />
+
+            {showCalendar && (
+                <Calendar
+                    defaultView='month'
+                    localizer={localizer}
+                    events={tests}
+                    startAccessor="start"
+                    endAccessor="end"
+                    min={moment("2024-07-27T09:00:00").toDate()}
+                    max={moment("2024-07-27T19:00:00").toDate()}
+                    style={{ height: "80vh" }}
+                    eventPropGetter={testStyleGetter}
+                    components={{
+                        toolbar: CustomToolbar
+                    }}
+                />
+            )}
+
+            {showBoard && (
+                <BoardView selectedDepartment={actualUserDept} />
+            )}
 
             {contextMenu.visible && (
                 <div
