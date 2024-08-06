@@ -59,6 +59,25 @@ adminRouter.put("/resetPassword/:_id", async (req, res) => {
    }
 })
 
+adminRouter.put("/editUser/:_id", async (req, res) => {
+   try {
+      const user = await User.findByIdAndUpdate(req.params._id);
+      if (!user) return res.status(404).json({ error: "User not found" });
+      user.firstname = req.body.firstname;
+      user.lastname = req.body.lastname;
+      user.email = req.body.email;
+      user.department = req.body.department;
+      user.role = req.body.role;
+      await user.save();
+      return res.json({
+         message: 'User updated successfully!',
+         user
+      });
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'User update failed!' });
+   }
+})
+
 // Admin Routes for department management
 adminRouter.post("/createDepartment", async (req, res) => {
    try {

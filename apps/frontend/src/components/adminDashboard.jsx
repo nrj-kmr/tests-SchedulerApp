@@ -9,6 +9,9 @@ import UserModal from "./dialogModals/createUserModal";
 import TestModal from "./dialogModals/addTestModal";
 import DepartmentModal from "./dialogModals/createDepartment";
 import CalendarView from "./calendarComponents/calendarView";
+import UserOptionsDialog from "./dialogModals/userOptionsDialog";
+import TestEditModal from "./dialogModals/editTestModal";
+import EditDepartmentModal from "./dialogModals/editDepartment";
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -23,10 +26,18 @@ const AdminDashboard = () => {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
-
-  const [newUser, setNewUser] = useState({ firstname: '', lastname: '', email: '', password: '', department: '' });
+  
+  const [newUser, setNewUser] = useState({ firstname: '', lastname: '', email: '', password: '', department: '', role: '' });
   const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
   const [newDepartment, setNewDepartment] = useState({ name: '', admin: '' });
+  
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedTest, setSelectedTest] = useState(null);
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+
+  const [isUserOptionsOpen, setIsUserOptionsOpen] = useState(false);
+  const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
+  const [isDepartmentEditModalOpen, setIsDepartmentEditModalOpen] = useState(false);
 
   if (!isUserAdmin) {
     return (
@@ -34,6 +45,77 @@ const AdminDashboard = () => {
         <h1 className="font-bold text-2xl">You are not authorized to access this page</h1>
       </div>
     )
+  }
+
+  const handleUserOptions = (user) => {
+    setSelectedUser(user);
+    setIsUserOptionsOpen(true);
+  }
+  const handleCloseDialog = () => {
+    setIsUserOptionsOpen(false);
+    setSelectedUser(null);
+  }
+
+  const handleSaveUser = (updatedUser) => {
+    if (updatedUser.role === 'Admin') {
+      updatedUser.isAdmin = true;
+    } else {
+      updatedUser.isAdmin = false;
+    }
+    axios.put(`http://localhost:8000/api/admin/editUser/${updatedUser._id}`, updatedUser)
+      .then((response) => {
+        console.log("User updated successfully:", response.data);
+        handleCloseDialog();
+      })
+      .catch((err) => {
+        console.log('Error while updating user:', err);
+        handleCloseDialog();
+      })
+    handleCloseDialog();
+  }
+
+  const handleEditTest = (test) => {
+    setSelectedTest(test);
+    setIsTestEditModalOpen(true);
+  }
+  const handleCloseTestEditModal = () => {
+    setIsTestEditModalOpen(false);
+    setSelectedTest(null);
+  }
+  const handleUpdateTest = (updatedTest) => {
+    axios.put(`http://localhost:8000/api/admin/editTest/${updatedTest._id}`, updatedTest)
+      .then((response) => {
+        console.log("Test updated successfully:", response.data);
+        handleCloseTestEditModal();
+      })
+      .catch((err) => {
+        console.log('Error while updating test:', err);
+        handleCloseTestEditModal();
+      })
+    handleCloseTestEditModal();
+  }
+
+  const handleEditDepartment = (department) => {
+    setSelectedDepartment(department);
+    setIsDepartmentEditModalOpen(true);
+  }
+
+  const handleCloseDepartmentEditModal = () => {
+    setIsDepartmentEditModalOpen(false);
+    setSelectedDepartment(null);
+  }
+
+  const handleUpdateDepartment = (updatedDepartment) => {
+    axios.put(`http://localhost:8000/api/admin/editDepartment/${updatedDepartment._id}`, updatedDepartment)
+      .then((response) => {
+        console.log("Department updated successfully:", response.data);
+        handleCloseDepartmentEditModal();
+      })
+      .catch((err) => {
+        console.log('Error while updating department:', err);
+        handleCloseDepartmentEditModal();
+      })
+    handleCloseDepartmentEditModal();
   }
 
   return (
@@ -84,6 +166,7 @@ const AdminDashboard = () => {
                           <th className="py-2 px-4 border-b font-bold text-left">Name</th>
                           <th className="py-2 px-4 border-b font-bold text-left">Email</th>
                           <th className="py-2 px-4 border-b font-bold text-left">Department</th>
+                          <th className="py-2 px-4 border-b font-bold text-left">Role</th>
                           <th className="py-2 px-4 border-b font-bold text-left"></th>
                         </tr>
                       </thead>
@@ -94,9 +177,10 @@ const AdminDashboard = () => {
                             <td className="py-1 px-4 border-b">{user.firstname} {user.lastname}</td>
                             <td className="py-1 px-4 border-b">{user.email}</td>
                             <td className="py-1 px-4 border-b">{user.department ? user.department : '-'}</td>
+                            <td className="py-1 px-4 border-b">{user.isAdmin ? 'Admin' : 'User'}</td>
                             <td className="py-1 px-4 border-b">
-                              <div className="flex space-x-2 justify-end">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Options</button>
+                              <div className="flex space-x-2 justify-center">
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:opacity-50' onClick={() => handleUserOptions(user)}>Options</button>
                               </div>
                             </td>
                           </tr>
@@ -154,7 +238,7 @@ const AdminDashboard = () => {
                             <td className="py-1 px-4 border-b">{test.status}</td>
                             <td className="py-1 px-4 border-b">
                               <div className="flex space-x-2 justify-end">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Edit</button>
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditTest(test)}>Edit</button>
                               </div>
                             </td>
                           </tr>
@@ -204,7 +288,7 @@ const AdminDashboard = () => {
                             <td className="py-1 px-4 border-b">{department.admin ? department.admin : '-'}</td>
                             <td className="py-1 px-4 border-b">
                               <div className="flex space-x-2 justify-end">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700'>Edit</button>
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditDepartment(department)}>Edit</button>
                               </div>
                             </td>
                           </tr>
@@ -234,6 +318,33 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      {selectedUser && (
+        <UserOptionsDialog
+          user={selectedUser}
+          isOpen={isUserOptionsOpen}
+          onClose={handleCloseDialog}
+          onSave={handleSaveUser}
+        />
+      )}
+
+      {selectedTest && (
+        <TestEditModal
+          test={selectedTest}
+          isOpen={isTestEditModalOpen}
+          onClose={handleCloseTestEditModal}
+          onSave={handleUpdateTest}
+        />
+      )}
+
+      {selectedDepartment && (
+        <EditDepartmentModal
+          department={selectedDepartment}
+          isOpen={isDepartmentEditModalOpen}
+          onClose={handleCloseDepartmentEditModal}
+          onSave={handleUpdateDepartment}
+        />
+      )}
 
       {/* Create User Modal (pop-up box for adding users) */}
       <UserModal
