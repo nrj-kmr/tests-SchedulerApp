@@ -9,9 +9,11 @@ import UserModal from "./dialogModals/createUserModal";
 import TestModal from "./dialogModals/addTestModal";
 import DepartmentModal from "./dialogModals/createDepartment";
 import CalendarView from "./calendarComponents/calendarView";
-import UserOptionsDialog from "./dialogModals/userOptionsDialog";
+import EditUserModal from "./dialogModals/editUserModal";
 import TestEditModal from "./dialogModals/editTestModal";
 import EditDepartmentModal from "./dialogModals/editDepartment";
+import TestsView from "./views/testsView";
+import DepartmentsView from "./views/departments";
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -26,11 +28,11 @@ const AdminDashboard = () => {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
-  
+
   const [newUser, setNewUser] = useState({ firstname: '', lastname: '', email: '', password: '', department: '', role: '' });
   const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
   const [newDepartment, setNewDepartment] = useState({ name: '', admin: '' });
-  
+
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTest, setSelectedTest] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -173,14 +175,14 @@ const AdminDashboard = () => {
                       <tbody>
                         {users.map((user, index) => (
                           <tr key={user._id}>
-                            <td className="py-1 px-4 border-b">{index + 1}</td>
-                            <td className="py-1 px-4 border-b">{user.firstname} {user.lastname}</td>
-                            <td className="py-1 px-4 border-b">{user.email}</td>
-                            <td className="py-1 px-4 border-b">{user.department ? user.department : '-'}</td>
-                            <td className="py-1 px-4 border-b">{user.isAdmin ? 'Admin' : 'User'}</td>
-                            <td className="py-1 px-4 border-b">
+                            <td className="py-1 px-4 border-b border-gray-500">{index + 1}</td>
+                            <td className="py-1 px-4 border-b border-gray-500">{user.firstname} {user.lastname}</td>
+                            <td className="py-1 px-4 border-b border-gray-500">{user.email}</td>
+                            <td className="py-1 px-4 border-b border-gray-500">{user.department ? user.department : '-'}</td>
+                            <td className="py-1 px-4 border-b border-gray-500">{user.isAdmin ? 'Admin' : 'User'}</td>
+                            <td className="py-1 px-4 border-b border-gray-500">
                               <div className="flex space-x-2 justify-center">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:opacity-50' onClick={() => handleUserOptions(user)}>Options</button>
+                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:opacity-50' onClick={() => handleUserOptions(user)}>Edit</button>
                               </div>
                             </td>
                           </tr>
@@ -194,118 +196,23 @@ const AdminDashboard = () => {
 
             {/* TESTS' VIEW */}
             {selectedView === 'tests' && (
-              <div>
-                <div className="sticky top-0 z-0">
-                  <h1 className='flex flex-grow justify-center font-bold text-2xl'>Tests List</h1>
-                  <div className="flex justify-end mb-4">
-                    <button
-                      className='bg-blue-600 text-white px-2 py-1 rounded shadow-md hover:bg-blue-700'
-                      onClick={() => {
-                        setIsTestModalOpen(true);
-                      }}
-                    >
-                      Add Test
-                    </button>
-                  </div>
-                </div>
-
-                <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
-                  {tests.length === 0 ? (
-                    <p>No tests available</p>
-                  ) : (
-                    <table className="min-w-full">
-                      <thead>
-                        <tr>
-                          <th className="py-2 px-4 border-b font-bold text-left">#</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Title</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Department</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Date</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Start Time</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">End Time</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Status</th>
-                          <th className="py-2 px-4 border-b font-bold text-left"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {tests.map((test, index) => (
-                          <tr key={test._id}>
-                            <td className="py-1 px-4 border-b">{index + 1}</td>
-                            <td className="py-1 px-4 border-b">{test.title}</td>
-                            <td className="py-1 px-4 border-b">{test.department}</td>
-                            <td className="py-1 px-4 border-b">{test.date.split('T')[0]}</td>
-                            <td className="py-1 px-4 border-b">{test.startTime.split('T')[1].split('.')[0]}</td>
-                            <td className="py-1 px-4 border-b">{test.endTime.split('T')[1].split('.')[0]}</td>
-                            <td className="py-1 px-4 border-b">{test.status}</td>
-                            <td className="py-1 px-4 border-b">
-                              <div className="flex space-x-2 justify-end">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditTest(test)}>Edit</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </div>
+              <TestsView tests={tests} setIsTestModalOpen={setIsTestModalOpen} handleEditTest={handleEditTest} />
             )}
 
             {/* All DEPARTMENTS' VIEW */}
             {selectedView === 'departments' && (
-              <div>
-                <div className="sticky top-0 z-0">
-                  <h1 className='flex flex-grow justify-center font-bold text-2xl'>Departments List</h1>
-                  <div className="flex justify-end mb-4">
-                    <button
-                      className='bg-blue-600 text-white px-2 py-1 rounded shadow-md hover:bg-blue-700'
-                      onClick={() => {
-                        setIsDepartmentModalOpen(true);
-                      }}
-                    >
-                      Add Department
-                    </button>
-                  </div>
-                </div>
-
-                <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
-                  {departments.length === 0 ? (
-                    <p>No departments available</p>
-                  ) : (
-                    <table className="min-w-full">
-                      <thead>
-                        <tr>
-                          <th className="py-2 px-4 border-b font-bold text-left">#</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Name</th>
-                          <th className="py-2 px-4 border-b font-bold text-left">Admin</th>
-                          <th className="py-2 px-4 border-b font-bold text-left"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {departments.map((department, index) => (
-                          <tr key={department._id}>
-                            <td className="py-1 px-4 border-b">{index + 1}</td>
-                            <td className="py-1 px-4 border-b">{department.name}</td>
-                            <td className="py-1 px-4 border-b">{department.admin ? department.admin : '-'}</td>
-                            <td className="py-1 px-4 border-b">
-                              <div className="flex space-x-2 justify-end">
-                                <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditDepartment(department)}>Edit</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-
-                    </table>
-                  )}
-                </div>
-              </div>
+              <DepartmentsView
+                departments={departments}
+                setIsDepartmentModalOpen={setIsDepartmentModalOpen}
+                handleEditDepartment={handleEditDepartment}
+              />
             )}
 
             {/* Show Calendar Based on Selected Department */}
             {(departments || []).map((department) => {
               if (department.name.includes(selectedView)) {
                 return (
-                  < CalendarView
+                  <CalendarView
                     key={department._id}
                     department={selectedView}
                     actualUserDept={selectedView}
@@ -320,7 +227,7 @@ const AdminDashboard = () => {
       </div>
 
       {selectedUser && (
-        <UserOptionsDialog
+        <EditUserModal
           user={selectedUser}
           isOpen={isUserOptionsOpen}
           onClose={handleCloseDialog}

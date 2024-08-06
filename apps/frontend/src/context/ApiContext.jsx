@@ -1,5 +1,4 @@
-import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { fetchDepartments, fetchTests, fetchUsers } from "../services/apiServices";
 
 export const ApiContext = createContext();

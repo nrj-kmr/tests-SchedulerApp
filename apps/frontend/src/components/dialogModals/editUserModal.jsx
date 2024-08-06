@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { fetchDepartments } from '../../services/apiServices';
 import { AuthContext } from '../../context/AuthContext';
 
-const UserOptionsDialog = ({ user, isOpen, onClose, onSave }) => {
+const editUserModal = ({ user, isOpen, onClose, onSave }) => {
      const [firstname, setFirstname] = useState(user.firstname);
      const [lastname, setLastname] = useState(user.lastname);
      const [email, setEmail] = useState(user.email);
@@ -155,4 +155,4 @@ const UserOptionsDialog = ({ user, isOpen, onClose, onSave }) => {
      );
 };
 
-export default UserOptionsDialog;
+export default editUserModal;
