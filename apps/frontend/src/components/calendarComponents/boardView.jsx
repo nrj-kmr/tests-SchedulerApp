@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchTests } from '../../services/apiServices';
 
-const BoardView = ({ selectedDepartment }) => {
+const BoardView = ({ selectedDepartment, onTestClick }) => {
      const [tests, setTests] = useState([]);
      const sections = ['Scheduled', 'In Progress', 'Completed', 'Rescheduled'];
 
@@ -33,7 +33,11 @@ const BoardView = ({ selectedDepartment }) => {
                          <h2 className="text-lg font-bold mb-4 text-black">{section}</h2>
                          <div className="space-y-2">
                               {filterTestsByStatus(section).map((test) => (
-                                   <div key={test._id} className="bg-white text-black p-2 rounded shadow-md cursor-pointer">
+                                   <div
+                                   key={test._id}
+                                   onClick={(e) => onTestClick(e, test)}
+                                   className="bg-white text-black p-2 rounded shadow-md cursor-pointer"
+                                   >
                                         <h3 key={test.title} className="text-lg font-bold">{test.title}</h3>
                                         <p key={test.description}>{test.description}</p>
                                    </div>

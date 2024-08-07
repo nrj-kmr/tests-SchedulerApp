@@ -7,6 +7,7 @@ import { fetchTests } from '../../services/apiServices'
 import TestModal from '../dialogModals/addTestModal'
 import axios from 'axios'
 import BoardView from './boardView'
+import EditTestModal from '../dialogModals/editTestModal'
 
 const localizer = momentLocalizer(moment)
 
@@ -20,6 +21,26 @@ const CalendarView = ({ department, actualUserDept }) => {
 
     const [isTestModalOpen, setIsTestModalOpen] = useState(false);
     const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
+
+    const [isEditTestModalOpen, setIsEditTestModalOpen] = useState(false);
+    const [selectedTestForEdit, setSelectedTestForEdit] = useState(null);
+
+    const openEditModal = (test) => {
+        setSelectedTestForEdit(test);
+        setIsEditTestModalOpen(true);
+    }
+    const closeEditModal = () => {
+        setSelectedTestForEdit(null);
+        setIsEditTestModalOpen(false);
+    }
+    const handleSave = (updatedTest) => {
+        console.log('Updated Test:', updatedTest);
+        closeEditModal();
+    }
+
+    const handleClickOutside = (e) => {
+        setContextMenu({ ...contextMenu, visible: false });
+    }
 
     const handleRightClick = (e, test) => {
         e.preventDefault();
@@ -116,11 +137,12 @@ const CalendarView = ({ department, actualUserDept }) => {
                     components={{
                         toolbar: CustomToolbar
                     }}
+                    onSelectEvent={(event) => handleRightClick(event, event)}
                 />
             )}
 
             {showBoard && (
-                <BoardView selectedDepartment={actualUserDept} />
+                <BoardView selectedDepartment={actualUserDept} onTestClick={handleRightClick} />
             )}
 
             {contextMenu.visible && (
@@ -136,7 +158,10 @@ const CalendarView = ({ department, actualUserDept }) => {
                             {selectedTest ? (
                                 <>
                                     <li>
-                                        <h1 className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'>
+                                        <h1
+                                            onClick={() => openEditModal(selectedTestForEdit)}
+                                            className='p-2 text-lg cursor-pointer hover:bg-slate-800 transition-colors duration-300'
+                                        >
                                             Edit Test
                                         </h1>
                                     </li>
@@ -159,6 +184,15 @@ const CalendarView = ({ department, actualUserDept }) => {
                         </ul>
                     </div>
                 </div>
+            )}
+
+            {isEditTestModalOpen && selectedTestForEdit && (
+                <EditTestModal
+                    test={selectedTestForEdit}
+                    isOpen={isEditTestModalOpen}
+                    onClose={closeEditModal}
+                    onSave={handleSave}
+                />
             )}
 
             <TestModal
