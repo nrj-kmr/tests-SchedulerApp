@@ -27,6 +27,7 @@ const DepartmentsView = ({ departments, setIsDepartmentModalOpen, handleEditDepa
                 <th className="py-2 px-4 border-b font-bold text-left">#</th>
                 <th className="py-2 px-4 border-b font-bold text-left">Name</th>
                 <th className="py-2 px-4 border-b font-bold text-left">Admin</th>
+                <th className="py-2 px-4 border-b font-bold text-left">Description</th>
                 <th className="py-2 px-4 border-b font-bold text-left"></th>
               </tr>
             </thead>
@@ -36,6 +37,7 @@ const DepartmentsView = ({ departments, setIsDepartmentModalOpen, handleEditDepa
                   <td className="py-1 px-4 border-b border-gray-500">{index + 1}</td>
                   <td className="py-1 px-4 border-b border-gray-500">{department.name}</td>
                   <td className="py-1 px-4 border-b border-gray-500">{department.admin ? department.admin : '-'}</td>
+                  <td className="py-1 px-4 border-b border-gray-500">{department.description ? department.description : '-'}</td>
                   <td className="py-1 px-4 border-b border-gray-500">
                     <div className="flex space-x-2 justify-end">
                       <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditDepartment(department)}>Edit</button>

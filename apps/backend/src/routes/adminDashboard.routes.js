@@ -1,8 +1,7 @@
 // routes/adminDashboard.routes.js
-import express from 'express';
-const router = express.Router();
+const Router = express.Router();
 
-const adminDashboardRouter = express.Router();
+const adminDashboardRouter = Router();
 
 // Admin Dashboard Route
 adminDashboardRouter.get('/', (req, res) => {

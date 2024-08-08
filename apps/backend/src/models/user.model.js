@@ -18,8 +18,22 @@ const userSchema = new mongoose.Schema({
    },
    password: { type: String, required: true },
    department: { type: String, ref: 'Department' },  
-   isAdmin: { type: Boolean, default: false }
+   isAdmin: { type: Boolean, default: false },
+   role : { type: String, }
 }, { timestamps: true })
+
+// Define virtual property to get fullname
+userSchema.virtual('fullname').get(function () {
+   return `${this.firstname} ${this.lastname}`;
+});
+
+// Define virtual property to get user role
+userSchema.virtual('userRole').get(function () {
+   return this.isAdmin ? 'Admin' : 'User';
+});
+
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 const User = mongoose.model("User", userSchema);
 

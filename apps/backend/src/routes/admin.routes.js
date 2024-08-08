@@ -4,27 +4,14 @@ import User from '../models/user.model.js';
 import Admin from '../models/admin.model.js';
 import Department from '../models/department.model.js';
 import Test from '../models/tests.model.js';
-
-import dotenv from "dotenv";
-import { createUser } from '../controllers/user.controller.js';
-dotenv.config({ path: "./.env" });
+import { createDepartment, createTest, createUser } from '../controllers/admin.controller.js';
+import { checkAuthorization, getUsers } from '../controllers/auth.controller.js';
 
 const adminRouter = Router();
 
 // Admin Routes for user management
 adminRouter.post("/createUser", createUser)
-
-adminRouter.get("/getUsers", async (req, res) => {
-   try {
-      const users = await User.find({});
-      if (!users) return res.send(404).json({ error: "Users not fetched" })
-      return res.json(users)
-   } catch (error) {
-      return res.status(500).json({
-         error: error.message,
-         message: 'Error while fetching Users' })
-   }
-})
+adminRouter.get("/getUsers", getUsers)
 
 // get user by email
 adminRouter.get("/getUser/:email", async (req, res) => {
@@ -79,15 +66,7 @@ adminRouter.put("/editUser/:_id", async (req, res) => {
 })
 
 // Admin Routes for department management
-adminRouter.post("/createDepartment", async (req, res) => {
-   try {
-      const newDepartment = await Department.create(req.body);
-      await newDepartment.save();
-      return res.status(201).json({ message: `Department: ${newDepartment.name} created successfully!` });
-   } catch (error) {
-      return res.status(500).json({ error: error.message || 'Department creation failed!' });
-   }
-});
+adminRouter.post("/createDepartment", createDepartment);
 
 adminRouter.get("/getDepartments", async (req, res) => {
    try {
@@ -97,7 +76,8 @@ adminRouter.get("/getDepartments", async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          error: error.message,
-         message: 'server error, with departments' })
+         message: 'server error, with departments'
+      })
    }
 })
 
@@ -128,18 +108,7 @@ adminRouter.put("/editDepartment/:_id", async (req, res) => {
 });
 
 // Admin Routes for test management
-adminRouter.post("/createTest", async (req, res) => {
-   try {
-      const newTest = await Test.create(req.body);
-      await newTest.save();
-      return res.status(201).json({
-         message: 'Test created successfully!',
-         test: newTest
-      });
-   } catch (error) {
-      return res.status(400).json({ error: error.message || 'Test creation failed!' });
-   }
-});
+adminRouter.post("/createTest", createTest);
 
 adminRouter.get("/getTests", async (req, res) => {
    try {
@@ -149,7 +118,8 @@ adminRouter.get("/getTests", async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          error: error.message,
-         message: 'Error while fetching tests' })
+         message: 'Error while fetching tests'
+      })
    }
 })
 
@@ -169,16 +139,6 @@ adminRouter.put("/editTest/:_id", async (req, res) => {
    }
 });
 
-// Middleware to check for authorization
-const checkAuthorization = async (req, res, next) => {
-   const authHeader = req.headers.authorization;
-   if (authHeader && authHeader === process.env.SUPERADMIN_SECRET) {
-      next();
-   } else {
-      res.status(403).json({ error: 'Forbidden!' });
-   }
-}
-
 // Protected route to create superAdmin
 adminRouter.post("/createSuperAdmin", checkAuthorization, async (req, res) => {
    try {
@@ -186,13 +146,10 @@ adminRouter.post("/createSuperAdmin", checkAuthorization, async (req, res) => {
       if (!name || !email || !password) {
          return res.status(400).json({ error: 'Name, Email and Password are required!' });
       }
-
       const hashedPassword = await bcrypt.hash(password, 10)
       const newSuperAdmin = new Admin({ name, email, password: hashedPassword, superAdmin: true });
       await newSuperAdmin.save()
-
       res.status(201).json({ message: "SuperAdmin created Successfully!" })
-
    } catch (error) {
       return res.status(500).json({
          error: error.message,
@@ -209,7 +166,8 @@ adminRouter.get("/getSuperAdmins", checkAuthorization, async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          error: error.message,
-         message: 'Error while fetching SuperAdmins' })
+         message: 'Error while fetching SuperAdmins'
+      })
    }
 })
 

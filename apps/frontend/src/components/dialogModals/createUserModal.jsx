@@ -24,8 +24,8 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
          className='fixed inset-0 flex justify-center items-center z-50'
          overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
       >
-         <div className='relative bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
-            <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={closeModal}>&times;</button>
+         <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+            <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-400 hover:text-gray-800 transition-all duration-300' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add User</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }} className='space-y-4'>
@@ -74,7 +74,7 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
 
                <label className='block'>
                   <select name="role"
-                     value={newUser.role}
+                     value={newUser.userRole}
                      onChange={handleInputChange}
                      required
                      className="p-2 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -85,13 +85,11 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
                   </select>
                </label>
 
-
-
-               <div className='flex justify-end space-x-4'>
-                  <button type='button' onClick={closeModal} className='px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'>
+               <div className='flex space-x-3 py-4'>
+                  <button type='button' onClick={closeModal} className='w-full px-4 py-2 border border-gray-300 bg-gray-100 text-sm text-gray-700 rounded-md hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300'>
                      Cancel
                   </button>
-                  <button type='submit' className='px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                  <button type='submit' className='w-full px-4 py-2 border border-indigo-300 bg-indigo-200 text-sm text-indigo-600 rounded-md hover:bg-indigo-300 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300'>
                      Add User
                   </button>
                </div>

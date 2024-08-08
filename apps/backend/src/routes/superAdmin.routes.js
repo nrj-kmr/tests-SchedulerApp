@@ -3,43 +3,12 @@ import bcrypt from 'bcrypt';
 import User from '../models/user.model.js';
 import Admin from '../models/admin.model.js';
 import Department from '../models/department.model.js';
+import { createUser } from '../controllers/admin.controller.js';
 
 const superAdminRouter = Router();
 
 // SuperAdmin Routes for admin management
-superAdminRouter.post("/createAdmin", async (req, res) => {
-   const { name, email, password, department, isAdmin, superAdmin } = req.body;
-   try {
-      // Find the department by name
-      const departmentDoc = await Department.findOne({ name: department });
-      if (!departmentDoc) {
-         return res.status(404).json({ error: 'Department not found!' });
-      }
-
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Create the new admin with the department's name
-      const newAdmin = new Admin({
-         name,
-         email,
-         password: hashedPassword,
-         department: departmentDoc.name,
-         isAdmin,
-         superAdmin
-      });
-      await newAdmin.save();
-      return res.status(201).json({
-         message: 'Admin created successfully!',
-         newAdmin
-      });
-   } catch (error) {
-      return res.status(500).json({
-         error: error.message,
-         message: 'Admin creation failed!'
-      });
-   }
-})
+superAdminRouter.post("/createAdmin", createUser)
 
 superAdminRouter.get("/getAdmins", async (req, res) => {
    try {

@@ -1,86 +1,89 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import Admin from "../models/admin.model.js";
 
-export const signup = async (req, res) => {
-   const { name, email, password, role } = req.body;
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 
-   if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: 'All fields are required' });
+// Middleware to check if the user is authorized
+export const checkAuthorization = async (req, res, next) => {
+   const authHeader = req.headers.authorization;
+   if (authHeader && authHeader === process.env.SUPERADMIN_SECRET) {
+      next();
+   } else {
+      res.status(403).json({ error: 'Forbidden!' });
    }
+}
 
+// Get All Users
+export const getUsers = async (req, res) => {
    try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-         return res.status(400).json({ message: 'User already exists' });
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const newUser = new User({
-         name,
-         email,
-         password: hashedPassword,
-         role
-      });
-
-      await newUser.save();
-
-      res.status(201).json({ message: 'User created successfully' });
+      const users = await User.find({});
+      if (!users) return res.send(404).json({ error: "users not fetched" })
+      res.json(users);
    } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
+      return res.status(500).json({
+         error: error.message,
+         message: "internal server error!"
+      });
    }
 };
 
 export const login = async (req, res) => {
-   const { email, password, isAdmin } = req.body;
-
-   if (!email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-   }
-
    try {
-      let user;
-      if(isAdmin) {
-         user = await User.findOne({ email }).select('+superAdmin');
-         if (!user) {
-            return res.status(400).json({ error: 'Admin not found' });
-         } else {
-            user = await User.findOne({ email });
-            if (!user) {
-               return res.status(400).json({ error: 'User not found' });
-            }
+      const { email, password, isAdmin, department } = req.body;
+      const requiredFields = { email, password, department };
+
+      for (const [field, value] of Object.entries(requiredFields)) {
+         if (!value) {
+            return res.status(400).json({ error: `${field.charAt(0).toUpperCase() + field.slice(1)} is required!` });
          }
       }
-      // check if the password is correct
-      const passwordMatch = await bcrypt.compare(password, user.password)
+
+      // Check if the user is an admin
+      let user;
+      if (isAdmin) {
+         user = await Admin.findOne({ email }).select('+superAdmin');
+         if (!user) return res.status(404).json({ error: 'Admin not found!' });
+      } else {
+         user = await User.findOne({ email })
+         if (!user) {
+            return res.status(404).json({ error: 'User not found!' });
+         }
+      }
+
+      // Check if the user belongs to the selected department
+      if (user.department !== department) {
+         return res.status(400).json({ error: 'User does not belong to the selected department!' });
+      }
+
+      // Check if the password is correct
+      const passwordMatch = await (bcrypt.compare(password, user.password));
       if (!passwordMatch) {
-         return res.status(400).json({ error: 'Invalid credentials' });
+         return res.status(400).json({ error: 'Invalid credentials!' });
       }
-
-      // session-based authentication
-      req.session.user = user;
-
-      // token-based authentication
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-         expiresIn: '2h'
-      });
-
-      // redirect to the dashboard based on the user's role
-      const response = {
-         token,
-         user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role
-         },
-         message: `${user.role} logged in successfully`,
-         redirectUrl: user.role === 'admin' ? '/admin/dashboard' : '/dashboard'
-      }
-
-      res.status(200).json(response);
+      // Generate token for storing user session
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+      return res.json({ token });
    } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
+      return res.status(500).json({
+         error: error.message,
+         message: 'Sever Error, login failed!'
+      });
    }
 };
+
+export const verifyCredentials = async (req, res) => {
+   try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+      if (!user) {
+         return res.json({ valid: false });
+      }
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      return res.json({ valid: isPasswordValid });
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'Error verifying credentials!' });
+   }
+}

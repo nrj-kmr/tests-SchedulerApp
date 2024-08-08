@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
-import { fetchDepartments } from '../../services/apiServices';
+import { deleteUser, fetchDepartments } from '../../services/apiServices';
 import { AuthContext } from '../../context/AuthContext';
 
-const editUserModal = ({ user, isOpen, onClose, onSave }) => {
+const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [firstname, setFirstname] = useState(user.firstname);
      const [lastname, setLastname] = useState(user.lastname);
      const [email, setEmail] = useState(user.email);
@@ -11,7 +11,7 @@ const editUserModal = ({ user, isOpen, onClose, onSave }) => {
      const [showPasswordInput, setShowPasswordInput] = useState(false);
      const [passwordVisible, setPasswordVisible] = useState(false);
      const [department, setDepartment] = useState(user.department);
-     const [role, setRole] = useState('');
+     const [role, setRole] = useState(user.userRole || 'User');
      const { isUserAdmin } = useContext(AuthContext);
      const [isAdmin, setIsAdmin] = useState(isUserAdmin);
 
@@ -23,25 +23,39 @@ const editUserModal = ({ user, isOpen, onClose, onSave }) => {
                .catch((error) => console.error('Error fetching departments:', error));
      }, []);
 
-     useEffect(() => {
-          setIsAdmin(user.role === 'Admin');
-     }, [role])
      const handleToggleRole = () => {
-          setRole(prevRole => (prevRole === 'Admin' ? 'User' : 'Admin'));
-     }
+          setRole(prevRole => (prevRole.toLowerCase === 'admin' ? 'User' : 'Admin'));
+     };
 
      const handleSave = () => {
+          role.toLowerCase() === 'admin' ? setIsAdmin(true) : setIsAdmin(false);
           const updatedUser = {
                ...user,
                firstname,
                lastname,
-               role,
-               department,
-               password,
                email,
+               department,
+               isAdmin: isAdmin,
+               userRole: role,
+               password,
           };
           onSave(updatedUser);
      };
+     const handleDeleteUser = () => {
+          deleteUser(user._id)
+               .then((response) => {
+                    console.log('User deleted successfully:', response.data);
+                    onClose();
+                    setSuccessMessage(`User: '${user.firstname}' deleted successfully!`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 5000);
+               })
+               .catch((error) => {
+                    console.error('Error deleting user:', error);
+                    onClose();
+               });
+     }
 
      if (!isOpen) return null;
 
@@ -53,8 +67,8 @@ const editUserModal = ({ user, isOpen, onClose, onSave }) => {
                className="fixed inset-0 flex justify-center items-center z-50"
                overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
           >
-               <div className='relative bg-white p-8 rounded-lg shadow-lg w-full max-w-md'>
-                    <button className='absolute top-2 right-4 text-gray-500 hover:text-gray-700' onClick={onClose}>&times;</button>
+               <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+                    <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-400 hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
 
                     <h2 className='text-2xl font-bold mb-6 text-center'>Edit User</h2>
 
@@ -83,30 +97,6 @@ const editUserModal = ({ user, isOpen, onClose, onSave }) => {
                               </select>
                          </label>
 
-                         <label className='block'>
-                              <select
-                                   name='role'
-                                   value={role}
-                                   onChange={(e) => setRole(e.target.value)}
-                                   required
-                                   className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                              >
-                                   <option value='' disabled>Select Role</option>
-                                   <option value='admin'>Admin</option>
-                                   <option value='user'>User</option>
-                              </select>
-                         </label>
-
-                         <div className='mt-4'>
-                              <label className='flex items-center'>
-                                   <input
-                                        type='checkbox'
-                                        checked={role === 'Admin'}
-                                        onChange={handleToggleRole}
-                                        className='toggle-checkbox' />
-                                   <span className='ml-2'>{role ? role : 'toggle role'}</span>
-                              </label>
-                         </div>
 
                          {showPasswordInput && (
                               <>
@@ -132,22 +122,38 @@ const editUserModal = ({ user, isOpen, onClose, onSave }) => {
                               </>
                          )}
 
-                         <label className='block'>
-                              <button
-                                   className='border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-600 hover:text-gray-800'
-                                   onClick={(e) => {
-                                        e.preventDefault();
-                                        setPassword('password');
-                                        setShowPasswordInput(true);
-                                   }}
-                              >
-                                   {showPasswordInput ? 'Reset Again' : 'Reset Password'}
-                              </button>
-                         </label>
+                         <div className='mt-4 flex justify-between'>
+                              <label className='flex items-center justify-start'>
+                                   <input
+                                        type='checkbox'
+                                        checked={role === 'Admin'}
+                                        onChange={handleToggleRole}
+                                        className='toggle-checkbox' />
+                                   <span className='ml-2'>{role ? role : 'change role'}</span>
+                                   {console.log('role:', role)}
+                              </label>
+                              <label className='flex items-center justify-end'>
+                                   <button
+                                        className='border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-50 text-gray-600 hover:text-gray-800 hover:bg-gray-300 transition-all duration-300'
+                                        onClick={(e) => {
+                                             e.preventDefault();
+                                             setPassword('password');
+                                             setShowPasswordInput(true);
+                                        }}
+                                   >
+                                        {showPasswordInput ? 'Reset Again' : 'Reset Password'}
+                                   </button>
+                              </label>
+                         </div>
 
-                         <div className='flex justify-end space-x-3'>
-                              <button type='button' onClick={onClose} className='py-2 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700'>Cancel</button>
-                              <button type='submit' className='py-2 px-4 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700'>Save</button>
+                         <div className='flex justify-between py-4'>
+                              <span className='flex justify-start'>
+                                   <button type='button' onClick={handleDeleteUser} className='justify-start px-4 py-2 border border-red-300 text-sm bg-red-100 rounded-md text-red-500 hover:text-red-600 hover:bg-red-300 transition-all duration-400'>Delete User</button>
+                              </span>
+                              <span className='flex space-x-2 justify-end'>
+                                   <button type='button' onClick={onClose} className='justify-end py-2 px-4 bg-gray-100 border border-gray-300 text-sm text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-300 transition-all duration-300'>Cancel</button>
+                                   <button type='submit' className='justify-end py-2 px-4 border border-green-300 bg-green-100 text-sm text-green-600 rounded-md hover:text-green-800 hover:bg-green-300 transition-all duration-300'>Save</button>
+                              </span>
                          </div>
                     </form>
                </div>

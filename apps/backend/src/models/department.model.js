@@ -6,6 +6,9 @@ const departmentSchema = new mongoose.Schema({
       required: true,
       unique: true
    },
+   description : {
+      type: String,
+   },
    admin: {
       type: String,
       ref: "Admin",

@@ -42,6 +42,8 @@ const AdminDashboard = () => {
   const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
   const [isDepartmentEditModalOpen, setIsDepartmentEditModalOpen] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState('')
+
   if (!isUserAdmin) {
     return (
       <div className='flex justify-center items-center h-screen'>
@@ -143,7 +145,14 @@ const AdminDashboard = () => {
 
             {/* USERS' VIEW */}
             {selectedView === 'users' && (
-              <UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} />
+              <UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} successMessage={successMessage} />
+            )}
+
+            {successMessage && (
+              <div className='fixed inset-x-0 bottom-0 mx-auto mb-20 w-1/4 border border-red-400 bg-red-200 py-2 rounded-lg'>
+                <button onClick={() => setSuccessMessage('')} className="absolute top-0 right-0 text-red-500 font-bold px-2">&times;</button>
+                <p className='text-red-500 text-center'>{successMessage}</p>
+              </div>
             )}
 
             {/* TESTS' VIEW */}
@@ -180,6 +189,7 @@ const AdminDashboard = () => {
           isOpen={isUserOptionsOpen}
           onClose={handleCloseDialog}
           onSave={handleSaveUser}
+          setSuccessMessage={setSuccessMessage}
         />
       )}
 
