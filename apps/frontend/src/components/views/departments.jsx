@@ -7,12 +7,12 @@ const DepartmentsView = ({ departments, setIsDepartmentModalOpen, handleEditDepa
         <h1 className='flex flex-grow justify-center font-bold text-2xl'>Departments List</h1>
         <div className="flex justify-end mb-4">
           <button
-            className='bg-blue-600 text-white px-2 py-1 rounded shadow-md hover:bg-blue-700'
+            className='bg-indigo-200 text-indigo-600 px-2 py-1 rounded border border-indigo-100 hover:bg-indigo-100 hover:text-indigo-800 transition-all duration-300'
             onClick={() => {
               setIsDepartmentModalOpen(true);
             }}
           >
-            Add Department
+            + Add Department
           </button>
         </div>
       </div>
@@ -40,7 +40,7 @@ const DepartmentsView = ({ departments, setIsDepartmentModalOpen, handleEditDepa
                   <td className="py-1 px-4 border-b border-gray-500">{department.description ? department.description : '-'}</td>
                   <td className="py-1 px-4 border-b border-gray-500">
                     <div className="flex space-x-2 justify-end">
-                      <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditDepartment(department)}>Edit</button>
+                      <button className='bg-green-200 text-green-600 px-2 py-1 rounded shadow-md border border-green-100 hover:bg-green-100 hover:text-green-700 transition-all duration-300' onClick={() => handleEditDepartment(department)}>✎ Edit</button>
                     </div>
                   </td>
                 </tr>

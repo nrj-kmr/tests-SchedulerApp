@@ -53,7 +53,7 @@ const Topbar = ({ toggleSidebar }) => {
         {isUserAdmin &&
           <button
             onClick={handleAdminPanel}
-            className="py-1 px-2 text-xl font-bold rounded-md shadow-md bg-red-600 text-gray-100 hover:bg-red-700 hover:text-gray-100">
+            className="py-1 px-2 text-lg rounded-md shadow-md bg-red-200 border border-red-100 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-300">
             {isAdminPanel ? 'User Panel' : 'Admin Panel'}
           </button>
         }
@@ -61,7 +61,7 @@ const Topbar = ({ toggleSidebar }) => {
           <>
             <div className="relative">
               <span
-                className="flex items-center text-sm cursor-pointer p-2 rounded-md shadow-lg bg-blue-700 hover:bg-blue-800"
+                className="flex items-center text-md text-indigo-600 cursor-pointer p-2 rounded-md border border-indigo-300 bg-indigo-100 hover:bg-indigo-300 hover:text-indigo-700 transition-all duration-300"
                 onClick={toggleNotifications}
               >
                 🔔 Notifications
@@ -77,7 +77,7 @@ const Topbar = ({ toggleSidebar }) => {
             </div>
             <div className="relative">
               <span
-                className="flex items-center text-sm cursor-pointer p-2 rounded-md shadow-lg bg-blue-700 hover:bg-blue-800"
+                className="flex items-center text-md text-indigo-600 cursor-pointer p-2 rounded-md border border-indigo-300 bg-indigo-100 hover:bg-indigo-300 hover:text-indigo-700 transition-all duration-300"
                 onClick={toggleUserDropdown}
               >
                 🧑🏻‍💼 Profile

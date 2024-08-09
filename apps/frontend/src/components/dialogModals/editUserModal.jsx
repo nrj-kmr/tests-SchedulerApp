@@ -68,7 +68,7 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
           >
                <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
-                    <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-400 hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
+                    <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-600 text-xl hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
 
                     <h2 className='text-2xl font-bold mb-6 text-center'>Edit User</h2>
 
@@ -146,13 +146,13 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                               </label>
                          </div>
 
-                         <div className='flex justify-between py-4'>
+                         <div className='flex justify-between'>
                               <span className='flex justify-start'>
-                                   <button type='button' onClick={handleDeleteUser} className='justify-start px-4 py-2 border border-red-300 text-sm bg-red-100 rounded-md text-red-500 hover:text-red-600 hover:bg-red-300 transition-all duration-400'>Delete User</button>
+                                   <button type='button' onClick={handleDeleteUser} className='mt-4 justify-start px-4 py-2 border border-red-300 text-sm bg-red-100 rounded-md text-red-500 hover:text-red-600 hover:bg-red-300 transition-all duration-400'>Delete User</button>
                               </span>
                               <span className='flex space-x-2 justify-end'>
-                                   <button type='button' onClick={onClose} className='justify-end py-2 px-4 bg-gray-100 border border-gray-300 text-sm text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-300 transition-all duration-300'>Cancel</button>
-                                   <button type='submit' className='justify-end py-2 px-4 border border-green-300 bg-green-100 text-sm text-green-600 rounded-md hover:text-green-800 hover:bg-green-300 transition-all duration-300'>Save</button>
+                                   <button type='button' onClick={onClose} className='mt-4 justify-end py-2 px-4 bg-gray-100 border border-gray-300 text-sm text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-300 transition-all duration-300'>Cancel</button>
+                                   <button type='submit' className='mt-4 justify-end py-2 px-4 border border-green-300 bg-green-100 text-sm text-green-600 rounded-md hover:text-green-800 hover:bg-green-300 transition-all duration-300'>Save</button>
                               </span>
                          </div>
                     </form>

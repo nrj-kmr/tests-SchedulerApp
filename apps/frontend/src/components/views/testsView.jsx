@@ -44,18 +44,18 @@ const TestsView = ({ tests, setIsTestModalOpen, handleEditTest }) => {
         <h1 className='flex flex-grow justify-center font-bold text-2xl'>Tests List</h1>
         <div className="flex justify-end mb-4 space-x-2">
           <button
-            className="shadow-lg px-2 rounded bg-gray-600 hover:bg-gray-700"
+            className="border border-gray-50 px-2 rounded bg-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-all duration-300"
             onClick={generatePDFReport}
           >
-            Download Report
+            ↓ Download Report
           </button>
           <button
-            className='bg-blue-600 text-white px-2 py-1 rounded shadow-lg hover:bg-blue-700'
+            className='bg-indigo-200 text-indigo-600 px-2 py-1 rounded border border-indigo-100 hover:bg-indigo-100 hover:text-indigo-800 transition-all duration-300'
             onClick={() => {
               setIsTestModalOpen(true);
             }}
           >
-            Add Test
+            + Add Test
           </button>
         </div>
       </div>
@@ -89,7 +89,7 @@ const TestsView = ({ tests, setIsTestModalOpen, handleEditTest }) => {
                   <td className="py-1 px-4 border-b border-gray-500">{test.status}</td>
                   <td className="py-1 px-4 border-b border-gray-500">
                     <div className="flex space-x-2 justify-end">
-                      <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:bg-green-700' onClick={() => handleEditTest(test)}>Edit</button>
+                      <button className='bg-green-200 text-green-600 px-2 py-1 rounded shadow-md border border-green-100 hover:bg-green-100 hover:text-green-700 transition-all duration-300' onClick={() => handleEditTest(test)}>✎ Edit</button>
                     </div>
                   </td>
                 </tr>

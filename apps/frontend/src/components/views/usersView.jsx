@@ -4,15 +4,15 @@ const UsersView = ({ users, setIsUserModalOpen, handleEditUser }) => {
   return (
      <div>
      <div className="sticky top-0 z-0">
-       <h1 className='flex flex-grow justify-center font-bold text-2xl'>Users List</h1>
+       <h1 className='flex flex-grow justify-center font-bold text-2xl mb-2'>Users List</h1>
        <div className='flex justify-end mb-4'>
          <button
-           className='bg-blue-600 text-white px-2 py-1 rounded shadow-md hover:bg-blue-700'
+           className='bg-indigo-200 text-indigo-600 px-2 py-1 rounded border border-indigo-100 hover:bg-indigo-100 hover:text-indigo-800 transition-all duration-300'
            onClick={() => {
              setIsUserModalOpen(true);
            }}
          >
-           Add User
+           + Add User
          </button>
        </div>
 
@@ -42,7 +42,7 @@ const UsersView = ({ users, setIsUserModalOpen, handleEditUser }) => {
                  <td className="py-1 px-4 border-b border-gray-500">{user.isAdmin ? 'Admin' : 'User'}</td>
                  <td className="py-1 px-4 border-b border-gray-500">
                    <div className="flex space-x-2 justify-center">
-                     <button className='bg-green-600 text-white px-2 py-1 rounded shadow-md hover:opacity-50' onClick={() => handleEditUser(user)}>Edit</button>
+                     <button className='bg-green-200 text-green-600 px-2 py-1 rounded shadow-md border border-green-100 hover:bg-green-100 hover:text-green-700 transition-all duration-300' onClick={() => handleEditUser(user)}>✎ Edit</button>
                    </div>
                  </td>
                </tr>

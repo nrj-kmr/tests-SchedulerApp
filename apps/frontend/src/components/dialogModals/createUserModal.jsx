@@ -85,11 +85,11 @@ const UserModal = ({ isOpen, closeModal, newUser, handleInputChange, handleAddUs
                   </select>
                </label>
 
-               <div className='flex space-x-3 py-4'>
-                  <button type='button' onClick={closeModal} className='w-full px-4 py-2 border border-gray-300 bg-gray-100 text-sm text-gray-700 rounded-md hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300'>
+               <div className='flex space-x-3'>
+                  <button type='button' onClick={closeModal} className='mt-4 w-full px-4 py-2 border border-gray-300 bg-gray-100 text-sm text-gray-700 rounded-md hover:bg-gray-300 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300'>
                      Cancel
                   </button>
-                  <button type='submit' className='w-full px-4 py-2 border border-indigo-300 bg-indigo-200 text-sm text-indigo-600 rounded-md hover:bg-indigo-300 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300'>
+                  <button type='submit' className='mt-4 w-full px-4 py-2 border border-indigo-300 bg-indigo-200 text-sm text-indigo-600 rounded-md hover:bg-indigo-300 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300'>
                      Add User
                   </button>
                </div>
