@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
 import { deleteUser, fetchDepartments } from '../../services/apiServices';
 import { AuthContext } from '../../context/AuthContext';
+import { AxiosError } from 'axios';
 
 const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [firstname, setFirstname] = useState(user.firstname);
@@ -49,11 +50,14 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                     setSuccessMessage(`User: '${user.firstname}' deleted successfully!`);
                     setTimeout(() => {
                          setSuccessMessage('');
-                    }, 5000);
+                    }, 3000);
                })
                .catch((error) => {
-                    console.error('Error deleting user:', error);
                     onClose();
+                    setSuccessMessage(`Error deleting user: '${user.firstname}' \n ${error.response.data.error}`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 3000);
                });
      }
 
@@ -130,7 +134,6 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                                         onChange={handleToggleRole}
                                         className='toggle-checkbox' />
                                    <span className='ml-2'>{role ? role : 'change role'}</span>
-                                   {console.log('role:', role)}
                               </label>
                               <label className='flex items-center justify-end'>
                                    <button
