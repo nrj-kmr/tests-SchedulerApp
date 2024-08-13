@@ -112,6 +112,17 @@ adminRouter.put("/editDepartment/:_id", async (req, res) => {
    }
 });
 
+adminRouter.delete("/deleteDepartment/:_id", async (req, res) => {
+   try {
+      const department = await Department.findById(req.params._id);
+      if (!department) return res.status(404).json({ error: "department not found" });
+      await Department.findByIdAndDelete(req.params._id);
+      return res.json({ message: `${department._id} Deleted Successfully` });
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'Department deletion failed!' });
+   }
+});
+
 // Admin Routes for test management
 adminRouter.post("/createTest", createTest);
 
@@ -141,6 +152,18 @@ adminRouter.put("/editTest/:_id", async (req, res) => {
       });
    } catch (error) {
       return res.status(500).json({ error: error.message || 'Test update failed!' });
+   }
+});
+
+
+adminRouter.delete("/deleteTest/:_id", async (req, res) => {
+   try {
+      const test = await Test.findById(req.params._id);
+      if (!test) return res.status(404).json({ error: "Test not found" });
+      await Test.findByIdAndDelete(req.params._id);
+      return res.json({ message: `${test._id} Deleted Successfully` });
+   } catch (error) {
+      return res.status(500).json({ error: error.message || 'Test deletion failed!' });
    }
 });
 

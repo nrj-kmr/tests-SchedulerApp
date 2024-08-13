@@ -1,8 +1,8 @@
-import express, { application } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv, { parse } from "dotenv"
+import dotenv from "dotenv"
 import Api from "./routes/api.js";
 
 dotenv.config({ path: "./.env" })

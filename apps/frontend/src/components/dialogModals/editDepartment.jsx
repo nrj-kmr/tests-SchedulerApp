@@ -1,17 +1,10 @@
-import { fetchDepartments } from "../../services/apiServices";
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
-const EditDepartmentModal = ({ department, isOpen, onClose, onSave }) => {
+const EditDepartmentModal = ({ department, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [name, setName] = useState(department.name);
      const [admin, setAdmin] = useState(department.admin);
      const [description, setDescription] = useState(department.description);
-
-     useEffect(() => {
-          fetchDepartments()
-               .then((response) => setDepartments(response.data))
-               .catch((error) => console.error('Error fetching departments:', error));
-     }, []);
 
      const handleSave = () => {
           const updatedDepartment = {
@@ -22,6 +15,26 @@ const EditDepartmentModal = ({ department, isOpen, onClose, onSave }) => {
           };
           onSave(updatedDepartment);
      };
+
+     const handleDeleteDepartment = () => {
+          deleteDepartment(department._id)
+               .then((response) => {
+                    console.log('Department deleted successfully:', response.data);
+                    onClose();
+                    setSuccessMessage(`Department: '${department.name}' deleted successfully!`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 3000);
+               })
+               .catch((error) => {
+                    onClose();
+                    setSuccessMessage(`Error deleting department: '${department.name}' \n ${error.response.data.error}`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 3000);
+                    console.error('Error deleting department:', error)
+               })
+     }
 
      if (!isOpen) return null;
 
@@ -51,13 +64,20 @@ const EditDepartmentModal = ({ department, isOpen, onClose, onSave }) => {
                               <textarea type='text' name='description' placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} className='mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                          </label>
 
-                         <div className='flex justify-end space-x-4'>
-                              <button type='button' onClick={onClose} className='mt-4 w-full bg-gray-100 text-gray-600 border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 transition-all duration-300'>
-                                   Cancel
-                              </button>
-                              <button type='submit' className='mt-4 w-full bg-indigo-200 text-indigo-600 border border-indigo-300 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-600 transition-all duration-300'>
-                                   Update
-                              </button>
+                         <div className='flex justify-between'>
+                              <span className="flex justify-start">
+                                   <button type='button' onClick={handleDeleteDepartment} className='mt-4 w-full bg-red-100 text-red-600 border border-red-300 py-2 px-4 rounded-md hover:bg-red-300 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-all duration-300'>
+                                        Delete
+                                   </button>
+                              </span>
+                              <span className="flex justify-end space-x-2">
+                                   <button type='button' onClick={onClose} className='mt-4 w-full bg-gray-100 text-gray-600 border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 transition-all duration-300'>
+                                        Cancel
+                                   </button>
+                                   <button type='submit' className='mt-4 w-full bg-indigo-200 text-indigo-600 border border-indigo-300 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-600 transition-all duration-300'>
+                                        Update
+                                   </button>
+                              </span>
                          </div>
 
                     </form>

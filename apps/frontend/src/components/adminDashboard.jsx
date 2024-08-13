@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   const { users, tests, departments } = useContext(ApiContext);
 
   const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [selectedView, setSelectedView] = useState('welcome')
+  const [selectedView, setSelectedView] = useState('users')
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
@@ -145,9 +145,10 @@ const AdminDashboard = () => {
 
             {/* USERS' VIEW */}
             {selectedView === 'users' && (
-              <UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} successMessage={successMessage} />
+              <UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} />
             )}
 
+            {/* SUCCESS MESSAGE */}
             {successMessage && (
               <div className='fixed inset-x-0 bottom-0 mx-auto mb-20 w-1/4 border border-red-400 bg-red-200 py-2 rounded-lg'>
                 <button onClick={() => setSuccessMessage('')} className="absolute top-0 right-0 text-red-500 font-bold px-2">&times;</button>
@@ -199,6 +200,7 @@ const AdminDashboard = () => {
           isOpen={isTestEditModalOpen}
           onClose={handleCloseTestEditModal}
           onSave={handleUpdateTest}
+          setSuccessMessage={setSuccessMessage}
         />
       )}
 
@@ -208,6 +210,7 @@ const AdminDashboard = () => {
           isOpen={isDepartmentEditModalOpen}
           onClose={handleCloseDepartmentEditModal}
           onSave={handleUpdateDepartment}
+          setSuccessMessage={setSuccessMessage}
         />
       )}
 

@@ -1,12 +1,15 @@
-import { fetchDepartments } from "../../services/apiServices";
+import { deleteTest, fetchDepartments } from "../../services/apiServices";
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
-const EditTestModal = ({ test, isOpen, onClose, onSave }) => {
-     const [title, setTitle] = useState(test.title);
-     const [department, setDepartment] = useState(test.department);
+const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [departments, setDepartments] = useState([]);
+     const [title, setTitle] = useState(test.title);
      const [description, setDescription] = useState(test.description);
+     const [date, setDate] = useState(test.date);
+     const [startTime, setStartTime] = useState(test.startTime);
+     const [endTime, setEndTime] = useState(test.endTime);
+     const [department, setDepartment] = useState(test.department);
      const [status, setStatus] = useState(test.status);
 
      const allStatus = [
@@ -26,12 +29,35 @@ const EditTestModal = ({ test, isOpen, onClose, onSave }) => {
           const updatedTest = {
                ...test,
                title,
-               department,
                description,
+               date,
+               startTime,
+               endTime,
+               department,
                status,
           };
           onSave(updatedTest);
      };
+
+     const handleDeleteTest = () => {
+          deleteTest(test._id)
+               .then((response) => {
+                    console.log('Test deleted successfully:', response.data);
+                    onClose();
+                    setSuccessMessage(`Test: '${test.title}' deleted successfully!`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 3000);
+               })
+               .catch((error) => {
+                    onClose();
+                    setSuccessMessage(`Error deleting test: '${test.title}' \n ${error.response.data.error}`);
+                    setTimeout(() => {
+                         setSuccessMessage('');
+                    }, 3000);
+                    console.error('Error deleting test:', error)
+               })
+     }
 
      if (!isOpen) return null;
 
@@ -54,16 +80,28 @@ const EditTestModal = ({ test, isOpen, onClose, onSave }) => {
                          </label>
 
                          <label className='block'>
-                              <select name='department' value={department} onChange={(e) => setDepartment(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
-                                   <option value=''>Select Department</option>
-                                   {departments.map((department) => (
-                                        <option key={department.id} value={department.id}>{department.name}</option>
-                                   ))}
-                              </select>
+                              <textarea name='description' placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                         </label>
+
+                         <label className="block">
+                              <input type="date" name="date" value={date} onChange={(e) => setDate(e.target.value)} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                         </label>
+
+                         <label className="block">
+                              <input type="time" name="startTime" value={startTime} onChange={(e) => setStartTime(e.target.value)} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                         </label>
+
+                         <label className="block">
+                              <input type="time" name="endTime" value={endTime} onChange={(e) => setEndTime(e.target.value)} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
                          </label>
 
                          <label className='block'>
-                              <textarea name='description' placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                              <select name='department' value={department} onChange={(e) => setDepartment(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
+                                   <option value=''>Select Department</option>
+                                   {departments.map((department) => (
+                                        <option key={department._id} value={department.id}>{department.name}</option>
+                                   ))}
+                              </select>
                          </label>
 
                          <label className='block'>
@@ -75,13 +113,20 @@ const EditTestModal = ({ test, isOpen, onClose, onSave }) => {
                               </select>
                          </label>
 
-                         <div className='flex justify-end space-x-4'>
-                              <button type='button' onClick={onClose} className='mt-4 w-full bg-gray-100 text-gray-600 text-sm border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 transition-all duration-300'>
-                                   Cancel
-                              </button>
-                              <button type='submit' className='mt-4 w-full bg-indigo-100 text-indigo-500 text-sm border border-indigo-300 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-600 transition-all duration-300'>
-                                   Update
-                              </button>
+                         <div className='flex justify-between'>
+                              <span className="flex justify-start">
+                                   <button type='button' onClick={handleDeleteTest} className='mt-4 w-full justify-start bg-red-100 text-red-600 text-sm border border-red-300 py-2 px-4 rounded-md hover:bg-red-300 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-all duration-300'>
+                                        Delete test
+                                   </button>
+                              </span>
+                              <span className="flex space-x-2 justify-end">
+                                   <button type='button' onClick={onClose} className='mt-4 w-full justify-end bg-gray-100 text-gray-600 text-sm border border-gray-300 py-2 px-4 rounded-md hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 transition-all duration-300'>
+                                        Cancel
+                                   </button>
+                                   <button type='submit' className='mt-4 w-full bg-indigo-100 text-indigo-500 text-sm border border-indigo-300 py-2 px-4 rounded-md hover:bg-indigo-300 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-600 transition-all duration-300'>
+                                        Update
+                                   </button>
+                              </span>
                          </div>
                     </form>
                </div>

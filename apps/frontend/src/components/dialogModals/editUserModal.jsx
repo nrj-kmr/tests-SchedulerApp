@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import Modal from 'react-modal';
 import { deleteUser, fetchDepartments } from '../../services/apiServices';
 import { AuthContext } from '../../context/AuthContext';
-import { AxiosError } from 'axios';
 
 const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [firstname, setFirstname] = useState(user.firstname);
