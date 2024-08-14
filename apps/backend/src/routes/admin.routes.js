@@ -28,12 +28,8 @@ adminRouter.delete("/deleteUser/:_id", async (req, res) => {
    try {
       const user = await User.findById(req.params._id);
       if (!user) return res.status(404).json({ error: "User not found" });
-      if (user.isAdmin) {
-         return res.status(403).json({ error: "You are not authorized to delete this user" })
-      } else {
-         await User.findByIdAndDelete(req.params._id);
-         return res.json({ message: `${user._id} Deleted Successfully` });
-      }
+      await User.findByIdAndDelete(req.params._id);
+      return res.json({ message: `${user._id} Deleted Successfully` });
    } catch (error) {
       return res.status(500).json({ error: error.message || 'User deletion failed!' });
    }

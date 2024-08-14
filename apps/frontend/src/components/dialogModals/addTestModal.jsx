@@ -111,8 +111,6 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                            onChange={handleInputChange}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                            required
-                           min='05:00'
-                           max='20:00'
                         />
                      </label>
                      <label className='block flex-grow'>
@@ -124,8 +122,6 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                            onChange={handleInputChange}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                            required
-                           min='05:00'
-                           max='20:00'
                         />
                      </label>
                   </div>

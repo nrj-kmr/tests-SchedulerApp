@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import CustomToolbar from './CustomToolbar'
 import { fetchTests } from '../../services/apiServices'
@@ -8,8 +11,18 @@ import TestModal from '../dialogModals/addTestModal'
 import axios from 'axios'
 import BoardView from './boardView'
 import EditTestModal from '../dialogModals/editTestModal'
+import { enIN } from 'date-fns/locale/en-IN'
 
-const localizer = momentLocalizer(moment)
+const locales = {
+    "en-IN": enIN
+}
+const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales
+});
 
 const CalendarView = ({ department, actualUserDept }) => {
     const [tests, setTests] = useState([]);
@@ -43,7 +56,7 @@ const CalendarView = ({ department, actualUserDept }) => {
     }
 
     const handleRightClick = (e, test) => {
-        e.preventDefault();
+        e.preventDefault;
         setSelectedTest(test);
         setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
     }
@@ -130,8 +143,6 @@ const CalendarView = ({ department, actualUserDept }) => {
                     events={tests}
                     startAccessor="start"
                     endAccessor="end"
-                    min={moment("2024-07-27T09:00:00").toDate()}
-                    max={moment("2024-07-27T19:00:00").toDate()}
                     style={{ height: "80vh" }}
                     eventPropGetter={testStyleGetter}
                     components={{
