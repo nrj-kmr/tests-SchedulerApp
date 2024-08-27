@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Topbar = ({ toggleSidebar }) => {
+const Topbar = ({ toggleSidebar, changeView }) => {
   const { user, isUserAdmin, logout } = useContext(AuthContext);
   const [userDropdown, setUserDropdown] = useState(false);
   const [notifications, setNotifications] = useState(false)
@@ -45,7 +45,12 @@ const Topbar = ({ toggleSidebar }) => {
           <span className="p-2 text-xl font-bold">Test Scheduler</span>
         </div>
       ) : (
-        <span className="p-2 text-xl font-bold">Test Scheduler</span>
+        <div>
+          <span className="p-2 text-xl font-bold">Test Scheduler</span>
+          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('calendar')}>Calendar</span>
+          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('tests')}>All tests</span>
+        </div>
+
       )}
 
 

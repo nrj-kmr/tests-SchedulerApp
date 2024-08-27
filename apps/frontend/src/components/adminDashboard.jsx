@@ -10,11 +10,11 @@ import TestModal from "./dialogModals/addTestModal";
 import DepartmentModal from "./dialogModals/createDepartment";
 import CalendarView from "./calendarComponents/calendarView";
 import EditUserModal from "./dialogModals/editUserModal";
-import TestEditModal from "./dialogModals/editTestModal";
 import EditDepartmentModal from "./dialogModals/editDepartment";
 import TestsView from "./views/testsView";
 import DepartmentsView from "./views/departments";
 import UsersView from "./views/usersView";
+import EditTestModal from "./dialogModals/editTestModal";
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -145,7 +145,11 @@ const AdminDashboard = () => {
 
             {/* USERS' VIEW */}
             {selectedView === 'users' && (
-              <UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} />
+              <UsersView
+                users={users}
+                setIsUserModalOpen={setIsUserModalOpen}
+                handleEditUser={handleUserOptions}
+              />
             )}
 
             {/* SUCCESS MESSAGE */}
@@ -158,7 +162,11 @@ const AdminDashboard = () => {
 
             {/* TESTS' VIEW */}
             {selectedView === 'tests' && (
-              <TestsView tests={tests} setIsTestModalOpen={setIsTestModalOpen} handleEditTest={handleEditTest} />
+              <TestsView
+                tests={tests}
+                setIsTestModalOpen={setIsTestModalOpen}
+                handleEditTest={handleEditTest}
+              />
             )}
 
             {/* All DEPARTMENTS' VIEW */}
@@ -195,7 +203,7 @@ const AdminDashboard = () => {
       )}
 
       {selectedTest && (
-        <TestEditModal
+        <EditTestModal
           test={selectedTest}
           isOpen={isTestEditModalOpen}
           onClose={handleCloseTestEditModal}
@@ -243,7 +251,6 @@ const AdminDashboard = () => {
             const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
             console.log("Test Added", response.data)
             setIsTestModalOpen(false);
-
           } catch (err) {
             console.log('Error while adding new test', err)
           }
