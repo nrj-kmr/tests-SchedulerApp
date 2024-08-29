@@ -4,6 +4,8 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { useContext } from 'react';
 
+import { serverURL } from '../services/apiServices.jsx';
+
 export default function Login() {
     const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ export default function Login() {
 
     // Get all departments for the dropdown
     useEffect(() => {
-        axios.get('http://localhost:8000/api/admin/getDepartments')
+        axios.get(`${serverURL}/api/admin/getDepartments`)
             .then((response) => setAllDepartments(response.data))
             .catch((error) => console.error('Error fetching departments:', error));
     }, []);
@@ -44,7 +46,7 @@ export default function Login() {
 
         try {
             // verify the user's email and password
-            const credentialsResponse = await axios.post('http://localhost:8000/api/user/verifyCredentials', {
+            const credentialsResponse = await axios.post(`${serverURL}/api/user/verifyCredentials`, {
                 email,
                 password
             });
@@ -54,7 +56,7 @@ export default function Login() {
             }
 
             // Fetch the actual department of the user form the backend
-            const departmentResponse = await axios.get(`http://localhost:8000/api/admin/getDepartment/${email}`);
+            const departmentResponse = await axios.get(`${serverURL}/api/admin/getDepartment/${email}`);
             const actualDepartment = departmentResponse.data.department;
             if (actualDepartment !== department) {
                 setDepartmentError('User does not belong to this department!');
@@ -62,7 +64,7 @@ export default function Login() {
             }
 
             // Proceed with login if all checks pass
-            const response = await axios.post('http://localhost:8000/api/user/login', {
+            const response = await axios.post(`${serverURL}/api/user/login`, {
                 email,
                 password,
                 department,

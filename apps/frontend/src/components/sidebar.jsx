@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
+import { serverURL } from '../services/apiServices';
+
 const Sidebar = ({ onViewChange, onDepartmentChange }) => {
   const { isUserAdmin } = useContext(AuthContext);
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/admin/getDepartments')
+    axios.get(`${serverURL}/api/admin/getDepartments`)
       .then((response) => setDepartments(response.data))
       .catch((error) => console.error('Error fetching departments:', error));
   }, [])

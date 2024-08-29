@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { useContext } from "react";
 
+import { serverURL } from "../services/apiServices.jsx";
+
 function Signup({ onSuccess }) {
     const { signup } = useContext(AuthContext);
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -18,7 +20,7 @@ function Signup({ onSuccess }) {
     });
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/admin/getDepartments')
+        axios.get(`${serverURL}/api/admin/getDepartments`)
             .then((response) => setDepartments(response.data))
             .catch((error) => console.error('Error fetching departments:', error));
     }, []);
@@ -38,7 +40,7 @@ function Signup({ onSuccess }) {
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/api/user/signup', formData)
+        axios.post(`${serverURL}/api/user/signup`, formData)
             .then((response) => {
                 if (response.status === 201) {
                     if (onSuccess) onSuccess();

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
+import { serverURL } from '../../services/apiServices';
+
 const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
    const [departments, setDepartments] = useState([]);
 
@@ -13,7 +15,7 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
    ];
 
    useEffect(() => {
-      axios.get('http://localhost:8000/api/admin/getDepartments')
+      axios.get(`${serverURL}/api/admin/getDepartments`)
          .then((response) => { setDepartments(response.data); })
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
