@@ -13,6 +13,8 @@ import BoardView from './boardView'
 import EditTestModal from '../dialogModals/editTestModal'
 import { enIN } from 'date-fns/locale/en-IN'
 
+import { serverURL } from '../../services/apiServices'
+
 const locales = {
     "en-IN": enIN
 }
@@ -47,7 +49,7 @@ const CalendarView = ({ department, actualUserDept }) => {
     }
 
     const handleUpdateTest = (updatedTest) => {
-        axios.put(`http://localhost:8000/api/admin/editTest/${updatedTest._id}`, updatedTest)
+        axios.put(`${serverURL}/api/admin/editTest/${updatedTest._id}`, updatedTest)
             .then((response) => {
                 console.log('Test updated successfully:', response.data);
                 closeEditModal();
@@ -179,7 +181,7 @@ const CalendarView = ({ department, actualUserDept }) => {
                 handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
                 handleAddTest={async (formData) => {
                     try {
-                        const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
+                        const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
                         console.log("Test Added", (await response).data)
                         setIsTestModalOpen(false);
                     } catch (err) {

@@ -9,6 +9,8 @@ import { ApiContext } from '../context/ApiContext';
 import EditTestModal from './dialogModals/editTestModal';
 import TestModal from './dialogModals/addTestModal';
 
+import { serverURL } from '../services/apiServices';
+
 const UserDashboard = ({ }) => {
   const [exactDepartment, setExactDepartment] = useState('');
   const [selectedView, setSelectedView] = useState('calendar');
@@ -31,7 +33,7 @@ const UserDashboard = ({ }) => {
   useEffect(() => {
     const fetchDepartment = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/admin/getDepartment/${userEmail}`);
+        const response = await axios.get(`${serverURL}/api/admin/getDepartment/${userEmail}`);
         setExactDepartment(response.data.department);
       } catch (error) {
         console.error('Error fetching department:', error);
@@ -81,7 +83,7 @@ const UserDashboard = ({ }) => {
         handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
         handleAddTest={async (formData) => {
           try {
-            const response = axios.post('http://localhost:8000/api/admin/createTest', formData)
+            const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
             console.log("Test Added", (await response).data)
             setIsTestModalOpen(false);
           } catch (err) {
