@@ -46,7 +46,32 @@ const seedDB = async () => {
 
       console.log(`> Default admin & department created successfully.\n Admin: ${defaultAdmin.email}\n Department: ${defaultAdmin.department}\n`);
     } else {
-      console.log(`> Admin user or department already exists.\n Admin: ${defaultAdmin.email}\n Department: ${defaultAdmin.department}\n`);
+      // delete existing and create new
+      await Admin.deleteMany({ email: defaultAdmin.email });
+      await User.deleteMany({ email: defaultAdmin.email });
+      await Department.deleteMany({ name: defaultAdmin.department });
+
+      // create new after deleting existing
+      const hashedPassword = await bcrypt.hash(defaultAdmin.password, 10);
+      const newAdmin = new Admin({
+        ...defaultAdmin,
+        password: hashedPassword,
+      });
+      const newUser = new User({
+        ...defaultAdmin,
+        password: hashedPassword,
+      });
+      const newDepartment = new Department({
+        name: defaultAdmin.department,
+        description: 'Default department',
+        admin: defaultAdmin.email,
+      });
+
+      await newAdmin.save();
+      await newUser.save();
+      await newDepartment.save();
+
+      console.log(`> Admin user or department already exists.\n Created Successfully \n Admin: ${defaultAdmin.email}\n Department: ${defaultAdmin.department}\n`);
     }
 
     mongoose.connection.close();

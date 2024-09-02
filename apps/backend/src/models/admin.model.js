@@ -19,7 +19,6 @@ const adminSchema = new mongoose.Schema({
    password: { type: String, required: true },
    department: { type: String, ref: "Department" },
    isAdmin: { type: Boolean, default: true },
-   role: { type: String }
 }, { timestamps: true })
 
 // Define virtual property to get fullname

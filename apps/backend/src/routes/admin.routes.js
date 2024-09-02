@@ -50,12 +50,17 @@ adminRouter.put("/resetPassword/:_id", async (req, res) => {
 adminRouter.put("/editUser/:_id", async (req, res) => {
    try {
       const user = await User.findByIdAndUpdate(req.params._id);
+
+      // also save/update the user into admin if the isAdmin is true
+      // also if the isAdmin is false, remove from the Admin Collection
+
       if (!user) return res.status(404).json({ error: "User not found" });
       user.firstname = req.body.firstname;
       user.lastname = req.body.lastname;
       user.email = req.body.email;
       user.department = req.body.department;
-      user.role = req.body.role;
+      user.password = req.body.password;
+      user.isAdmin = req.body.isAdmin;
       await user.save();
       return res.json({
          message: 'User updated successfully!',
@@ -98,6 +103,8 @@ adminRouter.put("/editDepartment/:_id", async (req, res) => {
       const department = await Department.findByIdAndUpdate(req.params._id);
       if (!department) return res.status(404).json({ error: "Department not found" });
       department.name = req.body.name;
+      department.description = req.body.description;
+      department.admin = req.body.admin;
       await department.save();
       res.json({
          message: 'Department updated successfully!',
@@ -140,7 +147,12 @@ adminRouter.put("/editTest/:_id", async (req, res) => {
       const test = await Test.findByIdAndUpdate(req.params._id);
       if (!test) return res.status(404).json({ error: "Test not found" });
       test.title = req.body.title;
+      test.description = req.body.description;
       test.department = req.body.department;
+      test.date = req.body.date;
+      // test.startTime = req.body.startTime;
+      // test.endTime = req.body.endTime;
+      test.status = req.body.status;
       await test.save();
       res.json({
          message: 'Test updated successfully!',

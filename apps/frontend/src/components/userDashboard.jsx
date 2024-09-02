@@ -19,6 +19,8 @@ const UserDashboard = ({ }) => {
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState('');
+
   const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
   const { user, userEmail } = useContext(AuthContext)
@@ -74,6 +76,13 @@ const UserDashboard = ({ }) => {
           </div>
         )}
 
+        {successMessage && (
+          <div className='fixed inset-x-0 bottom-0 mx-auto mb-20 w-1/4 border border-red-400 bg-red-200 py-2 rounded-lg'>
+            <button onClick={() => setSuccessMessage('')} className="absolute top-0 right-0 text-red-500 font-bold px-2">&times;</button>
+            <p className='text-red-500 text-center'>{successMessage}</p>
+          </div>
+        )}
+
       </div>
 
       <TestModal
@@ -101,6 +110,7 @@ const UserDashboard = ({ }) => {
             console.log('Form Data:', formData);
             setIsTestEditModalOpen(false);
           }}
+          setSuccessMessage={setSuccessMessage}
         />
       )}
     </div>

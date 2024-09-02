@@ -1,7 +1,8 @@
 import { FaBars } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Notifications from "./Notifications";
 
 const Topbar = ({ toggleSidebar, changeView }) => {
   const { user, isUserAdmin, logout } = useContext(AuthContext);
@@ -9,15 +10,30 @@ const Topbar = ({ toggleSidebar, changeView }) => {
   const [notifications, setNotifications] = useState(false)
   const [isAdminPanel, setIsAdminPanel] = useState(false)
 
+  const userDropdownRef = useRef(null);
+
   const navigate = useNavigate()
   const location = useLocation();
 
   const toggleUserDropdown = () => {
     setUserDropdown(!userDropdown);
   };
-  const toggleNotifications = () => {
-    setNotifications(!notifications)
-  }
+  const handleClickOutside = (event) => {
+    if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+      setUserDropdown(false);
+    }
+  };
+  useEffect(() => {
+    if (userDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [userDropdown]);
 
   useEffect(() => {
     if (location.pathname === '/admin/dashboard') {
@@ -64,23 +80,10 @@ const Topbar = ({ toggleSidebar, changeView }) => {
         }
         {user && user.email ? (
           <>
-            <div className="relative">
-              <span
-                className="flex items-center text-md text-indigo-600 cursor-pointer p-2 rounded-md border border-indigo-300 bg-indigo-100 hover:bg-indigo-300 hover:text-indigo-700 transition-all duration-300"
-                onClick={toggleNotifications}
-              >
-                🔔 Notifications
-              </span>
-              {notifications && (
-                <div className="absolute right-0 mt-2 w-full rounded-md shadow-md bg-gray-700 hover:bg-blue-800">
-                  <div className="w-full text-left px-4 py-2 text-white">
-                    No Notifications right now!
-                    {/* conditionally render the notifiactions */}
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="relative">
+
+            <Notifications />
+
+            <div className="relative" ref={userDropdownRef}>
               <span
                 className="flex items-center text-md text-indigo-600 cursor-pointer p-2 rounded-md border border-indigo-300 bg-indigo-100 hover:bg-indigo-300 hover:text-indigo-700 transition-all duration-300"
                 onClick={toggleUserDropdown}
