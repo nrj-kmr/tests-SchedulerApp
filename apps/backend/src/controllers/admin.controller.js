@@ -59,6 +59,14 @@ export const createTest = async (req, res) => {
     const notify = await Notification.create(notification);
     await notify.save();
 
+    // logic to delete old notifications if the total number of notifications exceeds 100
+    const notificationCount = await Notification.countDocuments();
+    if (notificationCount > 100) {
+      const oldestNotifications = await Notification.find().sort({ createdAt: 1 }).limit(notificationCount - 100);
+      const oldestNotificationIds = oldestNotifications.map(notification => notification._id);
+      await Notification.deleteMany({ _id: { $in: oldestNotificationIds } });
+    }
+
     await newTest.save();
     return res.status(201).json({
       message: 'Test created successfully!',
