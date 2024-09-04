@@ -12,21 +12,14 @@ To set up the project, follow these steps:
      git clone https://github.com/nrj-kmr/tests-SchedulerApp.git
      ```
 
-2. Navigate to the project directory:
-
-     ```bash
-     cd tests-SchedulerApp/apps
-     ```
-
-3. Navigate to the backend and frontend directories to start the server and the UI.
-     - Backend:
+2. Navigate to the backend and frontend directories to start the server and the UI.
+     - Backend: navigate to the backend and install dependencies
 
           ```bash
           cd tests-SchedulerApp/apps/backend
           ```
           - copy the `.env.sample` file and rename the copy to `.env`
           - replace the variable values in `.env` accordingly.
-
           - then in the same folder run the following commands;
 
           ```js
@@ -34,18 +27,23 @@ To set up the project, follow these steps:
           npm run seed //to create a test/default user to gain admin privilages after setup
           npm start
           ```
-
+          - 🎉 voila!
           - Access the backend serving at `http://localhost:5058`
 
-     - frontend:
+     - frontend: navigate to the frontend and install dependencies
 
-          ```js
+          ```bash
           cd tests-SchedulerApp/apps/frontend
+          ```
+          - copy the `.env.example` file and  rename the copy to `.env`
+          - then replace the varible values if required
+          - then run the followig commands to start the frontend
+          ```js
           npm install
           npm run dev
           ```
      
-
+          - 🎉 voila!
           - Access the frontend serving at `http://localhost:5173`
 
 ## Project File Structure
