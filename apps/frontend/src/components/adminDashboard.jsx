@@ -16,7 +16,7 @@ import DepartmentsView from "./views/departments";
 import UsersView from "./views/usersView";
 import EditTestModal from "./dialogModals/editTestModal";
 
-import { serverURL } from '../services/apiServices'
+import { serverURL, updateTest } from '../services/apiServices'
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
   const { users, tests, departments } = useContext(ApiContext);
 
   const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [selectedView, setSelectedView] = useState('users')
+  const [selectedView, setSelectedView] = useState('welcome')
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
@@ -90,7 +90,7 @@ const AdminDashboard = () => {
     setSelectedTest(null);
   }
   const handleUpdateTest = (updatedTest) => {
-    axios.put(`${serverURL}/api/admin/editTest/${updatedTest._id}`, updatedTest)
+    updateTest(updatedTest._id, updatedTest)
       .then((response) => {
         console.log("Test updated successfully:", response.data);
         handleCloseTestEditModal();

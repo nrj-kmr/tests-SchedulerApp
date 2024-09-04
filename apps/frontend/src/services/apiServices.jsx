@@ -14,7 +14,7 @@ export const deleteUser = (id) => api.delete(`/admin/deleteUser/${id}`);
 
 export const fetchTests = () => api.get('/admin/getTests');
 export const addTest = (newTest) => api.post('/admin/addTest', newTest);
-export const updateTest = (id, updatedTest) => api.put(`/admin/updateTest/${id}`, updatedTest);
+export const updateTest = (id, updatedTest) => api.put(`/admin/editTest/${id}`, updatedTest);
 export const deleteTest = (id) => api.delete(`/admin/deleteTest/${id}`);
 
 export const fetchDepartments = () => api.get('/admin/getDepartments');

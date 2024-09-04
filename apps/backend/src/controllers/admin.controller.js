@@ -3,6 +3,7 @@ import Test from "../models/tests.model.js";
 import User from "../models/user.model.js";
 import Admin from "../models/admin.model.js";
 import bcrypt from "bcrypt";
+import Notification from "../models/notification.model.js";
 
 // CREATE A NEW USER
 export const createUser = async (req, res) => {
@@ -49,6 +50,23 @@ export const createDepartment = async (req, res) => {
 export const createTest = async (req, res) => {
   try {
     const newTest = await Test.create(req.body);
+    const notification = {
+      title: `${newTest.title} created`,
+      message: `A new test: "${newTest.title}" has been created`,
+      type: 'info',
+      department: newTest.department
+    };
+    const notify = await Notification.create(notification);
+    await notify.save();
+
+    // logic to delete old notifications if the total number of notifications exceeds 100
+    const notificationCount = await Notification.countDocuments();
+    if (notificationCount > 100) {
+      const oldestNotifications = await Notification.find().sort({ createdAt: 1 }).limit(notificationCount - 100);
+      const oldestNotificationIds = oldestNotifications.map(notification => notification._id);
+      await Notification.deleteMany({ _id: { $in: oldestNotificationIds } });
+    }
+
     await newTest.save();
     return res.status(201).json({
       message: 'Test created successfully!',

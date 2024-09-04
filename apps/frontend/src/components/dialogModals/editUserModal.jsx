@@ -7,13 +7,12 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
      const [firstname, setFirstname] = useState(user.firstname);
      const [lastname, setLastname] = useState(user.lastname);
      const [email, setEmail] = useState(user.email);
-     const [password, setPassword] = useState('');
+     const [password, setPassword] = useState(user.password);
      const [showPasswordInput, setShowPasswordInput] = useState(false);
      const [passwordVisible, setPasswordVisible] = useState(false);
      const [department, setDepartment] = useState(user.department);
-     const [role, setRole] = useState(user.userRole || 'User');
      const { isUserAdmin } = useContext(AuthContext);
-     const [isAdmin, setIsAdmin] = useState(isUserAdmin);
+     const [isAdmin, setIsAdmin] = useState(user.isAdmin);
 
      const [departments, setDepartments] = useState([]);
 
@@ -23,20 +22,20 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                .catch((error) => console.error('Error fetching departments:', error));
      }, []);
 
-     const handleToggleRole = () => {
-          setRole(prevRole => (prevRole.toLowerCase === 'admin' ? 'User' : 'Admin'));
+     const handleToggleRole = (event) => {
+          console.log('event.target.checked:', event.target.checked);
+          setIsAdmin(event.target.checked);
      };
 
      const handleSave = () => {
-          role.toLowerCase() === 'admin' ? setIsAdmin(true) : setIsAdmin(false);
+          console.log('saving user with isAdmin', isAdmin);
           const updatedUser = {
                ...user,
                firstname,
                lastname,
                email,
                department,
-               isAdmin: isAdmin,
-               userRole: role,
+               isAdmin,
                password,
           };
           onSave(updatedUser);
@@ -94,8 +93,8 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                          <label className='block'>
                               <select name='department' value={department} onChange={(e) => setDepartment(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
                                    <option value='' disabled>Select Department</option>
-                                   {departments.map((department) => (
-                                        <option key={department._id} value={department.name}>{department.name}</option>
+                                   {departments.map((dept) => (
+                                        <option key={dept._id} value={dept.name}>{dept.name}</option>
                                    ))}
                               </select>
                          </label>
@@ -129,10 +128,11 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                               <label className='flex items-center justify-start'>
                                    <input
                                         type='checkbox'
-                                        checked={role === 'Admin'}
+                                        checked={isAdmin}
                                         onChange={handleToggleRole}
-                                        className='toggle-checkbox' />
-                                   <span className='ml-2'>{role ? role : 'change role'}</span>
+                                        className='toggle-checkbox'
+                                   />
+                                   <span className='ml-2'>{isAdmin ? 'Admin' : 'User'}</span>
                               </label>
                               <label className='flex items-center justify-end'>
                                    <button
