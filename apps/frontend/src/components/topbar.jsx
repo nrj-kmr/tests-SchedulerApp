@@ -63,8 +63,8 @@ const Topbar = ({ toggleSidebar, changeView }) => {
       ) : (
         <div>
           <span className="p-2 text-xl font-bold">Test Scheduler</span>
-          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('calendar')}>Calendar</span>
-          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('tests')}>All tests</span>
+          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('calendar')} title="view all tests on the calendar">Calendar</span>
+          <span className="p-2 text-lg font-normal cursor-pointer" onClick={() => changeView('tests')} title="view list of all tests">All tests</span>
         </div>
 
       )}
