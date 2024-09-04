@@ -174,7 +174,11 @@ const CalendarView = ({ department, actualUserDept }) => {
             )}
 
             {showBoard && (
-                <BoardView selectedDepartment={actualUserDept} onTestClick={(e) => openEditModal()} />
+                <BoardView
+                    selectedDepartment={actualUserDept}
+                    setTestModal={setIsTestModalOpen}
+                    handleEditTest={openEditModal}
+                />
             )}
 
             {selectedTest && (
