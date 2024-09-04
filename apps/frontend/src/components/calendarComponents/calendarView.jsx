@@ -72,16 +72,28 @@ const CalendarView = ({ department, actualUserDept }) => {
         const fetchAllTests = async () => {
             try {
                 const response = await fetchTests();
-                const fetchedTests = response.data.map(test => ({
-                    ...test,
-                    start: new Date(test.startTime),
-                    end: new Date(test.endTime)
-                }))
+
+                const fetchedTests = response.data.map(test => {
+                    const startDateTime = new Date(test.startTime);
+                    const endDateTime = new Date(test.endTime);
+
+                    // Adjust for local timezone offset
+                    const timezoneOffset = startDateTime.getTimezoneOffset() * 60000; // offset in milliseconds
+                    const startDateTimeLocal = new Date(startDateTime.getTime() + timezoneOffset);
+                    const endDateTimeLocal = new Date(endDateTime.getTime() + timezoneOffset);
+
+                    return {
+                        ...test,
+                        start: startDateTimeLocal,
+                        end: endDateTimeLocal
+                    };
+                });
+
                 setTests(fetchedTests.filter(test => test.department === actualUserDept));
             } catch (error) {
                 console.error('Error fetching tests:', error);
             }
-        }
+        };
         fetchAllTests();
     }, [actualUserDept]);
 

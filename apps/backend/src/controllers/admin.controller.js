@@ -7,7 +7,7 @@ import Notification from "../models/notification.model.js";
 
 // CREATE A NEW USER
 export const createUser = async (req, res) => {
-  const { firstname, lastname, email, password, department, isAdmin, role } = req.body;
+  const { firstname, lastname, email, password, department, isAdmin } = req.body;
   if (!firstname || !email || !password || !department) {
     return res.status(400).json({ error: 'Few fields are required!' });
   }
@@ -17,10 +17,10 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ error: 'User already exists!' });
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department, isAdmin, role });
+      const newUser = new User({ firstname, lastname, email, password: hashedPassword, department, isAdmin });
       await newUser.save();
       if (isAdmin === 'true') {
-        const newAdmin = new Admin({ firstname, lastname, email, password: hashedPassword, department, isAdmin, role });
+        const newAdmin = new Admin({ firstname, lastname, email, password: hashedPassword, department, isAdmin });
         await newAdmin.save();
       }
       return res.status(201).json({ message: 'User created successfully!', isAdmin: newUser.isAdmin, newUser });

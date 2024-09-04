@@ -64,11 +64,7 @@ const AdminDashboard = () => {
   }
 
   const handleSaveUser = (updatedUser) => {
-    if (updatedUser.role === 'Admin') {
-      updatedUser.isAdmin = true;
-    } else {
-      updatedUser.isAdmin = false;
-    }
+    console.log('Updated User:', updatedUser);
     axios.put(`${serverURL}/api/admin/editUser/${updatedUser._id}`, updatedUser)
       .then((response) => {
         console.log("User updated successfully:", response.data);
@@ -86,8 +82,8 @@ const AdminDashboard = () => {
     setIsTestEditModalOpen(true);
   }
   const handleCloseTestEditModal = () => {
-    setIsTestEditModalOpen(false);
     setSelectedTest(null);
+    setIsTestEditModalOpen(false);
   }
   const handleUpdateTest = (updatedTest) => {
     updateTest(updatedTest._id, updatedTest)

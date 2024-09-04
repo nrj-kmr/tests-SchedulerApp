@@ -13,33 +13,36 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
      const [department, setDepartment] = useState(user.department);
      const { isUserAdmin } = useContext(AuthContext);
      const [isAdmin, setIsAdmin] = useState(user.isAdmin);
-
      const [departments, setDepartments] = useState([]);
-
      useEffect(() => {
           fetchDepartments()
                .then((response) => setDepartments(response.data))
                .catch((error) => console.error('Error fetching departments:', error));
      }, []);
-
      const handleToggleRole = (event) => {
-          console.log('event.target.checked:', event.target.checked);
-          setIsAdmin(event.target.checked);
-     };
+          const newIsAdmin = event.target.checked;
+          console.log('event:', newIsAdmin);
+          setIsAdmin(newIsAdmin);
+      
+          console.log('isAdmin (previous state):', isAdmin);
+      };
 
-     const handleSave = () => {
+      console.log(isAdmin, "Refressh")
+      
+      const handleSave = () => {
           console.log('saving user with isAdmin', isAdmin);
           const updatedUser = {
-               ...user,
-               firstname,
-               lastname,
-               email,
-               department,
-               isAdmin,
-               password,
+              ...user,
+              firstname,
+              lastname,
+              email,
+              department,
+              isAdmin,  
+              password,
           };
           onSave(updatedUser);
-     };
+      };
+      
      const handleDeleteUser = () => {
           deleteUser(user._id)
                .then((response) => {

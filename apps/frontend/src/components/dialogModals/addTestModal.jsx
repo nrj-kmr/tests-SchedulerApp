@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-import { serverURL } from '../../services/apiServices';
+import { fetchDepartments, serverURL } from '../../services/apiServices';
 
 const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
    const [departments, setDepartments] = useState([]);
@@ -15,7 +15,7 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
    ];
 
    useEffect(() => {
-      axios.get(`${serverURL}/api/admin/getDepartments`)
+      fetchDepartments()
          .then((response) => { setDepartments(response.data); })
          .catch((error) => console.error('Error fetching departments:', error));
    }, []);
@@ -33,18 +33,13 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
       }
 
       // create startTime and endTime Objects
-      const startDateTimeUTC = combineDateAndTime(date, startTime);
-      const endDateTimeUTC = combineDateAndTime(date, endTime);
+      const startDateTime = combineDateAndTime(date, startTime);
+      const endDateTime = combineDateAndTime(date, endTime);
 
-      //convert to Local Time Zone
-      // const startDateTimeUTC = new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000)
-      // const endDateTimeUTC = new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000)
-
-      console.log(`Start DateTime UTC: ${startDateTimeUTC}`);
-      console.log(`End DateTime UTC: ${endDateTimeUTC}`);
-
-      console.log(`Start DateTime UTC (ISO): ${startDateTimeUTC.toISOString()}`);
-      console.log(`End DateTime UTC (ISO): ${endDateTimeUTC.toISOString()}`);
+      // Adjust for local timezone offset
+      const timezoneOffset = startDateTime.getTimezoneOffset() * 60000; // offset in milliseconds
+      const startDateTimeUTC = new Date(startDateTime.getTime() - timezoneOffset);
+      const endDateTimeUTC = new Date(endDateTime.getTime() - timezoneOffset);
 
       const formData = {
          ...newTest,
@@ -103,7 +98,7 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                         min='2022-01-01'
                      />
                   </label>
-                  <div className='flex flex-row space-x-4'>
+                  <div className='flex flex-row space-x-3'>
                      <label className='block flex-grow'>
                         <span className='text-gray-700'>Start Time:</span>
                         <input

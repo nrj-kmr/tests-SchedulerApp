@@ -55,11 +55,13 @@ adminRouter.put("/editUser/:_id", async (req, res) => {
       // also if the isAdmin is false, remove from the Admin Collection
 
       if (!user) return res.status(404).json({ error: "User not found" });
+
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
       user.firstname = req.body.firstname;
       user.lastname = req.body.lastname;
       user.email = req.body.email;
       user.department = req.body.department;
-      user.password = req.body.password;
+      user.password = hashedPassword;
       user.isAdmin = req.body.isAdmin;
       await user.save();
       return res.json({
@@ -150,8 +152,8 @@ adminRouter.put("/editTest/:_id", async (req, res) => {
       test.description = req.body.description;
       test.department = req.body.department;
       test.date = req.body.date;
-      // test.startTime = req.body.startTime;
-      // test.endTime = req.body.endTime;
+      test.startTime = req.body.startTime;
+      test.endTime = req.body.endTime;
       test.status = req.body.status;
       await test.save();
       res.json({

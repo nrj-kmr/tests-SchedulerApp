@@ -7,7 +7,6 @@ import Api from "./routes/api.js";
 
 dotenv.config({ path: "./.env" })
 const app = express();
-
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.json({limit: '16kb'}))
