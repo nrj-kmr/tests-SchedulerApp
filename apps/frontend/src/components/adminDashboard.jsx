@@ -169,7 +169,10 @@ const AdminDashboard = () => {
 
             {/* All DEPARTMENTS' VIEW */}
             {selectedView === 'departments' && (
-              <DepartmentsView departments={departments} setIsDepartmentModalOpen={setIsDepartmentModalOpen} handleEditDepartment={handleEditDepartment} />
+              <DepartmentsView
+                departments={departments}
+                setIsDepartmentModalOpen={setIsDepartmentModalOpen} handleEditDepartment={handleEditDepartment}
+              />
             )}
 
             {/* Show Calendar Based on Selected Department */}
@@ -213,6 +216,7 @@ const AdminDashboard = () => {
 
       {selectedDepartment && (
         <EditDepartmentModal
+          users={users}
           department={selectedDepartment}
           isOpen={isDepartmentEditModalOpen}
           onClose={handleCloseDepartmentEditModal}
@@ -259,6 +263,7 @@ const AdminDashboard = () => {
 
       {/* Create Department Modal (pop-up box for adding departments) */}
       <DepartmentModal
+        users={users}
         isOpen={isDepartmentModalOpen}
         closeModal={() => setIsDepartmentModalOpen(false)}
         newDepartment={newDepartment}

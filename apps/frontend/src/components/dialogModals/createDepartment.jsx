@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-const DepartmentModal = ({ isOpen, closeModal, newDepartment, handleInputChange, handleAddDepartment }) => {
+const DepartmentModal = ({ users, isOpen, closeModal, newDepartment, handleInputChange, handleAddDepartment }) => {
 
    return (
       <Modal
@@ -30,16 +30,6 @@ const DepartmentModal = ({ isOpen, closeModal, newDepartment, handleInputChange,
                      />
                   </label>
                   <label className='block'>
-                     <input
-                        type='text'
-                        name='admin'
-                        value={newDepartment.admin}
-                        onChange={handleInputChange}
-                        placeholder='Enter Department admin'
-                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                     />
-                  </label>
-                  <label className='block'>
                      <textarea
                         type='text'
                         name='description'
@@ -48,6 +38,26 @@ const DepartmentModal = ({ isOpen, closeModal, newDepartment, handleInputChange,
                         placeholder='Enter Department description'
                         className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                      />
+                  </label>
+                  <label className='block'>
+                     <select
+                        name="admin"
+                        value={newDepartment.admin}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                     >
+                        <option value="" disabled>--Select Admin--</option>
+                        {users
+                           .filter(user => user.isAdmin)
+                           .map((user) => (
+                              <option
+                                 key={user._id}
+                                 value={user.name}
+                              >
+                                 {user.firstname} {user.lastname}
+                              </option>
+                           ))}
+                     </select>
                   </label>
 
                   <div className='flex justify-end space-x-4'>
@@ -58,7 +68,6 @@ const DepartmentModal = ({ isOpen, closeModal, newDepartment, handleInputChange,
                         Add Department
                      </button>
                   </div>
-                  
                </div>
             </form>
          </div>

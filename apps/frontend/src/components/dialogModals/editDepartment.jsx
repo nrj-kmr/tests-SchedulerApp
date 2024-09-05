@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
-const EditDepartmentModal = ({ department, isOpen, onClose, onSave, setSuccessMessage }) => {
+const EditDepartmentModal = ({ users, department, isOpen, onClose, onSave, setSuccessMessage }) => {
      const [name, setName] = useState(department.name);
      const [admin, setAdmin] = useState(department.admin);
      const [description, setDescription] = useState(department.description);
@@ -53,15 +53,43 @@ const EditDepartmentModal = ({ department, isOpen, onClose, onSave, setSuccessMe
 
                     <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className='space-y-4'>
                          <label className='block'>
-                              <input type='text' name='name' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
-                         </label>
-
-                         <label>
-                              <input type='text' name='admin' placeholder='Admin' value={admin} onChange={(e) => setAdmin(e.target.value)} className='mt-3 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                              <input
+                                   type='text'
+                                   name='name'
+                                   placeholder='Name'
+                                   value={name}
+                                   onChange={(e) => setName(e.target.value)}
+                                   required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
                          </label>
 
                          <label className='block'>
-                              <textarea type='text' name='description' placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} className='mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                              <textarea
+                                   type='text'
+                                   name='description'
+                                   placeholder='Description'
+                                   value={description}
+                                   onChange={(e) => setDescription(e.target.value)}
+                                   className='mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
+                         </label>
+
+                         <label>
+                              <select
+                                   name='admin'
+                                   value={admin}
+                                   onChange={(e) => setAdmin(e.target.value)}
+                                   className='mt-3 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
+                                   <option value='' disabled>--Select Admin--</option>
+                                   {users
+                                        .filter(user => user.isAdmin)
+                                        .map((user) => (
+                                             <option
+                                                  key={user._id}
+                                                  value={user.name}
+                                             >
+                                                  {user.firstname} {user.lastname}
+                                             </option>
+                                        ))}
+                              </select>
                          </label>
 
                          <div className='flex justify-between'>
@@ -79,7 +107,6 @@ const EditDepartmentModal = ({ department, isOpen, onClose, onSave, setSuccessMe
                                    </button>
                               </span>
                          </div>
-
                     </form>
                </div>
           </Modal>
