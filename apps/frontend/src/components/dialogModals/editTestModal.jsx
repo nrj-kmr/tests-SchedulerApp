@@ -2,7 +2,7 @@ import { deleteTest, fetchDepartments, serverURL } from "../../services/apiServi
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
-const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage }) => {
+const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUserAdmin, userDept }) => {
      const [departments, setDepartments] = useState([]);
      const [title, setTitle] = useState(test.title);
      const [description, setDescription] = useState(test.description);
@@ -149,20 +149,36 @@ const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage }) => 
                               </label>
                          </div>
 
+                         {isUserAdmin ? (
+                              <label className='block'>
+                                   <select
+                                        name='department'
+                                        value={department}
+                                        onChange={(e) => setDepartment(e.target.value)}
+                                        required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                                   >
+                                        <option value=''>Select Department</option>
+                                        {departments.map((department) => (
+                                             <option key={department._id} value={department.id}>{department.name}</option>
+                                        ))}
+                                   </select>
+                              </label>
+                         ) : (
+                              <label className='block'>
+                                   <select
+                                        name='department'
+                                        value={department}
+                                        onChange={(e) => setDepartment(e.target.value)}
+                                        required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                                   >
+                                        <option value='' disabled>Select Department</option>
+                                        {departments.map((dept) => (
+                                             <option key={dept._id} value={dept.id} disabled={dept.name !== userDept}>{dept.name}</option>
+                                        ))}
+                                   </select>
+                              </label>
+                         )}
 
-                         <label className='block'>
-                              <select
-                                   name='department'
-                                   value={department}
-                                   onChange={(e) => setDepartment(e.target.value)}
-                                   required className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                              >
-                                   <option value=''>Select Department</option>
-                                   {departments.map((department) => (
-                                        <option key={department._id} value={department.id}>{department.name}</option>
-                                   ))}
-                              </select>
-                         </label>
 
                          <label className='block'>
                               <select

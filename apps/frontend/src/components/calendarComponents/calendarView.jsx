@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
@@ -14,6 +14,7 @@ import EditTestModal from '../dialogModals/editTestModal'
 import { enIN } from 'date-fns/locale/en-IN'
 
 import { serverURL } from '../../services/apiServices'
+import { AuthContext } from '../../context/AuthContext'
 
 const locales = {
     "en-IN": enIN
@@ -27,6 +28,7 @@ const localizer = dateFnsLocalizer({
 });
 
 const CalendarView = ({ department, actualUserDept }) => {
+    const { isUserAdmin } = useContext(AuthContext);
     const [tests, setTests] = useState([]);
     const [selectedTest, setSelectedTest] = useState(null);
     const [showCalendar, setShowCalendar] = useState(true);
@@ -183,6 +185,8 @@ const CalendarView = ({ department, actualUserDept }) => {
 
             {selectedTest && (
                 <EditTestModal
+                    isUserAdmin={isUserAdmin}
+                    userDept={actualUserDept}
                     test={selectedTest}
                     isOpen={isEditTestModalOpen}
                     onClose={closeEditModal}
@@ -191,6 +195,8 @@ const CalendarView = ({ department, actualUserDept }) => {
             )}
 
             <TestModal
+                isUserAdmin={isUserAdmin}
+                userDept={actualUserDept}
                 isOpen={isTestModalOpen}
                 closeModal={() => setIsTestModalOpen(false)}
                 newTest={newTest}

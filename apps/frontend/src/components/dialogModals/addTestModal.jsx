@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 
 import { fetchDepartments, serverURL } from '../../services/apiServices';
 
-const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest }) => {
+const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTest, isUserAdmin, userDept }) => {
    const [departments, setDepartments] = useState([]);
 
    const allStatus = [
@@ -122,20 +122,38 @@ const TestModal = ({ isOpen, closeModal, newTest, handleInputChange, handleAddTe
                         />
                      </label>
                   </div>
-                  <label className='block'>
-                     <select
-                        name='department'
-                        value={newTest.department}
-                        onChange={handleInputChange}
-                        className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-                        required
-                     >
-                        <option value='' disabled>Select Department</option>
-                        {departments.map((dept) => (
-                           <option key={dept._id} value={dept.name}>{dept.name}</option>
-                        ))}
-                     </select>
-                  </label>
+                  {isUserAdmin ? (
+                     <label className='block'>
+                        <select
+                           name='department'
+                           value={newTest.department}
+                           onChange={handleInputChange}
+                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                           required
+                        >
+                           <option value='' disabled>Select Department</option>
+                           {departments.map((dept) => (
+                              <option key={dept._id} value={dept.name}>{dept.name}</option>
+                           ))}
+                        </select>
+                     </label>
+                  ) : (
+                     <label className='block'>
+                        <select
+                           name='department'
+                           value={newTest.department}
+                           onChange={handleInputChange}
+                           className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+                           required
+                        >
+                           <option value='' disabled>Select Department</option>
+                           {departments.map((dept) => (
+                              <option key={dept._id} value={dept.name} disabled={dept.name !== userDept}>{dept.name}</option>
+                           ))}
+                        </select>
+                     </label>
+                  )}
+
                   <label className='block'>
                      <select
                         name='status'

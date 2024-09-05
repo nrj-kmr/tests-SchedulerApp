@@ -202,6 +202,7 @@ const AdminDashboard = () => {
 
       {selectedTest && (
         <EditTestModal
+          isUserAdmin={isUserAdmin}
           test={selectedTest}
           isOpen={isTestEditModalOpen}
           onClose={handleCloseTestEditModal}
@@ -240,6 +241,7 @@ const AdminDashboard = () => {
 
       {/* Create Test Modal (pop-up box for adding tests) */}
       <TestModal
+        isUserAdmin={isUserAdmin}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
         newTest={newTest}

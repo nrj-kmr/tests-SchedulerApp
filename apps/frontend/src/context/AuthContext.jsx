@@ -16,12 +16,14 @@ export const AuthProvider = ({ children }) => {
 
   const sessionData = JSON.parse(sessionStorage.getItem('user')) || {};
   const userEmail = sessionData.email || '';
-  
-  if (user) {
-    fetchUserByEmail(userEmail).then((response) => {
-      setIsUserAdmin(response.data.isAdmin);
-    });
-  }
+
+  useEffect(() => {
+    if (user) {
+      fetchUserByEmail(userEmail).then((response) => {
+        setIsUserAdmin(response.data.isAdmin);
+      });
+    }
+  }, [user]);
 
   const login = (userData) => {
     setUser(userData);

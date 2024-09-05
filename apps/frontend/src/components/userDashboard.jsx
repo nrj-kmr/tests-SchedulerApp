@@ -15,6 +15,7 @@ const UserDashboard = ({ }) => {
   const [exactDepartment, setExactDepartment] = useState('');
   const [selectedView, setSelectedView] = useState('calendar');
 
+  const { isUserAdmin } = useContext(AuthContext);
   const [selectedTest, setSelectedTest] = useState(null);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
@@ -86,6 +87,8 @@ const UserDashboard = ({ }) => {
       </div>
 
       <TestModal
+        isUserAdmin={isUserAdmin}
+        userDept={exactDepartment}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
         newTest={newTest}
@@ -103,6 +106,8 @@ const UserDashboard = ({ }) => {
 
       {selectedTest && (
         <EditTestModal
+          isUserAdmin={isUserAdmin}
+          userDept={exactDepartment}
           test={selectedTest}
           isOpen={isTestEditModalOpen}
           onClose={() => setIsTestEditModalOpen(false)}
