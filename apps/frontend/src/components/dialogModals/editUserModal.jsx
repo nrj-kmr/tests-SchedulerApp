@@ -11,7 +11,6 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
      const [showPasswordInput, setShowPasswordInput] = useState(false);
      const [passwordVisible, setPasswordVisible] = useState(false);
      const [department, setDepartment] = useState(user.department);
-     const { isUserAdmin } = useContext(AuthContext);
      const [isAdmin, setIsAdmin] = useState(user.isAdmin);
      const [departments, setDepartments] = useState([]);
      useEffect(() => {
@@ -21,28 +20,22 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
      }, []);
      const handleToggleRole = (event) => {
           const newIsAdmin = event.target.checked;
-          console.log('event:', newIsAdmin);
           setIsAdmin(newIsAdmin);
-      
-          console.log('isAdmin (previous state):', isAdmin);
-      };
+     };
 
-      console.log(isAdmin, "Refressh")
-      
-      const handleSave = () => {
-          console.log('saving user with isAdmin', isAdmin);
+     const handleSave = () => {
           const updatedUser = {
-              ...user,
-              firstname,
-              lastname,
-              email,
-              department,
-              isAdmin,  
-              password,
+               ...user,
+               firstname,
+               lastname,
+               email,
+               department,
+               isAdmin,
+               password,
           };
           onSave(updatedUser);
-      };
-      
+     };
+
      const handleDeleteUser = () => {
           deleteUser(user._id)
                .then((response) => {
