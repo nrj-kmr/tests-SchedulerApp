@@ -2,7 +2,6 @@ import Topbar from "./topbar"
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
 import Sidebar from "./sidebar";
-import axios from "axios";
 import Modal from 'react-modal';
 import { ApiContext } from "../context/ApiContext";
 import UserModal from "./dialogModals/createUserModal";
@@ -16,7 +15,7 @@ import DepartmentsView from "./views/departments";
 import UsersView from "./views/usersView";
 import EditTestModal from "./dialogModals/editTestModal";
 
-import { serverURL, updateTest } from '../services/apiServices'
+import { addDepartment, addTest, addUser, updateDepartment, updateTest, updateUser } from '../services/apiServices'
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -26,7 +25,7 @@ const AdminDashboard = () => {
   const { users, tests, departments } = useContext(ApiContext);
 
   const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [selectedView, setSelectedView] = useState('welcome')
+  const [selectedView, setSelectedView] = useState('users')
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
@@ -64,8 +63,7 @@ const AdminDashboard = () => {
   }
 
   const handleSaveUser = (updatedUser) => {
-    console.log('Updated User:', updatedUser);
-    axios.put(`${serverURL}/api/admin/editUser/${updatedUser._id}`, updatedUser)
+    updateUser(updatedUser._id, updatedUser)
       .then((response) => {
         console.log("User updated successfully:", response.data);
         handleCloseDialog();
@@ -109,7 +107,7 @@ const AdminDashboard = () => {
   }
 
   const handleUpdateDepartment = (updatedDepartment) => {
-    axios.put(`${serverURL}/api/admin/editDepartment/${updatedDepartment._id}`, updatedDepartment)
+    updateDepartment(updatedDepartment._id, updatedDepartment)
       .then((response) => {
         console.log("Department updated successfully:", response.data);
         handleCloseDepartmentEditModal();
@@ -232,7 +230,7 @@ const AdminDashboard = () => {
         newUser={newUser}
         handleInputChange={(e) => setNewUser({ ...newUser, [e.target.name]: e.target.value })}
         handleAddUser={() => {
-          axios.post(`${serverURL}/api/admin/createUser`, newUser)
+          addUser(newUser)
             .then((response) => {
               console.log(response)
               setIsUserModalOpen(false);
@@ -252,7 +250,7 @@ const AdminDashboard = () => {
         handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
         handleAddTest={async (formData) => {
           try {
-            const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
+            const response = addTest(formData);
             console.log("Test Added", response.data)
             setIsTestModalOpen(false);
           } catch (err) {
@@ -269,7 +267,7 @@ const AdminDashboard = () => {
         newDepartment={newDepartment}
         handleInputChange={(e) => setNewDepartment({ ...newDepartment, [e.target.name]: e.target.value })}
         handleAddDepartment={() => {
-          axios.post(`${serverURL}/api/admin/createDepartment`, newDepartment)
+          addDepartment(newDepartment)
             .then((response) => {
               console.log(response)
               setIsDepartmentModalOpen(false);
