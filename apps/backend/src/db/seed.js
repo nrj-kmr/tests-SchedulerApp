@@ -44,7 +44,7 @@ const seedDB = async () => {
       await newUser.save();
       await newDepartment.save();
 
-      console.log(`> Default admin & department created successfully.\n Admin: ${defaultAdmin.email}\n Department: ${defaultAdmin.department}\n`);
+      console.log(`> Default admin & department created successfully.\n Admin email: ${defaultAdmin.email}\n Password: ${defaultAdmin.password}\n Department: ${defaultAdmin.department}\n`);
     } else {
       // delete existing and create new
       await Admin.deleteMany({ email: defaultAdmin.email });
@@ -71,7 +71,7 @@ const seedDB = async () => {
       await newUser.save();
       await newDepartment.save();
 
-      console.log(`> Admin user or department already exists.\n Created Successfully \n Admin: ${defaultAdmin.email}\n Department: ${defaultAdmin.department}\n`);
+      console.log(`> Admin user or department already exists.\n Created Successfully \n Admin email: ${defaultAdmin.email}\n Password: ${defaultAdmin.password}\n Department: ${defaultAdmin.department}\n`);
     }
 
     mongoose.connection.close();
