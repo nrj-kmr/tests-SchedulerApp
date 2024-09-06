@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, forwardRef } from 'react';
 import Modal from 'react-modal';
 import { deleteUser, fetchDepartments } from '../../services/apiServices';
 import { AuthContext } from '../../context/AuthContext';
 
-const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => {
+const editUserModal = forwardRef(({ user, isOpen, onClose, onSave, setSuccessMessage }, ref) => {
      const [firstname, setFirstname] = useState(user.firstname);
      const [lastname, setLastname] = useState(user.lastname);
      const [email, setEmail] = useState(user.email);
@@ -65,7 +65,7 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                className="fixed inset-0 flex justify-center items-center z-50"
                overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
           >
-               <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+               <div ref={ref} className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
                     <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-600 text-xl hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
 
                     <h2 className='text-2xl font-bold mb-6 text-center'>Edit User</h2>
@@ -157,6 +157,6 @@ const editUserModal = ({ user, isOpen, onClose, onSave, setSuccessMessage }) => 
                </div>
           </Modal>
      );
-};
+});
 
 export default editUserModal;

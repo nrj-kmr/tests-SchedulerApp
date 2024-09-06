@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-const DepartmentModal = ({ users, isOpen, closeModal, newDepartment, handleInputChange, handleAddDepartment }) => {
+const DepartmentModal = forwardRef(({ users, isOpen, closeModal, newDepartment, handleInputChange, handleAddDepartment }, ref) => {
 
    return (
       <Modal
@@ -12,7 +12,7 @@ const DepartmentModal = ({ users, isOpen, closeModal, newDepartment, handleInput
          className='fixed inset-0 flex justify-center items-center z-50'
          overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
       >
-         <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+         <div ref={ref} className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
             <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-600 text-xl hover:text-gray-800 transition-all duration-300' onClick={closeModal}>&times;</button>
 
             <h2 className='text-2xl font-bold mb-6 text-center'>Add Department</h2>
@@ -73,6 +73,6 @@ const DepartmentModal = ({ users, isOpen, closeModal, newDepartment, handleInput
          </div>
       </Modal>
    );
-};
+});
 
 export default DepartmentModal;

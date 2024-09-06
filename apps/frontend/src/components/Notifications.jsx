@@ -4,6 +4,7 @@ import { serverURL } from "../services/apiServices";
 
 const Notifications = ({ userId }) => {
      const [notifications, setNotifications] = useState([]);
+     const [unreadCount, setUnreadCount] = useState(0);
      const [dropdown, setDropdown] = useState(false);
      const dropdownRef = useRef(null);
 
@@ -18,6 +19,10 @@ const Notifications = ({ userId }) => {
           };
           fetchNotifications();
      }, [userId]);
+
+     useEffect(() => {
+          setUnreadCount(notifications.filter((notification) => !notification.isRead).length);
+     }, [notifications]);
 
      const toggleDropdown = () => {
           setDropdown(!dropdown);
@@ -35,7 +40,6 @@ const Notifications = ({ userId }) => {
           } else {
                document.removeEventListener("mousedown", handleClickOutside);
           }
-
           return () => {
                document.removeEventListener("mousedown", handleClickOutside);
           };
@@ -49,6 +53,7 @@ const Notifications = ({ userId }) => {
                     updatedNotifications[index].isRead = true;
                     return updatedNotifications;
                });
+               setUnreadCount((prevCount) => prevCount - 1);
           } catch (error) {
                console.error('Error marking notification as read:', error);
           }
@@ -61,6 +66,11 @@ const Notifications = ({ userId }) => {
                     onClick={toggleDropdown}
                >
                     🔔 Notifications
+                    {unreadCount > 0 && (
+                         <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                              {unreadCount}
+                         </span>
+                    )}
                </span>
 
                {dropdown && (
@@ -68,8 +78,8 @@ const Notifications = ({ userId }) => {
                          {notifications.length === 0 ? (
                               <div className="w-full text-left px-4 py-2 text-white">No notifications</div>
                          ) : (
-                              <div className=" text-left px-4 py-2 text-white">
-                                   {notifications.slice(0, 10).map((notification, index) => (
+                              <div className=" text-left px-4 py-2 text-white" style={{ maxHeight: "500px", overflowY: "auto" }}>
+                                   {notifications.map((notification, index) => (
                                         <div
                                              key={index}
                                              className={`py-2 px-2 rounded-md hover:bg-blue-800 cursor-pointer ${notification.isRead ? 'bg-gray-700' : 'bg-gray-600'}`}

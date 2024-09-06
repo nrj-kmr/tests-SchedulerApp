@@ -52,7 +52,7 @@ export const createTest = async (req, res) => {
     const newTest = await Test.create(req.body);
     const notification = {
       title: `${newTest.title} created`,
-      message: `A new test: "${newTest.title}" has been created`,
+      message: `A new test: "${newTest.title}" has been created in the '${newTest.department}' department.`,
       type: 'info',
       department: newTest.department
     };

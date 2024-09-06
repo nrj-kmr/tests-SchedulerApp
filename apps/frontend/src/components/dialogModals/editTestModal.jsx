@@ -1,8 +1,8 @@
 import { deleteTest, fetchDepartments, serverURL } from "../../services/apiServices";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import Modal from "react-modal";
 
-const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUserAdmin, userDept }) => {
+const EditTestModal = forwardRef(({ test, isOpen, onClose, onSave, setSuccessMessage, isUserAdmin, userDept }, ref) => {
      const [departments, setDepartments] = useState([]);
      const [title, setTitle] = useState(test.title);
      const [description, setDescription] = useState(test.description);
@@ -30,9 +30,9 @@ const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUse
           const [hours, minutes, seconds] = timeString.split(':').map(Number);
           const date = new Date(year, month - 1, day, hours, minutes, seconds || 0);
           return isNaN(date.getTime()) ? null : date;
-      };
+     };
 
-      const handleSave = () => {
+     const handleSave = () => {
           const startDateTime = combineDateAndTime(date, startTime);
           const endDateTime = combineDateAndTime(date, endTime);
 
@@ -42,23 +42,23 @@ const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUse
           const endDateTimeUTC = new Date(endDateTime.getTime() - timezoneOffset);
 
           if (!startDateTimeUTC || !endDateTimeUTC) {
-              console.error('Invalid date or time value');
-              return;
+               console.error('Invalid date or time value');
+               return;
           }
 
           const updatedTest = {
-              ...test,
-              title,
-              description,
-              date,
-              startTime: startDateTimeUTC.toISOString(),
-              endTime: endDateTimeUTC.toISOString(),
-              department,
-              status,
+               ...test,
+               title,
+               description,
+               date,
+               startTime: startDateTimeUTC.toISOString(),
+               endTime: endDateTimeUTC.toISOString(),
+               department,
+               status,
           };
           onSave(updatedTest);
           onClose();
-      };
+     };
 
      const handleDeleteTest = () => {
           deleteTest(test._id)
@@ -90,7 +90,7 @@ const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUse
                className="fixed inset-0 flex justify-center items-center z-50"
                overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
           >
-               <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+               <div ref={ref} className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
                     <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-600 text-xl hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
 
                     <h2 className='text-2xl font-bold mb-6 text-center'>Edit Test</h2>
@@ -224,6 +224,6 @@ const EditTestModal = ({ test, isOpen, onClose, onSave, setSuccessMessage, isUse
                </div>
           </Modal>
      )
-}
+})
 
 export default EditTestModal;
