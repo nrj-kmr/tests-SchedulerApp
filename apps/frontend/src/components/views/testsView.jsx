@@ -62,7 +62,19 @@ const TestsView = ({ tests, setIsTestModalOpen, handleEditTest }) => {
 
       <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
         {tests.length === 0 ? (
-          <p>No tests available</p>
+          <>
+            <p className='p-3 text-center font-bold text-xl'>No tests available</p>
+            <div className='flex justify-center'>
+              <button
+                className='w-1/5 m-4 bg-indigo-200 text-indigo-600 py-1 rounded border border-indigo-100 hover:bg-indigo-100 hover:text-indigo-800 transition-all duration-300'
+                onClick={() => {
+                  setIsTestModalOpen(true);
+                }}
+              >
+                + Add Test
+              </button>
+            </div>
+          </>
         ) : (
           <table className="min-w-full">
             <thead>
