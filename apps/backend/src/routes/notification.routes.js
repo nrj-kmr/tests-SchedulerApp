@@ -40,7 +40,7 @@ notificationRouter.put('/markAsRead/:_id', async (req, res) => {
 notificationRouter.delete('/deleteNotification/:_id', async (req, res) => {
   try {
     const notificationId = req.params._id;
-    const notification = await Notification.findByIdAndDelete({ _id: notificationId, user: userId });
+    const notification = await Notification.findByIdAndDelete({ _id: notificationId });
     if (!notification) return res.status(404).json({ error: 'Notification not found' });
     res.json({ message: 'Notification deleted successfully!', notification });
   } catch (error) {

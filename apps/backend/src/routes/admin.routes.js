@@ -182,7 +182,18 @@ adminRouter.delete("/deleteTest/:_id", async (req, res) => {
    try {
       const test = await Test.findById(req.params._id);
       if (!test) return res.status(404).json({ error: "Test not found" });
+
+      // update in notification when a test is deleted
+      const notification = {
+         title: `${test.title} deleted`,
+         message: `The test: "${test.title}" has been deleted in the '${test.department}' department.`,
+         type: 'info',
+         department: test.department
+      };
+      const notify = await Notification.create(notification);
+
       await Test.findByIdAndDelete(req.params._id);
+      await notify.save();
       return res.json({ message: `${test._id} Deleted Successfully` });
    } catch (error) {
       return res.status(500).json({ error: error.message || 'Test deletion failed!' });

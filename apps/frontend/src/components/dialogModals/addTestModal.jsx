@@ -2,10 +2,15 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-import { fetchDepartments } from '../../services/apiServices';
+import { addTest, fetchDepartments } from '../../services/apiServices';
 
-const TestModal = forwardRef(({ isOpen, closeModal, newTest, handleInputChange, handleAddTest, isUserAdmin, userDept }, ref) => {
+const TestModal = forwardRef(({ isOpen, closeModal, isUserAdmin, userDept }, ref) => {
    const [departments, setDepartments] = useState([]);
+
+   const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
+   const handleInputChange = (e) => {
+      setNewTest((prevTest) => ({...prevTest, [e.target.name]: e.target.value}));
+   }
 
    const allStatus = [
       { _id: '1', name: 'Scheduled' },
@@ -47,8 +52,43 @@ const TestModal = forwardRef(({ isOpen, closeModal, newTest, handleInputChange, 
          endTime: endDateTimeUTC.toISOString()
       }
 
-      handleAddTest(formData);
+      try {
+         addTest(formData)
+         closeModal();
+      } catch (error) {
+         console.error('Error adding test:', error);
+      }
    }
+
+   // Function to get the current time in 'HH:MM' format
+  const getCurrentTime = () => {
+   const now = new Date();
+   const hours = String(now.getHours()).padStart(2, '0');
+   const minutes = String(now.getMinutes()).padStart(2, '0');
+   return `${hours}:${minutes}`;
+ };
+
+ // Function to get the time 2 hours from now in 'HH:MM' format
+ const getTimeTwoHoursLater = () => {
+   const now = new Date();
+   now.setHours(now.getHours() + 2);
+   const hours = String(now.getHours()).padStart(2, '0');
+   const minutes = String(now.getMinutes()).padStart(2, '0');
+   return `${hours}:${minutes}`;
+ };
+
+ // Set the default date, start time, and end time when the component mounts
+ useEffect(() => {
+   if (isOpen) {
+     const currentDate = new Date().toISOString().split('T')[0];
+     const currentTime = getCurrentTime();
+     const endTime = getTimeTwoHoursLater();
+
+     handleInputChange({ target: { name: 'date', value: currentDate } });
+     handleInputChange({ target: { name: 'startTime', value: currentTime } });
+     handleInputChange({ target: { name: 'endTime', value: endTime } });
+   }
+ }, [isOpen]);
 
    return (
       <Modal
@@ -141,7 +181,7 @@ const TestModal = forwardRef(({ isOpen, closeModal, newTest, handleInputChange, 
                      <label className='block'>
                         <select
                            name='department'
-                           value={newTest.department}
+                           value={userDept}
                            onChange={handleInputChange}
                            className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
                            required

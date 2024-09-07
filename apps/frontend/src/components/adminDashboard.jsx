@@ -265,17 +265,6 @@ const AdminDashboard = () => {
         isUserAdmin={isUserAdmin}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
-        newTest={newTest}
-        handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-        handleAddTest={async (formData) => {
-          try {
-            const response = addTest(formData);
-            console.log("Test Added", response.data)
-            setIsTestModalOpen(false);
-          } catch (err) {
-            console.log('Error while adding new test', err)
-          }
-        }}
       />
 
       {/* Create Department Modal (pop-up box for adding departments) */}

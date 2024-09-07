@@ -22,7 +22,7 @@ const UserDashboard = ({ }) => {
 
   const [successMessage, setSuccessMessage] = useState('');
 
-  const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
+  // const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
   const { user, userEmail } = useContext(AuthContext)
   const { tests } = useContext(ApiContext);
@@ -115,17 +115,6 @@ const UserDashboard = ({ }) => {
         userDept={exactDepartment}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
-        newTest={newTest}
-        handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-        handleAddTest={async (formData) => {
-          try {
-            const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
-            console.log("Test Added", (await response).data)
-            setIsTestModalOpen(false);
-          } catch (err) {
-            console.log('Error while adding new test', err)
-          }
-        }}
       />
 
       {selectedTest && (

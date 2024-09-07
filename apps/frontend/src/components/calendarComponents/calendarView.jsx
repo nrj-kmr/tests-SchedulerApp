@@ -223,17 +223,6 @@ const CalendarView = ({ department, actualUserDept }) => {
                 userDept={actualUserDept}
                 isOpen={isTestModalOpen}
                 closeModal={() => setIsTestModalOpen(false)}
-                newTest={newTest}
-                handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-                handleAddTest={async (formData) => {
-                    try {
-                        const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
-                        console.log("Test Added", (await response).data)
-                        setIsTestModalOpen(false);
-                    } catch (err) {
-                        console.log('Error while adding new test', err)
-                    }
-                }}
             />
         </div>
     )
