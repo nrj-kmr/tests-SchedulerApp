@@ -6,16 +6,6 @@ import Admin from "../models/admin.model.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 
-// Middleware to check if the user is authorized
-export const checkAuthorization = async (req, res, next) => {
-   const authHeader = req.headers.authorization;
-   if (authHeader && authHeader === process.env.SUPERADMIN_SECRET) {
-      next();
-   } else {
-      res.status(403).json({ error: 'Forbidden!' });
-   }
-}
-
 // Get All Users
 export const getUsers = async (req, res) => {
    try {
@@ -44,7 +34,7 @@ export const login = async (req, res) => {
       // Check if the user is an admin
       let user;
       if (isAdmin) {
-         user = await Admin.findOne({ email }).select('+superAdmin');
+         user = await Admin.findOne({ email });
          if (!user) return res.status(404).json({ error: 'Admin not found!' });
       } else {
          user = await User.findOne({ email })

@@ -59,6 +59,18 @@ const Notifications = ({ userId }) => {
           }
      }
 
+     const deleteNotification = async (notificationId) => {
+          try {
+               const response = await axios.delete(`${serverURL}/api/notifications/deleteNotification/${notificationId}`);
+               if (response.status === 200) {
+                    setNotifications((prevNotifications) => prevNotifications.filter((notification) => notification._id !== notificationId));
+                    setUnreadCount((prevCount) => prevCount - 1);
+               }
+          } catch (error) {
+               console.error('Error deleting notification:', error);
+          }
+     }
+
      return (
           <div className="relative" ref={dropdownRef}>
                <span
@@ -74,19 +86,38 @@ const Notifications = ({ userId }) => {
                </span>
 
                {dropdown && (
-                    <div className="absolute right-0 mt-2 w-80 rounded-md shadow-md bg-gray-700">
+                    <div className="absolute right-0 mt-2 w-max max-w-96 rounded-md shadow-md bg-gray-700">
                          {notifications.length === 0 ? (
                               <div className="w-full text-left px-4 py-2 text-white">No notifications</div>
                          ) : (
-                              <div className=" text-left px-4 py-2 text-white" style={{ maxHeight: "500px", overflowY: "auto" }}>
+                              <div className="w-full text-left px-2 py-2 text-white" style={{ maxHeight: "500px", overflowY: "auto" }}>
                                    {notifications.map((notification, index) => (
                                         <div
                                              key={index}
-                                             className={`py-2 px-2 rounded-md hover:bg-blue-800 cursor-pointer ${notification.isRead ? 'bg-gray-700' : 'bg-gray-600'}`}
+                                             className={`relative py-2 px-2 rounded-md hover:bg-blue-800 cursor-pointer ${notification.isRead ? 'bg-gray-700' : 'bg-gray-600'} group`}
                                              onClick={() => markAsRead(notification._id, index)}
                                              title={notification.isRead ? "Already marked as read" : "Click to mark as read"}
                                         >
-                                             {notification.message}
+                                             <div className="flex flex-col">
+                                                  <div>
+                                                       <span className="text-sm text-green-400 font-bold">{notification.title}</span>
+                                                       <span className="text-xs text-gray-400 ml-2">{new Date(notification.createdAt).toLocaleString()}</span>
+                                                  </div>
+                                                  <div className="flex">
+                                                       {!notification.isRead && <span className="text-xs text-gray-400 m-2">New</span>}
+                                                       {notification.message}
+                                                  </div>
+                                             </div>
+                                             <span
+                                                  title="Delete this notification"
+                                                  className="absolute right-4 top-1/2 transform -translate-y-1/2  rounded-full px-2 text-base font-bold border border-red-400 bg-red-300 text-red-600  hover:text-red-800 hover:bg-red-400 cursor-pointer hidden group-hover:block transition-all duration-300"
+                                                  onClick={(e) => {
+                                                       e.stopPropagation(); // Prevent the markAsRead handler from being called
+                                                       deleteNotification(notification._id);
+                                                  }}
+                                             >
+                                                  &times;
+                                             </span>
                                         </div>
                                    ))}
                               </div>

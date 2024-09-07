@@ -20,7 +20,7 @@ notificationRouter.put('/markAsRead/:_id', async (req, res) => {
   try {
     const notificationId = req.params._id;
     const notification = await Notification.findByIdAndUpdate(
-      notificationId,
+      { _id: notificationId },
       { isRead: true },
       { new: true }
     );
@@ -34,6 +34,17 @@ notificationRouter.put('/markAsRead/:_id', async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: error.message || 'Notification update failed!' });
+  }
+});
+
+notificationRouter.delete('/deleteNotification/:_id', async (req, res) => {
+  try {
+    const notificationId = req.params._id;
+    const notification = await Notification.findByIdAndDelete({ _id: notificationId, user: userId });
+    if (!notification) return res.status(404).json({ error: 'Notification not found' });
+    res.json({ message: 'Notification deleted successfully!', notification });
+  } catch (error) {
+    return res.status(500).json({ error: error.message || 'Notification deletion failed!' });
   }
 });
 
