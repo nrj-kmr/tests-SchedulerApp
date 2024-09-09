@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
@@ -36,9 +36,31 @@ const CalendarView = ({ department, actualUserDept }) => {
     const [activeView, setActiveView] = useState('calendar');
 
     const [isTestModalOpen, setIsTestModalOpen] = useState(false);
+    const [isEditTestModalOpen, setIsEditTestModalOpen] = useState(false);
     const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
-    const [isEditTestModalOpen, setIsEditTestModalOpen] = useState(false);
+    const addTestRef = useRef(null);
+    const editTestRef = useRef(null);
+
+    const handleClickOutside = (event) => {
+        if (addTestRef.current && !addTestRef.current.contains(event.target)) {
+            setIsTestModalOpen(false);
+        }
+        if (editTestRef.current && !editTestRef.current.contains(event.target)) {
+            setIsEditTestModalOpen(false);
+        }
+    }
+
+    useEffect(() => {
+        if (isTestModalOpen || isEditTestModalOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isTestModalOpen, isEditTestModalOpen]);
 
     const openEditModal = (test) => {
         setSelectedTest(test);
@@ -185,6 +207,7 @@ const CalendarView = ({ department, actualUserDept }) => {
 
             {selectedTest && (
                 <EditTestModal
+                    ref={editTestRef}
                     isUserAdmin={isUserAdmin}
                     userDept={actualUserDept}
                     test={selectedTest}
@@ -195,21 +218,11 @@ const CalendarView = ({ department, actualUserDept }) => {
             )}
 
             <TestModal
+                ref={addTestRef}
                 isUserAdmin={isUserAdmin}
                 userDept={actualUserDept}
                 isOpen={isTestModalOpen}
                 closeModal={() => setIsTestModalOpen(false)}
-                newTest={newTest}
-                handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-                handleAddTest={async (formData) => {
-                    try {
-                        const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
-                        console.log("Test Added", (await response).data)
-                        setIsTestModalOpen(false);
-                    } catch (err) {
-                        console.log('Error while adding new test', err)
-                    }
-                }}
             />
         </div>
     )

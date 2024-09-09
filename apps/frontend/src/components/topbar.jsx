@@ -7,7 +7,6 @@ import Notifications from "./Notifications";
 const Topbar = ({ toggleSidebar, changeView }) => {
   const { user, isUserAdmin, logout } = useContext(AuthContext);
   const [userDropdown, setUserDropdown] = useState(false);
-  const [notifications, setNotifications] = useState(false)
   const [isAdminPanel, setIsAdminPanel] = useState(false)
 
   const userDropdownRef = useRef(null);

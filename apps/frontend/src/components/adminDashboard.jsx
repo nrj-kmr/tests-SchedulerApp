@@ -1,8 +1,7 @@
 import Topbar from "./topbar"
 import { AuthContext } from "../context/AuthContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Sidebar from "./sidebar";
-import axios from "axios";
 import Modal from 'react-modal';
 import { ApiContext } from "../context/ApiContext";
 import UserModal from "./dialogModals/createUserModal";
@@ -16,7 +15,7 @@ import DepartmentsView from "./views/departments";
 import UsersView from "./views/usersView";
 import EditTestModal from "./dialogModals/editTestModal";
 
-import { serverURL, updateTest } from '../services/apiServices'
+import { addDepartment, addTest, addUser, updateDepartment, updateTest, updateUser } from '../services/apiServices'
 
 // Set the App Element for React Modal
 Modal.setAppElement('#root');
@@ -26,11 +25,15 @@ const AdminDashboard = () => {
   const { users, tests, departments } = useContext(ApiContext);
 
   const [isSidebarVisible, setSidebarVisible] = useState(true);
-  const [selectedView, setSelectedView] = useState('welcome')
+  const [selectedView, setSelectedView] = useState('users')
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+
+  const [isUserOptionsOpen, setIsUserOptionsOpen] = useState(false);
+  const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
+  const [isDepartmentEditModalOpen, setIsDepartmentEditModalOpen] = useState(false);
 
   const [newUser, setNewUser] = useState({ firstname: '', lastname: '', email: '', password: '', department: '', role: '' });
   const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
@@ -40,9 +43,44 @@ const AdminDashboard = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
-  const [isUserOptionsOpen, setIsUserOptionsOpen] = useState(false);
-  const [isTestEditModalOpen, setIsTestEditModalOpen] = useState(false);
-  const [isDepartmentEditModalOpen, setIsDepartmentEditModalOpen] = useState(false);
+  const userModalRef = useRef(null);
+  const testModalRef = useRef(null);
+  const departmentModalRef = useRef(null);
+  const editUserRef = useRef(null);
+  const editTestRef = useRef(null);
+  const editDepartmentRef = useRef(null);
+
+  const handleClickOutside = (e) => {
+    if (userModalRef.current && !userModalRef.current.contains(e.target)) {
+      setIsUserModalOpen(false);
+    }
+    if (testModalRef.current && !testModalRef.current.contains(e.target)) {
+      setIsTestModalOpen(false);
+    }
+    if (departmentModalRef.current && !departmentModalRef.current.contains(e.target)) {
+      setIsDepartmentModalOpen(false);
+    }
+    if (editUserRef.current && !editUserRef.current.contains(e.target)) {
+      setIsUserOptionsOpen(false);
+    }
+    if (editTestRef.current && !editTestRef.current.contains(e.target)) {
+      setIsTestEditModalOpen(false);
+    }
+    if (editDepartmentRef.current && !editDepartmentRef.current.contains(e.target)) {
+      setIsDepartmentEditModalOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isUserModalOpen || isTestModalOpen || isDepartmentModalOpen || isUserOptionsOpen || isTestEditModalOpen || isDepartmentEditModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isUserModalOpen, isTestModalOpen, isDepartmentModalOpen, isUserOptionsOpen, isTestEditModalOpen, isDepartmentEditModalOpen])
 
   const [successMessage, setSuccessMessage] = useState('')
 
@@ -64,8 +102,7 @@ const AdminDashboard = () => {
   }
 
   const handleSaveUser = (updatedUser) => {
-    console.log('Updated User:', updatedUser);
-    axios.put(`${serverURL}/api/admin/editUser/${updatedUser._id}`, updatedUser)
+    updateUser(updatedUser._id, updatedUser)
       .then((response) => {
         console.log("User updated successfully:", response.data);
         handleCloseDialog();
@@ -109,7 +146,7 @@ const AdminDashboard = () => {
   }
 
   const handleUpdateDepartment = (updatedDepartment) => {
-    axios.put(`${serverURL}/api/admin/editDepartment/${updatedDepartment._id}`, updatedDepartment)
+    updateDepartment(updatedDepartment._id, updatedDepartment)
       .then((response) => {
         console.log("Department updated successfully:", response.data);
         handleCloseDepartmentEditModal();
@@ -132,23 +169,15 @@ const AdminDashboard = () => {
         <div className={`main-content w-full flex flex-col flex-grow ${isSidebarVisible ? 'ml-64' : ''} transition-all duration-300`}>
           <div className="flex-grow pt-16 p-6 mt-2 bg-slate-500 text-white">
 
-            {/* Display the content here, Based on Selected View from the Sidebar. */}
-
-            {/* WELCOME VIEW */}
             {selectedView === 'welcome' && (
               <div className='flex justify-center items-center h-full'>
                 <h1 className="font-bold text-2xl">Welcome to Admin Dashboard</h1>
               </div>
             )}
 
-            {/* USERS' VIEW */}
-            {selectedView === 'users' && (
-              <UsersView
-                users={users}
-                setIsUserModalOpen={setIsUserModalOpen}
-                handleEditUser={handleUserOptions}
-              />
-            )}
+            {selectedView === 'users' && (<UsersView users={users} setIsUserModalOpen={setIsUserModalOpen} handleEditUser={handleUserOptions} />)}
+            {selectedView === 'tests' && (<TestsView tests={tests} setIsTestModalOpen={setIsTestModalOpen} handleEditTest={handleEditTest} />)}
+            {selectedView === 'departments' && (<DepartmentsView departments={departments} setIsDepartmentModalOpen={setIsDepartmentModalOpen} handleEditDepartment={handleEditDepartment} />)}
 
             {/* SUCCESS MESSAGE */}
             {successMessage && (
@@ -156,23 +185,6 @@ const AdminDashboard = () => {
                 <button onClick={() => setSuccessMessage('')} className="absolute top-0 right-0 text-red-500 font-bold px-2">&times;</button>
                 <p className='text-red-500 text-center'>{successMessage}</p>
               </div>
-            )}
-
-            {/* TESTS' VIEW */}
-            {selectedView === 'tests' && (
-              <TestsView
-                tests={tests}
-                setIsTestModalOpen={setIsTestModalOpen}
-                handleEditTest={handleEditTest}
-              />
-            )}
-
-            {/* All DEPARTMENTS' VIEW */}
-            {selectedView === 'departments' && (
-              <DepartmentsView
-                departments={departments}
-                setIsDepartmentModalOpen={setIsDepartmentModalOpen} handleEditDepartment={handleEditDepartment}
-              />
             )}
 
             {/* Show Calendar Based on Selected Department */}
@@ -195,6 +207,7 @@ const AdminDashboard = () => {
 
       {selectedUser && (
         <EditUserModal
+          ref={editUserRef}
           user={selectedUser}
           isOpen={isUserOptionsOpen}
           onClose={handleCloseDialog}
@@ -205,6 +218,7 @@ const AdminDashboard = () => {
 
       {selectedTest && (
         <EditTestModal
+          ref={editTestRef}
           isUserAdmin={isUserAdmin}
           test={selectedTest}
           isOpen={isTestEditModalOpen}
@@ -216,6 +230,7 @@ const AdminDashboard = () => {
 
       {selectedDepartment && (
         <EditDepartmentModal
+          ref={editDepartmentRef}
           users={users}
           department={selectedDepartment}
           isOpen={isDepartmentEditModalOpen}
@@ -227,12 +242,13 @@ const AdminDashboard = () => {
 
       {/* Create User Modal (pop-up box for adding users) */}
       <UserModal
+        ref={userModalRef}
         isOpen={isUserModalOpen}
         closeModal={() => setIsUserModalOpen(false)}
         newUser={newUser}
         handleInputChange={(e) => setNewUser({ ...newUser, [e.target.name]: e.target.value })}
         handleAddUser={() => {
-          axios.post(`${serverURL}/api/admin/createUser`, newUser)
+          addUser(newUser)
             .then((response) => {
               console.log(response)
               setIsUserModalOpen(false);
@@ -245,31 +261,22 @@ const AdminDashboard = () => {
 
       {/* Create Test Modal (pop-up box for adding tests) */}
       <TestModal
+        ref={testModalRef}
         isUserAdmin={isUserAdmin}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
-        newTest={newTest}
-        handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-        handleAddTest={async (formData) => {
-          try {
-            const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
-            console.log("Test Added", response.data)
-            setIsTestModalOpen(false);
-          } catch (err) {
-            console.log('Error while adding new test', err)
-          }
-        }}
       />
 
       {/* Create Department Modal (pop-up box for adding departments) */}
       <DepartmentModal
+        ref={departmentModalRef}
         users={users}
         isOpen={isDepartmentModalOpen}
         closeModal={() => setIsDepartmentModalOpen(false)}
         newDepartment={newDepartment}
         handleInputChange={(e) => setNewDepartment({ ...newDepartment, [e.target.name]: e.target.value })}
         handleAddDepartment={() => {
-          axios.post(`${serverURL}/api/admin/createDepartment`, newDepartment)
+          addDepartment(newDepartment)
             .then((response) => {
               console.log(response)
               setIsDepartmentModalOpen(false);

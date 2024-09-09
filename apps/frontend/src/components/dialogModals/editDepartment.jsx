@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, forwardRef } from "react";
 import Modal from "react-modal";
 
-const EditDepartmentModal = ({ users, department, isOpen, onClose, onSave, setSuccessMessage }) => {
+const EditDepartmentModal = forwardRef(({ users, department, isOpen, onClose, onSave, setSuccessMessage }, ref) => {
      const [name, setName] = useState(department.name);
      const [admin, setAdmin] = useState(department.admin);
      const [description, setDescription] = useState(department.description);
@@ -46,7 +46,7 @@ const EditDepartmentModal = ({ users, department, isOpen, onClose, onSave, setSu
                className="fixed inset-0 flex justify-center items-center z-50"
                overlayClassName='fixed inset-0 bg-black bg-opacity-70 z-40'
           >
-               <div className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
+               <div ref={ref} className='relative bg-gray-50 p-8 rounded-lg shadow-lg w-full max-w-md'>
                     <button className='absolute top-2 right-2 rounded-full px-2 hover:bg-gray-200 text-gray-600 text-xl hover:text-gray-800 transition-all duration-300' onClick={onClose}>&times;</button>
 
                     <h2 className='text-2xl font-bold mb-6 text-center'>Edit Department</h2>
@@ -111,6 +111,6 @@ const EditDepartmentModal = ({ users, department, isOpen, onClose, onSave, setSu
                </div>
           </Modal>
      )
-}
+});
 
 export default EditDepartmentModal;

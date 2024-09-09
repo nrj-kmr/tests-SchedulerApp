@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../components/topbar';
 import CalendarView from '../components/calendarComponents/calendarView';
@@ -22,11 +22,34 @@ const UserDashboard = ({ }) => {
 
   const [successMessage, setSuccessMessage] = useState('');
 
-  const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
+  // const [newTest, setNewTest] = useState({ title: '', description: '', department: '', date: '', startTime: '', endTime: '', status: '' });
 
   const { user, userEmail } = useContext(AuthContext)
-  const { tests, departments } = useContext(ApiContext);
+  const { tests } = useContext(ApiContext);
   const navigate = useNavigate();
+
+  const addTestRef = useRef(null);
+  const editTestRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (addTestRef.current && !addTestRef.current.contains(event.target)) {
+      setIsTestModalOpen(false);
+    }
+    if (editTestRef.current && !editTestRef.current.contains(event.target)) {
+      setIsTestEditModalOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isTestModalOpen || isTestEditModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isTestModalOpen, isTestEditModalOpen]);
 
   const handleEditTest = (test) => {
     setSelectedTest(test);
@@ -87,25 +110,16 @@ const UserDashboard = ({ }) => {
       </div>
 
       <TestModal
+        ref={addTestRef}
         isUserAdmin={isUserAdmin}
         userDept={exactDepartment}
         isOpen={isTestModalOpen}
         closeModal={() => setIsTestModalOpen(false)}
-        newTest={newTest}
-        handleInputChange={(e) => setNewTest({ ...newTest, [e.target.name]: e.target.value })}
-        handleAddTest={async (formData) => {
-          try {
-            const response = axios.post(`${serverURL}/api/admin/createTest`, formData)
-            console.log("Test Added", (await response).data)
-            setIsTestModalOpen(false);
-          } catch (err) {
-            console.log('Error while adding new test', err)
-          }
-        }}
       />
 
       {selectedTest && (
         <EditTestModal
+          ref={editTestRef}
           isUserAdmin={isUserAdmin}
           userDept={exactDepartment}
           test={selectedTest}

@@ -19,7 +19,19 @@ const DepartmentsView = ({ departments, setIsDepartmentModalOpen, handleEditDepa
 
       <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
         {departments.length === 0 ? (
-          <p>No departments available</p>
+          <>
+            <p className='p-3 text-center font-bold text-xl'>No departments available</p>
+            <div className='flex justify-center'>
+              <button
+                className='w-1/5 m-4 bg-indigo-200 text-indigo-600 px-2 py-1 rounded border border-indigo-100 hover:bg-indigo-100 hover:text-indigo-800 transition-all duration-300'
+                onClick={() => {
+                  setIsDepartmentModalOpen(true);
+                }}
+              >
+                + Add Department
+              </button>
+            </div>
+          </>
         ) : (
           <table className="min-w-full">
             <thead>

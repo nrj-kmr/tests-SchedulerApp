@@ -19,7 +19,7 @@ const UsersView = ({ users, setIsUserModalOpen, handleEditUser }) => {
      </div>
      <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-slate-600 rounded-lg">
        {users.length === 0 ? (
-         <p>No users available</p>
+         <p className='p-3 text-center font-bold text-xl'>No users available</p>
        ) : (
          <table className="min-w-full">
            <thead>

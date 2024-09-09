@@ -5,7 +5,9 @@ import Admin from '../models/admin.model.js';
 import Department from '../models/department.model.js';
 import Test from '../models/tests.model.js';
 import { createDepartment, createTest, createUser } from '../controllers/admin.controller.js';
-import { checkAuthorization, getUsers } from '../controllers/auth.controller.js';
+import { getUsers } from '../controllers/auth.controller.js';
+import Notification from '../models/notification.model.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const adminRouter = Router();
 
@@ -155,6 +157,16 @@ adminRouter.put("/editTest/:_id", async (req, res) => {
       test.startTime = req.body.startTime;
       test.endTime = req.body.endTime;
       test.status = req.body.status;
+
+      // also update/create a notification for the test
+      const notification = {
+         title: `${test.title} updated`,
+         message: `The test: "${test.title}" has been updated in the '${test.department}' department.`,
+         type: 'info',
+         department: test.department
+      };
+      const notify = await Notification.create(notification);
+      await notify.save();
       await test.save();
       res.json({
          message: 'Test updated successfully!',
@@ -170,43 +182,22 @@ adminRouter.delete("/deleteTest/:_id", async (req, res) => {
    try {
       const test = await Test.findById(req.params._id);
       if (!test) return res.status(404).json({ error: "Test not found" });
+
+      // update in notification when a test is deleted
+      const notification = {
+         title: `${test.title} deleted`,
+         message: `The test: "${test.title}" has been deleted in the '${test.department}' department.`,
+         type: 'info',
+         department: test.department
+      };
+      const notify = await Notification.create(notification);
+
       await Test.findByIdAndDelete(req.params._id);
+      await notify.save();
       return res.json({ message: `${test._id} Deleted Successfully` });
    } catch (error) {
       return res.status(500).json({ error: error.message || 'Test deletion failed!' });
    }
 });
-
-// Protected route to create superAdmin
-adminRouter.post("/createSuperAdmin", checkAuthorization, async (req, res) => {
-   try {
-      const { name, email, password } = req.body;
-      if (!name || !email || !password) {
-         return res.status(400).json({ error: 'Name, Email and Password are required!' });
-      }
-      const hashedPassword = await bcrypt.hash(password, 10)
-      const newSuperAdmin = new Admin({ name, email, password: hashedPassword, superAdmin: true });
-      await newSuperAdmin.save()
-      res.status(201).json({ message: "SuperAdmin created Successfully!" })
-   } catch (error) {
-      return res.status(500).json({
-         error: error.message,
-         message: "error while creating superAdmin"
-      })
-   }
-})
-
-adminRouter.get("/getSuperAdmins", checkAuthorization, async (req, res) => {
-   try {
-      const superAdmins = await Admin.find({ superAdmin: true });
-      if (!superAdmins) return res.send(404).json({ error: "SuperAdmins not fetched" })
-      return res.json(superAdmins)
-   } catch (error) {
-      return res.status(500).json({
-         error: error.message,
-         message: 'Error while fetching SuperAdmins'
-      })
-   }
-})
 
 export default adminRouter;
