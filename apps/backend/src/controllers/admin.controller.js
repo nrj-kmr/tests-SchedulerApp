@@ -61,8 +61,8 @@ export const createTest = async (req, res) => {
 
     // logic to delete old notifications if the total number of notifications exceeds 100
     const notificationCount = await Notification.countDocuments();
-    if (notificationCount > 100) {
-      const oldestNotifications = await Notification.find().sort({ createdAt: 1 }).limit(notificationCount - 100);
+    if (notificationCount > 50) {
+      const oldestNotifications = await Notification.find().sort({ createdAt: 1 }).limit(notificationCount - 50);
       const oldestNotificationIds = oldestNotifications.map(notification => notification._id);
       await Notification.deleteMany({ _id: { $in: oldestNotificationIds } });
     }
