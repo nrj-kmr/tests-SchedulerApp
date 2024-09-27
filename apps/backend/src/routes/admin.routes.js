@@ -53,9 +53,6 @@ adminRouter.put("/editUser/:_id", async (req, res) => {
    try {
       const user = await User.findByIdAndUpdate(req.params._id);
 
-      // also save/update the user into admin if the isAdmin is true
-      // also if the isAdmin is false, remove from the Admin Collection
-
       if (!user) return res.status(404).json({ error: "User not found" });
 
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -66,6 +63,26 @@ adminRouter.put("/editUser/:_id", async (req, res) => {
       user.password = hashedPassword;
       user.isAdmin = req.body.isAdmin;
       await user.save();
+
+      // also save/update the user into admin if the isAdmin is true
+      // also if the isAdmin is false, remove from the Admin Collection
+      if (req.body.isAdmin) {
+         let admin = await Admin.findById(req.params._id);
+         if (!admin) {
+            admin = new Admin({ _id: req.params._id });
+         }
+         admin.firstname = req.body.firstname;
+         admin.lastname = req.body.lastname;
+         admin.email = req.body.email;
+         admin.password = hashedPassword;
+         admin.department = req.body.department;
+         admin.isAdmin = req.body.isAdmin;
+      
+         await admin.save();
+      } else {
+         await Admin.findByIdAndDelete(req.params._id);
+      }
+
       return res.json({
          message: 'User updated successfully!',
          user

@@ -1,7 +1,7 @@
 export const defaultAdmin = {
      firstname: 'Admin',
      lastname: 'User',
-     email: 'admin@example.com',
+     email: 'admin@123.com',
      password: 'admin123',
      department: 'default',
      isAdmin: true,
