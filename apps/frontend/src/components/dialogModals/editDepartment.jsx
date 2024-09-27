@@ -1,5 +1,6 @@
 import React, { useState, forwardRef } from "react";
 import Modal from "react-modal";
+import { deleteDepartment } from "../../services/apiServices";
 
 const EditDepartmentModal = forwardRef(({ users, department, isOpen, onClose, onSave, setSuccessMessage }, ref) => {
      const [name, setName] = useState(department.name);

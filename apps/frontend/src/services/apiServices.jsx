@@ -19,5 +19,5 @@ export const deleteTest = (id) => api.delete(`/admin/deleteTest/${id}`);
 
 export const fetchDepartments = () => api.get('/admin/getDepartments');
 export const addDepartment = (newDepartment) => api.post('/admin/createDepartment', newDepartment);
-export const updateDepartment = (id, updatedDepartment) => api.put(`/admin/updateDepartment/${id}`, updatedDepartment);
+export const updateDepartment = (id, updatedDepartment) => api.put(`/admin/editDepartment/${id}`, updatedDepartment);
 export const deleteDepartment = (id) => api.delete(`/admin/deleteDepartment/${id}`);
